@@ -37,7 +37,7 @@ This code is still pre-alpha.  In particular, using the pip install seems to be 
 
 
 
-###Installing using pip:
+### Installing using pip:
 
 As this code is still pre-alpha, your best bet is to cd into the folder containing teaspoon (should have setup.py there) and run
 
@@ -47,7 +47,7 @@ As this code is still pre-alpha, your best bet is to cd into the folder containi
 
 This is the developmental installion for pip.  When things get more stable, we can remove the -e part.
 
-###Installing using python:
+### Installing using python:
 
 According to the internet, the pip version of install appears to be better. However, if you don't use pip, another option is to cd into the teaspoon directory and run:
 
