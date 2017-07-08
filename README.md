@@ -31,7 +31,13 @@ In order to use all wrappers in teaspoon.TDA, the following need to be installed
 Installation
 ==============
 
-**Installing using pip:**
+### Warning:
+This code is still pre-alpha.  In particular, using the pip install seems to be finicky at best.  *TODO: Need to find someone who knows more about pip install to fix this up.* 
+** If you are having installation issues, please make a note of what you've done, including copying error message outputs, as a comment into the [installation issue on gitlab](https://gitlab.msu.edu/TSAwithTDA/teaspoon/issues/1) so we can start figuring out what is up with this system.**
+
+
+
+###Installing using pip:
 
 As this code is still pre-alpha, your best bet is to cd into the folder containing teaspoon (should have setup.py there) and run
 
@@ -41,7 +47,7 @@ As this code is still pre-alpha, your best bet is to cd into the folder containi
 
 This is the developmental installion for pip.  When things get more stable, we can remove the -e part.
 
-**Installing using python:**
+###Installing using python:
 
 According to the internet, the pip version of install appears to be better. However, if you don't use pip, another option is to cd into the teaspoon directory and run:
 
