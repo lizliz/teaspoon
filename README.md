@@ -33,7 +33,7 @@ Installation
 
 ### Warning:
 This code is still pre-alpha.  In particular, using the pip install seems to be finicky at best.  *TODO: Need to find someone who knows more about pip install to fix this up.* 
-** If you are having installation issues, please make a note of what you've done, including copying error message outputs, as a comment into the [installation issue on gitlab](https://gitlab.msu.edu/TSAwithTDA/teaspoon/issues/1) so we can start figuring out what is up with this system.**
+**If you are having installation issues, please make a note of what you've done, including copying error message outputs, as a comment into the [installation issue on gitlab](https://gitlab.msu.edu/TSAwithTDA/teaspoon/issues/1) so we can start figuring out what is up with this system.**
 
 
 
