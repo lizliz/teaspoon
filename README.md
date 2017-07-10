@@ -18,9 +18,9 @@ Requirements
 
 Please note that this code is still pre-alpha, so many things are not fully up and running yet.
 
-*TODO: Insert instructions on bug lists and feature requests*
+Bugs reports and feature reqests can be posted on the [gitlab issues](https://gitlab.msu.edu/TSAwithTDA/teaspoon/issues) page.
 
-In order to use all wrappers in teaspoon.TDA, the following need to be installed so they can be run command line. Note: the teaspoon installation will not install or check for their install.  
+In order to use all wrappers in teaspoon.TDA, the following need to be installed so they can be run command line. Note: the teaspoon installation will not install or check for their install.
 
 - [Ripser](https://github.com/Ripser/ripser). Code by Ulrich Bauer for computing persistent homology of a point cloud or distance matrix.
 - [Perseus](http://people.maths.ox.ac.uk/nanda/perseus/index.html). Code by Vidit Nanda for computing persistent homology of point clouds, cubical complexes, and distance matrices.
@@ -32,7 +32,7 @@ Installation
 ==============
 
 ### Warning:
-This code is still pre-alpha.  In particular, using the pip install seems to be finicky at best.  *TODO: Need to find someone who knows more about pip install to fix this up.* 
+This code is still pre-alpha.  In particular, using the pip install seems to be finicky at best.  *TODO: Need to find someone who knows more about pip install to fix this up.*
 **If you are having installation issues, please make a note of what you've done, including copying error message outputs, as a comment into the [installation issue on gitlab](https://gitlab.msu.edu/TSAwithTDA/teaspoon/issues/1) so we can start figuring out what is up with this system.**
 
 
@@ -41,8 +41,8 @@ This code is still pre-alpha.  In particular, using the pip install seems to be 
 
 As this code is still pre-alpha, your best bet is to cd into the folder containing teaspoon (should have setup.py there) and run
 
-```{python}
-    pip install -e .
+```{bash}
+pip install -e .
 ```
 
 This is the developmental installion for pip.  When things get more stable, we can remove the -e part.
@@ -51,13 +51,17 @@ This is the developmental installion for pip.  When things get more stable, we c
 
 According to the internet, the pip version of install appears to be better. However, if you don't use pip, another option is to cd into the teaspoon directory and run:
 
-```{bash} 
-    python setup.py develop
+```{bash}
+python setup.py develop
 ```
-    
+
 Again, this is the developer version of the installation.  Eventually, we will want to be doing 
 
-```{bash} 
-    python setup.py install
+```{bash}
+python setup.py install
 ```
-    
+
+Contributing
+=============
+
+See the [contributing](https://gitlab.msu.edu/TSAwithTDA/teaspoon/blob/master/CONTRIBUTING.md) page for more information on workflows.
