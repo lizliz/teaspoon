@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['preparefolders',['prepareFolders',['../namespaceteaspoon_1_1_t_d_a_1_1_persistence.html#aa767596a9f61323ef4e489e42890cd45',1,'teaspoon::TDA::Persistence']]]
+  ['sphere',['Sphere',['../namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#af130e51668240f775bca4ff195be2bea',1,'teaspoon::MakeData::PointCloud']]]
 ];

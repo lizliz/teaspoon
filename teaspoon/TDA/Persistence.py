@@ -1,25 +1,23 @@
-'''
-Created July 6, 2017
-Liz Munch
-muncheli@msu.edu
+## @package teaspoon.TDA.Persistence
+# Wrapper for using various fast persistence software inside of python.
+#
+# All diagrams are stored as a 2xN numpy matrix.
+# When a code returns multiple dimensions, these are returned as a dictionary
+# \code{.py}
+# {
+#     0: DgmDimension0,
+#     1: DgmDimension1,
+#     ...
+# }
+# \endcode
+# Infinite classes are given an entry of np.inf.
+#
+# During computation, all data files are saved in a hidden folder ".teaspoonData".
+# This folder is created if it doesn't already exist.
+# Files are repeatedly emptied out of it, so do not save anything in it that you might want later!
+#
 
 
-Wrapper for using various fast persistence software inside of python.
-
-All diagrams are stored as a 2xN numpy matrix.
-When a code returns multiple dimensions, these are returned as a dictionary
-{
-    0: DgmDimension0,
-    1: DgmDimension1,
-    ...
-}
-Infinite classes are given an entry of np.inf.
-
-All data files are saved in a hidden folder .teaspoonData
-This folder is created if it doesn't already exist.
-Files are repeatedly emptied out of it, so do not save anything in it that you might want later!
-
-'''
 import matplotlib.pyplot as plt
 import numpy as np
 import os
@@ -37,12 +35,9 @@ import warnings
 #-----------------------------------------------------#
 #-----------------------------------------------------#
 
-
 def prepareFolders():
-    '''
-    Checks that necessary folder structure system exists.
-    Empties out all previously saved files to avoid confusion.
-    '''
+## Checks that necessary folder structure system exists.
+# Empties out all previously saved files to avoid confusion.
     #---- Make folders for saving files
     folders = ['.teaspoonData','.teaspoonData/input','.teaspoonData/output']
     for location in folders:
@@ -57,12 +52,11 @@ def prepareFolders():
             os.remove(f)
 
 
+
+
 def readPerseusOutput(outputFileName):
-    '''
-    Reads in the diagrams in the format that perseus uses.
-    Returns a dictionary with integer keys representing the 
-    dimension of each diagram.
-    '''
+## Reads in the diagrams in the format that Perseus uses.
+# Returns a dictionary with integer keys representing the dimension of each diagram.
 
     outputFiles = glob.glob(outputFileName + '*')
 
@@ -141,32 +135,25 @@ def readRipserOutput(out):
 #------------Ripser-----------------------------------#
 
 
+
+## Computes persistence up to dimension maxDim using Uli Bauer's Ripser.
+#
+#
+# @remark Ripser needs to be installed on machine in advance
+# https://github.com/Ripser/ripser 
+#
+# @param P 
+#     A point cloud as an NxD numpy array.
+#     N is the number of points, D is the dimension of
+#     Euclidean space.
+# @param  maxDim 
+#     An integer representing the maximum dimension
+#     for computing persistent homology
+#
+# @return  
+#     A dictionary Dgms where Dgms[k] is a lx2 matrix 
+#     giving points in the k-dimensional pers diagram
 def VR_Ripser(P, maxDim = 1):
-
-    '''
-    Computes persistence up to dimension maxDim using Uli Bauer's Ripser
-    Needs to be installed on machine in advance
-    https://github.com/Ripser/ripser 
-
-
-    Parameters
-    ----------
-    P -
-        A point cloud as an NxD numpy array.
-        N is the number of points, D is the dimension of
-        Euclidean space.
-    maxDim -
-        An integer representing the maximum dimension
-        for computing persistent homology
-
-    Returns
-    -------
-    Dgms -  
-        A dictionary where Dgms[k] is a lx2 matrix 
-        giving points in the k-dimensional pers diagram
-
-    '''
-
 
     # Compute pairwise distance matrix, then use the other 
     # Ripser input style to do the work.
@@ -181,23 +168,21 @@ def VR_Ripser(P, maxDim = 1):
 def writePointCloudFileForPerseus(P,filename, 
                                 stepSize = .1, 
                                 numSteps = 500):
-    '''
-    Writes the point cloud to a file in the perseus format.
+    # Writes the point cloud to a file in the perseus format.
 
-    Notes:
-        Vidit has options for radius scaling factor. TODO: Figure out if this should be 1 or 2
+    # Notes:
+    #     Vidit has options for radius scaling factor. TODO: Figure out if this should be 1 or 2
 
-    Parameters
-    ----------
-    P
-        An NxD array.  Represents N points in R^D.
-    filename
-        location for saving the file
-    stepSize
-    numSteps
-        Perseus requires that you decide how many steps, and how wide they are, rather than computing all possible topological changes.  So, persistence will be calculated from parameter 0 until stepSize*numSteps.
+    # Parameters
+    # ----------
+    # P
+    #     An NxD array.  Represents $N$ points in $R^D$.
+    # filename
+    #     location for saving the file
+    # stepSize
+    # numSteps
+    #     Perseus requires that you decide how many steps, and how wide they are, rather than computing all possible topological changes.  So, persistence will be calculated from parameter 0 until stepSize*numSteps.
 
-    '''
     
     dimension = np.shape(P)[1]
     radiusScalingFactor = 1
@@ -213,43 +198,36 @@ def writePointCloudFileForPerseus(P,filename,
         file.write(string)
     
 
+## Does brips version of perseus.
+# Computes VR persitsence on points in Euclidean space.
+#
+# @remark
+# 1) Requires choice of maxRadius, numSteps, and/or stepSize. 
+#    Bad choices will give junk results.
+# 2) TODO: This appears to spit out radius rather than diameter
+#    persistence computations.  Need to figure this out and 
+#    make the choice uniform across outputs.
+#
+#
+# @param P
+#     An NxD array.  Represents N points in R^D.
+# @param maxRadius
+# @param stepSize
+# @param numSteps
+#     Perseus requires that you decide how many steps, and how wide they are, rather than computing all possible topological changes.  So, persistence will be calculated from parameter 0 until 
+#     maxRadius = stepSize*numSteps.
+#     Only 2 of the three entries should be passed.  
+#     If numSteps and stepSize are passed (regardless of whether maxRadius is passed), they will be used for the computation.  Otherwise, the two non-none valued entries will be used to calculate the third.
+#
+# @param suppressOutput
+#     If true, gets rid of printed output from perseus.
+# 
+# @return 
+#     A dictionary with integer keys 0,1,...,N 
+    The key gives the dimension of the persistence diagram.
 def VR_Perseus(P,dim = 1, 
             maxRadius = 3, numSteps = 100, stepSize = None,
             suppressOutput = True):
-    '''
-    Does brips version of perseus.
-    Computes VR persitsence on points in Euclidean space.
-
-    Warnings:
-    1) Requires choice of maxRadius, numSteps, and/or stepSize. 
-       Bad choices will give junk results.
-    2) TODO: This appears to spit out radius rather than diameter
-       persistence computations.  Need to figure this out and 
-       make the choice uniform across outputs.
-
-
-    Parameters
-    ----------
-    P
-        An NxD array.  Represents N points in R^D.
-    maxRadius
-    stepSize
-    numSteps
-        Perseus requires that you decide how many steps, and how wide they are, rather than computing all possible topological changes.  So, persistence will be calculated from parameter 0 until 
-        maxRadius = stepSize*numSteps.
-        Only 2 of the three entries should be passed.  
-        If numSteps and stepSize are passed (regardless of whether maxRadius is passed), they will be used for the computation.  Otherwise, the two non-none valued entries will be used to calculate the third.
-
-    suppressOutput
-        If true, gets rid of printed output from perseus.
-
-    Outputs
-    -------
-    Dgms
-        A dictionary with integer keys 0,1,...,N 
-        The key gives the dimension of the persistence diagram.
-
-    '''
 
     #---- Clean up and/or create local folder system
     prepareFolders()
@@ -335,29 +313,20 @@ def VR_Perseus(P,dim = 1,
 #-------------Ripser----------------------------------#
 
 
+## \brief Computes persistence up to maxDim using Uli Bauer's [Ripser](https://github.com/Ripser/ripser).
+#
+# \remark Ripser needs to be installed on machine in advance. This code doesn't check for it's existance.
+# 
+# @param distMat -
+#     A distance matrix given as a NxN numpy array
+# @param maxDim -
+#     An integer representing the maximum dimension
+#     for computing persistent homology
+#
+# @return   
+#     A dictionary Dgms where Dgms[k] is a lx2 matrix 
+#     giving points in the k-dimensional pers diagram
 def distMat_Ripser(distMat, maxDim = 1):
-
-    '''
-    Computes persistence up to maxDim using Uli Bauer's Ripser
-    Needs to be installed on machine in advance
-    https://github.com/Ripser/ripser 
-
-
-    Parameters
-    ----------
-    distMat -
-        A distance matrix given as a NxN numpy array
-    maxDim -
-        An integer representing the maximum dimension
-        for computing persistent homology
-
-    Returns
-    -------
-    Dgms -  
-        A dictionary where Dgms[k] is a lx2 matrix 
-        giving points in the k-dimensional pers diagram
-
-    '''
 
     # Check/setup the folder structure
     # Note: empties the folders in preparation
@@ -402,7 +371,7 @@ def distMat_Ripser(distMat, maxDim = 1):
 
 #---------------Perseus-------------------------------#
 
-
+## @todo
 def distMat_Perseus():
     print('Sorry, not yet implemented.  Try distMat_Ripser instead!')
 
@@ -417,13 +386,11 @@ def distMat_Perseus():
 
 
 def writeMatrixFileForPerseus(M,filesavename):
-    '''
-    Given 2D matrix M, write into file format read by Perseus.
-    Info on format can be found at: 
-    http://people.maths.ox.ac.uk/nanda/perseus/index.html
+    # Given 2D matrix M, write into file format read by Perseus.
+    # Info on format can be found at: 
+    # http://people.maths.ox.ac.uk/nanda/perseus/index.html
 
-    TODO: Set this up to work with higher-dimensional cubical complexes
-    '''
+    # TODO: Set this up to work with higher-dimensional cubical complexes
 
     Top = np.array([[2],[np.shape(M)[0]], [np.shape(M)[1]]])
 
@@ -435,38 +402,30 @@ def writeMatrixFileForPerseus(M,filesavename):
 
 
 
+## \brief Computes persistence for a matrix of function values 
+# using Vidit Nanda's [perseus](http://people.maths.ox.ac.uk/nanda/perseus/index.html).
+#
+# @remark
+# - perseus must be in the bash path
+# - matrix must be 2-dimensional
+#
+# @todo Update this to accept higher dimensional cubical complexes
+#
+# @param M
+#     a 2D numpy array
+# @param numDigits
+#     Perseus only accepts positive integer valued matrices.  To 
+#     compensate, we apply the transformation 
+#             x -> x* (10**numDigits) + M.min()
+#     then calculate persistence on the resulting matrix.
+#     The persistence diagram birth/death times are then converted
+#     back via the inverse transform.
+# @param suppressOutput
+#     If true, gets rid of printed output from perseus.
+#
+# @return A dictionary with integer keys 0,1,...,N 
+# The key gives the dimension of the persistence diagram.
 def Cubical_Perseus(M, numDigits = 2, suppressOutput = True):
-    """
-    Computes persistence for a matrix of function values.
-    Uses Vidit Nanda's perseus.
-    Notes:
-    - perseus must be in the bash path
-    - matrix must be 2-dimensional
-
-    TODO: Update this to accept higher dimensional cubical complexes
-
-    Parameters
-    ----------
-    M
-        a 2D numpy array
-    numDigits
-        Perseus only accepts positive integer valued matrices.  To 
-        compensate, we apply the transformation 
-                x -> x* (10**numDigits) + M.min()
-        then calculate persistence on the resulting matrix.
-        The persistence diagram birth/death times are then converted
-        back via the inverse transform.
-    suppressOutput
-        If true, gets rid of printed output from perseus.
-
-    Outputs
-    -------
-    Dgms
-        A dictionary with integer keys 0,1,...,N 
-        The key gives the dimension of the persistence diagram.
-
-    """
-
     #---- Clean up and/or create local folder system
     prepareFolders()
 
