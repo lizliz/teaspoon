@@ -1,0 +1,64 @@
+This package provides wrappers for using various persistent homology and other Topological Data Analysis software packages through python.
+
+The code is an compilation of work done by \href{http://www.elizabethmunch.com/math}{\tt Elizabeth Munch} along with her students and collaborators. People who have contributed to teaspoon include\+:
+
+
+\begin{DoxyItemize}
+\item \href{http://www.firaskhasawneh.com}{\tt Firas Khasawneh}
+\item Brian Bollen
+\end{DoxyItemize}
+
+\section*{Requirements }
+
+Please note that this code is still pre-\/alpha, so many things are not fully up and running yet.
+
+Bugs reports and feature reqests can be posted on the \href{https://gitlab.msu.edu/TSAwithTDA/teaspoon/issues}{\tt gitlab issues} page.
+
+In order to use all wrappers in teaspoon.\+T\+DA, the following need to be installed so they can be run command line. Note\+: the teaspoon installation will not install or check for their install.
+
+
+\begin{DoxyItemize}
+\item \href{https://github.com/Ripser/ripser}{\tt Ripser}. Code by Ulrich Bauer for computing persistent homology of a point cloud or distance matrix.
+\item \href{http://people.maths.ox.ac.uk/nanda/perseus/index.html}{\tt Perseus}. Code by Vidit Nanda for computing persistent homology of point clouds, cubical complexes, and distance matrices.
+\item \href{https://bitbucket.org/grey_narn/hera}{\tt Hera}. Code by Michael Kerber, Dmitriy Morozov, and Arnur Nigmetov for computing bottleneck and Wasserstein distances.
+\end{DoxyItemize}
+
+\section*{Installation }
+
+\subsubsection*{Warning\+:}
+
+This code is still pre-\/alpha. In particular, using the pip install seems to be finicky at best. {\itshape T\+O\+DO\+: Need to find someone who knows more about pip install to fix this up.} {\bfseries If you are having installation issues, please make a note of what you\textquotesingle{}ve done, including copying error message outputs, as a comment into the \href{https://gitlab.msu.edu/TSAwithTDA/teaspoon/issues/1}{\tt installation issue on gitlab} so we can start figuring out what is up with this system.}
+
+\subsubsection*{Installing using pip\+:}
+
+As this code is still pre-\/alpha, your best bet is to cd into the folder containing teaspoon (should have setup.\+py there) and run
+
+
+\begin{DoxyCode}
+1 pip install -e .
+\end{DoxyCode}
+
+
+This is the developmental installion for pip. When things get more stable, we can remove the -\/e part.
+
+\subsubsection*{Installing using python\+:}
+
+According to the internet, the pip version of install appears to be better. However, if you don\textquotesingle{}t use pip, another option is to cd into the teaspoon directory and run\+:
+
+
+\begin{DoxyCode}
+1 python setup.py develop
+\end{DoxyCode}
+
+
+Again, this is the developer version of the installation. Eventually, we will want to be doing
+
+
+\begin{DoxyCode}
+1 python setup.py install
+\end{DoxyCode}
+
+
+\section*{Contributing }
+
+See the https\+://gitlab.msu.\+edu/\+T\+S\+Awith\+T\+D\+A/teaspoon/blob/master/\+C\+O\+N\+T\+R\+I\+B\+U\+T\+I\+NG.md \char`\"{}contributing\char`\"{} page for more information on workflows. 

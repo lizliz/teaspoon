@@ -1,0 +1,251 @@
+\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence}{}\section{teaspoon.\+T\+D\+A.\+Persistence Namespace Reference}
+\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence}\index{teaspoon.\+T\+D\+A.\+Persistence@{teaspoon.\+T\+D\+A.\+Persistence}}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def {\bfseries test\+Command} ()\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_acc283535d8596af92ab1e7e9455d09b2}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_acc283535d8596af92ab1e7e9455d09b2}
+
+\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_aa767596a9f61323ef4e489e42890cd45}{prepare\+Folders} ()
+\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a3d273210437e69be2df595ed1751c661}{read\+Perseus\+Output} (output\+File\+Name)
+\item 
+def {\bfseries read\+Ripser\+String} (s)\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a862eea03c953145bb9290c1681f1f850}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a862eea03c953145bb9290c1681f1f850}
+
+\item 
+def {\bfseries read\+Ripser\+Output} (out)\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a4ea0e5c0180eff1391c4ac0cf126694c}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a4ea0e5c0180eff1391c4ac0cf126694c}
+
+\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_ae38f90d312da5c7fb8587a2f44e67b8a}{V\+R\+\_\+\+Ripser} (P, max\+Dim=1)
+\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a074e092c57bca5b1652c7b2a2c41f603}{write\+Point\+Cloud\+File\+For\+Perseus} (P, filename, step\+Size=.\+1, num\+Steps=500)
+\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_ae3954f45636c5f88b8e7cb7b422eea3d}{V\+R\+\_\+\+Perseus} (P, dim=1, max\+Radius=3, num\+Steps=100, step\+Size=None, suppress\+Output=True)
+\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a5d253547a9b956b8d5169808f31b42d2}{dist\+Mat\+\_\+\+Ripser} (dist\+Mat, max\+Dim=1)
+\item 
+def {\bfseries dist\+Mat\+\_\+\+Perseus} ()\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a0660fcd00ca57001f21bfaaefb1da9c3}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a0660fcd00ca57001f21bfaaefb1da9c3}
+
+\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a7ee47776929d1ade75b059415918a328}{write\+Matrix\+File\+For\+Perseus} (M, filesavename)
+\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_aa583aa9a694aeaa3983e77319ac68e84}{Cubical\+\_\+\+Perseus} (M, num\+Digits=2, suppress\+Output=True)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVerb}Created July 6, 2017
+Liz Munch
+muncheli@msu.edu
+
+
+Wrapper for using various fast persistence software inside of python.
+
+All diagrams are stored as a 2xN numpy matrix.
+When a code returns multiple dimensions, these are returned as a dictionary
+{
+0: DgmDimension0,
+1: DgmDimension1,
+...
+}
+Infinite classes are given an entry of np.inf.
+
+All data files are saved in a hidden folder .teaspoonData
+This folder is created if it doesn't already exist.
+Files are repeatedly emptied out of it, so do not save anything in it that you might want later!\end{DoxyVerb}
+ 
+
+\subsection{Function Documentation}
+\index{teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}!Cubical\+\_\+\+Perseus@{Cubical\+\_\+\+Perseus}}
+\index{Cubical\+\_\+\+Perseus@{Cubical\+\_\+\+Perseus}!teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}}
+\subsubsection[{\texorpdfstring{Cubical\+\_\+\+Perseus(\+M, num\+Digits=2, suppress\+Output=\+True)}{Cubical_Perseus(M, numDigits=2, suppressOutput=True)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Persistence.\+Cubical\+\_\+\+Perseus (
+\begin{DoxyParamCaption}
+\item[{}]{M, }
+\item[{}]{num\+Digits = {\ttfamily 2}, }
+\item[{}]{suppress\+Output = {\ttfamily True}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_aa583aa9a694aeaa3983e77319ac68e84}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_aa583aa9a694aeaa3983e77319ac68e84}
+\begin{DoxyVerb}Computes persistence for a matrix of function values.
+Uses Vidit Nanda's perseus.
+Notes:
+- perseus must be in the bash path
+- matrix must be 2-dimensional
+
+TODO: Update this to accept higher dimensional cubical complexes
+
+Parameters
+----------
+M
+    a 2D numpy array
+numDigits
+    Perseus only accepts positive integer valued matrices.  To 
+    compensate, we apply the transformation 
+            x -> x* (10**numDigits) + M.min()
+    then calculate persistence on the resulting matrix.
+    The persistence diagram birth/death times are then converted
+    back via the inverse transform.
+suppressOutput
+    If true, gets rid of printed output from perseus.
+
+Outputs
+-------
+Dgms
+    A dictionary with integer keys 0,1,...,N 
+    The key gives the dimension of the persistence diagram.\end{DoxyVerb}
+ \index{teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}!dist\+Mat\+\_\+\+Ripser@{dist\+Mat\+\_\+\+Ripser}}
+\index{dist\+Mat\+\_\+\+Ripser@{dist\+Mat\+\_\+\+Ripser}!teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}}
+\subsubsection[{\texorpdfstring{dist\+Mat\+\_\+\+Ripser(dist\+Mat, max\+Dim=1)}{distMat_Ripser(distMat, maxDim=1)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Persistence.\+dist\+Mat\+\_\+\+Ripser (
+\begin{DoxyParamCaption}
+\item[{}]{dist\+Mat, }
+\item[{}]{max\+Dim = {\ttfamily 1}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a5d253547a9b956b8d5169808f31b42d2}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a5d253547a9b956b8d5169808f31b42d2}
+\begin{DoxyVerb}Computes persistence up to maxDim using Uli Bauer's Ripser
+Needs to be installed on machine in advance
+https://github.com/Ripser/ripser 
+
+
+Parameters
+----------
+distMat -
+    A distance matrix given as a NxN numpy array
+maxDim -
+    An integer representing the maximum dimension
+    for computing persistent homology
+
+Returns
+-------
+Dgms -  
+    A dictionary where Dgms[k] is a lx2 matrix 
+    giving points in the k-dimensional pers diagram\end{DoxyVerb}
+ \index{teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}!prepare\+Folders@{prepare\+Folders}}
+\index{prepare\+Folders@{prepare\+Folders}!teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}}
+\subsubsection[{\texorpdfstring{prepare\+Folders()}{prepareFolders()}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Persistence.\+prepare\+Folders (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_aa767596a9f61323ef4e489e42890cd45}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_aa767596a9f61323ef4e489e42890cd45}
+\begin{DoxyVerb}Checks that necessary folder structure system exists.
+Empties out all previously saved files to avoid confusion.
+\end{DoxyVerb}
+ \index{teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}!read\+Perseus\+Output@{read\+Perseus\+Output}}
+\index{read\+Perseus\+Output@{read\+Perseus\+Output}!teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}}
+\subsubsection[{\texorpdfstring{read\+Perseus\+Output(output\+File\+Name)}{readPerseusOutput(outputFileName)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Persistence.\+read\+Perseus\+Output (
+\begin{DoxyParamCaption}
+\item[{}]{output\+File\+Name}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a3d273210437e69be2df595ed1751c661}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a3d273210437e69be2df595ed1751c661}
+\begin{DoxyVerb}Reads in the diagrams in the format that perseus uses.
+Returns a dictionary with integer keys representing the 
+dimension of each diagram.
+\end{DoxyVerb}
+ \index{teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}!V\+R\+\_\+\+Perseus@{V\+R\+\_\+\+Perseus}}
+\index{V\+R\+\_\+\+Perseus@{V\+R\+\_\+\+Perseus}!teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}}
+\subsubsection[{\texorpdfstring{V\+R\+\_\+\+Perseus(\+P, dim=1, max\+Radius=3, num\+Steps=100, step\+Size=\+None, suppress\+Output=\+True)}{VR_Perseus(P, dim=1, maxRadius=3, numSteps=100, stepSize=None, suppressOutput=True)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Persistence.\+V\+R\+\_\+\+Perseus (
+\begin{DoxyParamCaption}
+\item[{}]{P, }
+\item[{}]{dim = {\ttfamily 1}, }
+\item[{}]{max\+Radius = {\ttfamily 3}, }
+\item[{}]{num\+Steps = {\ttfamily 100}, }
+\item[{}]{step\+Size = {\ttfamily None}, }
+\item[{}]{suppress\+Output = {\ttfamily True}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_ae3954f45636c5f88b8e7cb7b422eea3d}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_ae3954f45636c5f88b8e7cb7b422eea3d}
+\begin{DoxyVerb}Does brips version of perseus.
+Computes VR persitsence on points in Euclidean space.
+
+Warnings:
+1) Requires choice of maxRadius, numSteps, and/or stepSize. 
+   Bad choices will give junk results.
+2) TODO: This appears to spit out radius rather than diameter
+   persistence computations.  Need to figure this out and 
+   make the choice uniform across outputs.
+
+
+Parameters
+----------
+P
+    An NxD array.  Represents N points in R^D.
+maxRadius
+stepSize
+numSteps
+    Perseus requires that you decide how many steps, and how wide they are, rather than computing all possible topological changes.  So, persistence will be calculated from parameter 0 until 
+    maxRadius = stepSize*numSteps.
+    Only 2 of the three entries should be passed.  
+    If numSteps and stepSize are passed (regardless of whether maxRadius is passed), they will be used for the computation.  Otherwise, the two non-none valued entries will be used to calculate the third.
+
+suppressOutput
+    If true, gets rid of printed output from perseus.
+
+Outputs
+-------
+Dgms
+    A dictionary with integer keys 0,1,...,N 
+    The key gives the dimension of the persistence diagram.\end{DoxyVerb}
+ \index{teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}!V\+R\+\_\+\+Ripser@{V\+R\+\_\+\+Ripser}}
+\index{V\+R\+\_\+\+Ripser@{V\+R\+\_\+\+Ripser}!teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}}
+\subsubsection[{\texorpdfstring{V\+R\+\_\+\+Ripser(\+P, max\+Dim=1)}{VR_Ripser(P, maxDim=1)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Persistence.\+V\+R\+\_\+\+Ripser (
+\begin{DoxyParamCaption}
+\item[{}]{P, }
+\item[{}]{max\+Dim = {\ttfamily 1}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_ae38f90d312da5c7fb8587a2f44e67b8a}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_ae38f90d312da5c7fb8587a2f44e67b8a}
+\begin{DoxyVerb}Computes persistence up to dimension maxDim using Uli Bauer's Ripser
+Needs to be installed on machine in advance
+https://github.com/Ripser/ripser 
+
+
+Parameters
+----------
+P -
+    A point cloud as an NxD numpy array.
+    N is the number of points, D is the dimension of
+    Euclidean space.
+maxDim -
+    An integer representing the maximum dimension
+    for computing persistent homology
+
+Returns
+-------
+Dgms -  
+    A dictionary where Dgms[k] is a lx2 matrix 
+    giving points in the k-dimensional pers diagram\end{DoxyVerb}
+ \index{teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}!write\+Matrix\+File\+For\+Perseus@{write\+Matrix\+File\+For\+Perseus}}
+\index{write\+Matrix\+File\+For\+Perseus@{write\+Matrix\+File\+For\+Perseus}!teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}}
+\subsubsection[{\texorpdfstring{write\+Matrix\+File\+For\+Perseus(\+M, filesavename)}{writeMatrixFileForPerseus(M, filesavename)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Persistence.\+write\+Matrix\+File\+For\+Perseus (
+\begin{DoxyParamCaption}
+\item[{}]{M, }
+\item[{}]{filesavename}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a7ee47776929d1ade75b059415918a328}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a7ee47776929d1ade75b059415918a328}
+\begin{DoxyVerb}Given 2D matrix M, write into file format read by Perseus.
+Info on format can be found at: 
+http://people.maths.ox.ac.uk/nanda/perseus/index.html
+
+TODO: Set this up to work with higher-dimensional cubical complexes
+\end{DoxyVerb}
+ \index{teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}!write\+Point\+Cloud\+File\+For\+Perseus@{write\+Point\+Cloud\+File\+For\+Perseus}}
+\index{write\+Point\+Cloud\+File\+For\+Perseus@{write\+Point\+Cloud\+File\+For\+Perseus}!teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}}
+\subsubsection[{\texorpdfstring{write\+Point\+Cloud\+File\+For\+Perseus(\+P, filename, step\+Size=.\+1, num\+Steps=500)}{writePointCloudFileForPerseus(P, filename, stepSize=.1, numSteps=500)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Persistence.\+write\+Point\+Cloud\+File\+For\+Perseus (
+\begin{DoxyParamCaption}
+\item[{}]{P, }
+\item[{}]{filename, }
+\item[{}]{step\+Size = {\ttfamily .1}, }
+\item[{}]{num\+Steps = {\ttfamily 500}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a074e092c57bca5b1652c7b2a2c41f603}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a074e092c57bca5b1652c7b2a2c41f603}
+\begin{DoxyVerb}Writes the point cloud to a file in the perseus format.
+
+Notes:
+    Vidit has options for radius scaling factor. TODO: Figure out if this should be 1 or 2
+
+Parameters
+----------
+P
+    An NxD array.  Represents N points in R^D.
+filename
+    location for saving the file
+stepSize
+numSteps
+    Perseus requires that you decide how many steps, and how wide they are, rather than computing all possible topological changes.  So, persistence will be calculated from parameter 0 until stepSize*numSteps.\end{DoxyVerb}
+ 

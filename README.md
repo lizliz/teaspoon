@@ -61,6 +61,12 @@ Again, this is the developer version of the installation.  Eventually, we will w
 python setup.py install
 ```
 
+Documentation
+=============
+
+Documentation is done using [doxygen](http://www.doxygen.org).  Documentation can be found in the [doc folder](https://gitlab.msu.edu/TSAwithTDA/teaspoon/doc/html/index.html).  Further info can be found in the [contributing](https://gitlab.msu.edu/TSAwithTDA/teaspoon/blob/master/CONTRIBUTING.md) page.
+
+
 Contributing
 =============
 

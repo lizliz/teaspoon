@@ -1,0 +1,222 @@
+\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud}{}\section{teaspoon.\+Make\+Data.\+Point\+Cloud Namespace Reference}
+\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud}\index{teaspoon.\+Make\+Data.\+Point\+Cloud@{teaspoon.\+Make\+Data.\+Point\+Cloud}}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a89af9aed6706a0a5ee9a2cbeec801db2}{Circle} (N=100, r=1, seed=None)
+\item 
+def \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_af130e51668240f775bca4ff195be2bea}{Sphere} (N=100, r=1, noise=0, seed=None)
+\item 
+def \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a3720c7f39eecd56c7e4375cc0feef4ed}{Annulus} (N=200, r=1, R=2, seed=None)
+\item 
+def \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a85b2e43a1f8feda494c13d9c8537c0a2}{Torus} (N=100, r=1, R=2, seed=None)
+\item 
+def \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_ad2738d11d9b3018aab5d163587239518}{Cube} (N=100, diam=1, dim=2, seed=None)
+\item 
+def \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a130af3abbe5cb02a99c3f64d3f3dd979}{Clusters} (N=100, centers=np.\+array(((0, 0),(3, 3))), sd=1, seed=None)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyVerb}Generates point clouds of different types.  
+
+Currently goals are:
+1) Circle
+2) Annulus
+3) Ellipse (Buggy)
+4) Torus
+
+All point clouds should be returned as a numpy array, 
+\end{DoxyVerb}
+ 
+
+\subsection{Function Documentation}
+\index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Annulus@{Annulus}}
+\index{Annulus@{Annulus}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
+\subsubsection[{\texorpdfstring{Annulus(\+N=200, r=1, R=2, seed=\+None)}{Annulus(N=200, r=1, R=2, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Annulus (
+\begin{DoxyParamCaption}
+\item[{}]{N = {\ttfamily 200}, }
+\item[{}]{r = {\ttfamily 1}, }
+\item[{}]{R = {\ttfamily 2}, }
+\item[{}]{seed = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a3720c7f39eecd56c7e4375cc0feef4ed}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a3720c7f39eecd56c7e4375cc0feef4ed}
+\begin{DoxyVerb}Returns point cloud sampled from uniform distribution on  
+annulus in R^2 of inner radius r and outer radius R
+
+Parameters
+----------
+N -
+    Number of points to generate
+r -
+    Inner radius of the annulus
+R -
+    Outer radius of the annulus
+seed -
+    Fixes the seed.  Good if we want to replicate results.
+
+
+Returns
+-------
+P -  
+    A Nx2 numpy array with the points drawn as the rows.\end{DoxyVerb}
+ \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Circle@{Circle}}
+\index{Circle@{Circle}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
+\subsubsection[{\texorpdfstring{Circle(\+N=100, r=1, seed=\+None)}{Circle(N=100, r=1, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Circle (
+\begin{DoxyParamCaption}
+\item[{}]{N = {\ttfamily 100}, }
+\item[{}]{r = {\ttfamily 1}, }
+\item[{}]{seed = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a89af9aed6706a0a5ee9a2cbeec801db2}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a89af9aed6706a0a5ee9a2cbeec801db2}
+\begin{DoxyVerb}Generate N points in R^2 from the circle centered
+at the origin with radius r.
+
+Parameters
+----------
+N -
+    Number of points to generate
+r -
+    Radius of the circle
+seed -
+    Fixes the seed.  Good if we want to replicate results.
+
+
+Returns
+-------
+P -  
+    A Nx2 numpy array with the points drawn as the rows.\end{DoxyVerb}
+ \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Clusters@{Clusters}}
+\index{Clusters@{Clusters}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
+\subsubsection[{\texorpdfstring{Clusters(\+N=100, centers=np.\+array(((0, 0),(3, 3))), sd=1, seed=\+None)}{Clusters(N=100, centers=np.array(((0, 0),(3, 3))), sd=1, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Clusters (
+\begin{DoxyParamCaption}
+\item[{}]{N = {\ttfamily 100}, }
+\item[{}]{centers = {\ttfamily np.array(((0,0),(3,3)))}, }
+\item[{}]{sd = {\ttfamily 1}, }
+\item[{}]{seed = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a130af3abbe5cb02a99c3f64d3f3dd979}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a130af3abbe5cb02a99c3f64d3f3dd979}
+\begin{DoxyVerb}Generate k clusters of points, N points in total (evenly divided?)
+centers is a k x d numpy array, where centers[i,:] is the center of 
+the ith cluster in R^d.
+Points are drawn from a normal distribution with std dev = sd
+
+Parameters
+----------
+N -
+    Number of points to be generated
+centers -
+    k x d numpy array, where centers[i,:] is the center of 
+    the ith cluster in R^d.
+
+sd - 
+    standard deviation of clusters.
+    TODO: Make this enterable as a vector so each cluster can have
+    a different sd?
+seed -
+    Fixes the seed.  Good if we want to replicate results.
+
+Returns
+-------
+P -  
+    A Nxd numpy array with the points drawn as the rows.\end{DoxyVerb}
+ \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Cube@{Cube}}
+\index{Cube@{Cube}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
+\subsubsection[{\texorpdfstring{Cube(\+N=100, diam=1, dim=2, seed=\+None)}{Cube(N=100, diam=1, dim=2, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Cube (
+\begin{DoxyParamCaption}
+\item[{}]{N = {\ttfamily 100}, }
+\item[{}]{diam = {\ttfamily 1}, }
+\item[{}]{dim = {\ttfamily 2}, }
+\item[{}]{seed = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_ad2738d11d9b3018aab5d163587239518}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_ad2738d11d9b3018aab5d163587239518}
+\begin{DoxyVerb}Generate N points in R^dim from the box
+[0,diam]x[0,diam]x...x[0,diam]
+
+Parameters
+----------
+N -
+    Number of points to generate
+diam -
+    Points are pulled from the box 
+    [0,diam]x[0,diam]x...x[0,diam]
+dim -
+    Points are embedded in R^dim
+
+Returns
+-------
+P -  
+    A Nxdim numpy array with the points drawn as the rows.\end{DoxyVerb}
+ \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Sphere@{Sphere}}
+\index{Sphere@{Sphere}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
+\subsubsection[{\texorpdfstring{Sphere(\+N=100, r=1, noise=0, seed=\+None)}{Sphere(N=100, r=1, noise=0, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Sphere (
+\begin{DoxyParamCaption}
+\item[{}]{N = {\ttfamily 100}, }
+\item[{}]{r = {\ttfamily 1}, }
+\item[{}]{noise = {\ttfamily 0}, }
+\item[{}]{seed = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_af130e51668240f775bca4ff195be2bea}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_af130e51668240f775bca4ff195be2bea}
+\begin{DoxyVerb}Generate N points in R^3 from the sphere centered
+at the origin with radius r.
+If noise is set to a positive number, the points 
+can be at distance r +/- noise from the origin.
+
+Parameters
+----------
+N -
+    Number of points to generate
+r -
+    Radius of the sphere
+seed -
+    Fixes the seed.  Good if we want to replicate results.
+
+
+Returns
+-------
+P -  
+    A Nx3 numpy array with the points drawn as the rows.\end{DoxyVerb}
+ \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Torus@{Torus}}
+\index{Torus@{Torus}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
+\subsubsection[{\texorpdfstring{Torus(\+N=100, r=1, R=2, seed=\+None)}{Torus(N=100, r=1, R=2, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Torus (
+\begin{DoxyParamCaption}
+\item[{}]{N = {\ttfamily 100}, }
+\item[{}]{r = {\ttfamily 1}, }
+\item[{}]{R = {\ttfamily 2}, }
+\item[{}]{seed = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a85b2e43a1f8feda494c13d9c8537c0a2}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a85b2e43a1f8feda494c13d9c8537c0a2}
+\begin{DoxyVerb}Sampling method taken from Sampling from a Manifold by Diaconis, 
+Holmes and Shahshahani, arXiv:1206.6913
+
+Generates torus with points
+x = ( R + r*cos(theta) ) * cos(psi),  
+y = ( R + r*cos(theta) ) * sin(psi),
+z = r * sin(theta)
+
+Need to draw theta with distribution
+
+g(theta) = (1+ r*cos(theta)/R ) / (2pi) on 0 <= theta < 2pi
+
+and psi with uniform density on [0,2pi).
+
+For theta, draw theta uniformly from [0,2pi) and 
+eta from [1-r/R,1+r/R].  If eta< 1 + (r/R) cos(theta), return theta.
+
+Parameters
+----------
+N -
+    Number of points to generate
+r -
+    Inner radius of the torus
+R -
+    Outer radius of the torus
+seed -
+    Fixes the seed.  Good if we want to replicate results.
+
+
+Returns
+-------
+P -  
+    A Nx3 numpy array with the points drawn as the rows.\end{DoxyVerb}
+ 
