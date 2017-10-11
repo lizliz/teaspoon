@@ -224,7 +224,7 @@ def writePointCloudFileForPerseus(P,filename,
 # 
 # @return 
 #     A dictionary with integer keys 0,1,...,N 
-    The key gives the dimension of the persistence diagram.
+#    The key gives the dimension of the persistence diagram.
 def VR_Perseus(P,dim = 1, 
             maxRadius = 3, numSteps = 100, stepSize = None,
             suppressOutput = True):

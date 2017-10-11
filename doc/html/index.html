@@ -14,6 +14,12 @@
 <script type="text/javascript">
   $(document).ready(function() { init_search(); });
 </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -22,6 +28,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="teaspoon.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">teaspoon
    </div>
@@ -85,22 +92,27 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <li><a href="http://www.firaskhasawneh.com">Firas Khasawneh</a></li>
 <li>Brian Bollen</li>
 </ul>
+<h1>Locations </h1>
+<ul>
+<li><b>Code</b>: <a href="https://gitlab.msu.edu/TSAwithTDA/teaspoon">http://gitlab.msu.edu/TSAwithTDA/teaspoon</a>.</li>
+<li><b>Documentation</b>: <a href="http://elizabethmunch.com/math/teaspoon/index.html">http://elizabethmunch.com/math/teaspoon/index.html</a></li>
+</ul>
 <h1>Requirements </h1>
 <p>Please note that this code is still pre-alpha, so many things are not fully up and running yet.</p>
 <p>Bugs reports and feature reqests can be posted on the <a href="https://gitlab.msu.edu/TSAwithTDA/teaspoon/issues">gitlab issues</a> page.</p>
-<p>In order to use all wrappers in teaspoon.TDA, the following need to be installed so they can be run command line. Note: the teaspoon installation will not install or check for their install.</p>
+<p>In order to use all wrappers in teaspoon.TDA, the following need to be installed so they can be run command line.</p>
 <ul>
 <li><a href="https://github.com/Ripser/ripser">Ripser</a>. Code by Ulrich Bauer for computing persistent homology of a point cloud or distance matrix.</li>
 <li><a href="http://people.maths.ox.ac.uk/nanda/perseus/index.html">Perseus</a>. Code by Vidit Nanda for computing persistent homology of point clouds, cubical complexes, and distance matrices.</li>
 <li><a href="https://bitbucket.org/grey_narn/hera">Hera</a>. Code by Michael Kerber, Dmitriy Morozov, and Arnur Nigmetov for computing bottleneck and Wasserstein distances.</li>
 </ul>
+<p><span style="color:red">Warning</span>: the teaspoon installation will not install nor check for the install of these packages. In particular, perseus should be installed so that typing <code>perseus</code> runs it, even though some operating systems end up with an executable with a different name.</p>
 <h1>Installation </h1>
 <h3>Warning:</h3>
-<p>This code is still pre-alpha. In particular, using the pip install seems to be finicky at best. <em>TODO: Need to find someone who knows more about pip install to fix this up.</em> <b>If you are having installation issues, please make a note of what you've done, including copying error message outputs, as a comment into the <a href="https://gitlab.msu.edu/TSAwithTDA/teaspoon/issues/1">installation issue on gitlab</a> so we can start figuring out what is up with this system.</b></p>
+<p>This code is still pre-alpha. In particular, using the pip install seems to be finicky at best. If you are having installation issues, please make a note of what you've done, including copying error message outputs, as a comment into the <a href="https://gitlab.msu.edu/TSAwithTDA/teaspoon/issues/1">installation issue on gitlab</a> so we can start figuring out what is up with this system.</p>
 <h3>Installing using pip:</h3>
 <p>As this code is still pre-alpha, your best bet is to cd into the folder containing teaspoon (should have setup.py there) and run</p>
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;pip install -e .</div></div><!-- fragment --><p>This is the developmental installion for pip. When things get more stable, we can remove the -e part.</p>
-<h3>Installing using python:</h3>
+<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;pip install .</div></div><!-- fragment --><p>If you want the developmental installation for pip run </p><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;pip install -e .</div></div><!-- fragment --><p> When things get more stable, we can remove the -e part. If you already have teaspoon installed but want to update to a newer version, run </p><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;pip install -U .</div></div><!-- fragment --><h3>Installing using python:</h3>
 <p>According to the internet, the pip version of install appears to be better. However, if you don't use pip, another option is to cd into the teaspoon directory and run:</p>
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;python setup.py develop</div></div><!-- fragment --><p>Again, this is the developer version of the installation. Eventually, we will want to be doing</p>
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;python setup.py install</div></div><!-- fragment --><h1>Documentation </h1>

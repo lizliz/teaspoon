@@ -4,7 +4,7 @@
 \begin{DoxyCompactItemize}
 \item 
 def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_distance_ad3481b3888962dbf302bacb9d9504e8b}{dgm\+Dist\+\_\+\+Hera} (D1, D2, wass\+Deg=\textquotesingle{}Bottleneck\textquotesingle{}, rel\+Error=None, internal\+\_\+p=None)
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Computes the distance using the geom\+\_\+bottleneck and geom\+\_\+matching code from \href{https://bitbucket.org/grey_narn/hera}{\tt Hera}. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
@@ -28,65 +28,67 @@ Has code for computing pairwise distance for diagrams.
 \item[{}]{internal\+\_\+p = {\ttfamily None}}
 \end{DoxyParamCaption}
 )}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_distance_ad3481b3888962dbf302bacb9d9504e8b}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_distance_ad3481b3888962dbf302bacb9d9504e8b}
-\begin{DoxyVerb}TODO: This documentation needs cleaning and updating.
-
-Computes the distance using the geom_bottleneck and geom_matching code
-from hera, found at https://bitbucket.org/grey_narn/hera
-
-Need to build the C++ code, then add bottleneck_dist folder and wasserstein_dist to path
-On Liz's machine, this involves adding the following lines to the ~/.bashrc
-    export PATH="/home/liz/Dropbox/Math/Code/hera/geom_matching/wasserstein/build:$PATH"
-    export PATH="/home/liz/Dropbox/Math/Code/hera/geom_bottleneck/build/example:$PATH"
 
 
-Default values for wasserstein_dist from Hera: 
+Computes the distance using the geom\+\_\+bottleneck and geom\+\_\+matching code from \href{https://bitbucket.org/grey_narn/hera}{\tt Hera}. 
+
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000001}{Todo}]This documentation needs cleaning and updating.\end{DoxyRefDesc}
 
 
+Need to build the C++ code, then add bottleneck\+\_\+dist folder and wasserstein\+\_\+dist to path On Liz\textquotesingle{}s machine, this involves adding the following lines to the $\sim$/.bashrc export P\+A\+TH=\char`\"{}/home/liz/\+Dropbox/\+Math/\+Code/hera/geom\+\_\+matching/wasserstein/build\+:\$\+P\+A\+T\+H\char`\"{} export P\+A\+TH=\char`\"{}/home/liz/\+Dropbox/\+Math/\+Code/hera/geom\+\_\+bottleneck/build/example\+:\$\+P\+A\+T\+H\char`\"{}
 
-internal_p must be in $[1.0, \infinity]$ (to explicitly set internal_p to $\infinity$, supply inf).By default wasserstein degree is 1.0, relative error is 0.01, internal norm is l_infinity.
+Default values for wasserstein\+\_\+dist from Hera\+:
 
-hera input format:
-bottleneck_dist file1 file2  [relative_error]
-wasserstein_dist file1 file2  [wasserstein degree] [relative error] [internal norm] 
+internal\+\_\+p must be in $[1.0, \infty]$ (to explicitly set internal\+\_\+p to $\infty$, supply inf).By default wasserstein degree is 1.\+0, relative error is 0.\+01, internal norm is l\+\_\+infinity.
 
-
-
-Parameters
-----------
-D1, D2
-    Persistence diagrams given as Lx2 numpy arrays.
-wassDeg
-    Options are:
-    - 'Bottleneck' or anything containing 'bot'
-        Runs the bottleneck_dist command
-    - np.inf 
-        Also returns bottleneck distance with the bottleneck_dist command
-    - an integer q 
-        Computes the q-th Wasserstein distance
-relError
-    - An input to both bottleneck_dist and wasserstein_dist.
-
-      For wasserstein_dist from hera documentation:
-        If two diagrams are equal, then the exact distance 0.0 is printed (the order of points in file1 and file2 need not be the same).
-        Otherwise the output is an approximation of the exact distance. Precisely:
-        if d_exact is the true distance and d_approx is the output, then 
-
-            | d_exact - d_approx | / d_exact < relative_error.
-
-      For bottleneck_dist from hera documentation:
-        If two diagrams are equal, then the exact distance 0.0 is printed (the order of points in file1 and file2 need not be the same). Otherwise the output is an approximation of the exact distance. Precisely: if d_exact is the true distance and d_approx is the output, then 
-            | d_exact - d_approx | / d_exact < relative_error.
-    - Default value in Hera is 0.01 for Wasserstein distance and 0 (exact computation) for bottleneck distance. 
-    - Values passed to hera must be positive. TODO: Does this mean strictly positive? What is the behavior when passing 0?
-internal_p
-    This is only controllable for Wasserstein distance computation.  Matched points are measured by $L_p$ distance.
-    Default is internal_p = infinity.
-    TODO: Check that bottleneck_dist uses infinity even though it doesn't explicitly say so in the documentation.
+hera input format\+: 
+\begin{DoxyCode}
+1 bottleneck\_dist file1 file2  [relative\_error]
+2 wasserstein\_dist file1 file2  [wasserstein degree] [relative error] [internal norm] 
+\end{DoxyCode}
 
 
+\subsubsection*{Parameters }
 
-Returns
--------
-distance
-    - a float for the distance between the diagrams\end{DoxyVerb}
- 
+
+\begin{DoxyParams}{Parameters}
+{\em D1} & \\
+\hline
+{\em D2} & \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence}{Persistence} diagrams given as Lx2 numpy arrays. \\
+\hline
+{\em wass\+Deg} & Options are\+:
+\begin{DoxyItemize}
+\item \textquotesingle{}Bottleneck\textquotesingle{} or anything containing \textquotesingle{}bot\textquotesingle{} Runs the bottleneck\+\_\+dist command
+\item np.\+inf Also returns bottleneck distance with the bottleneck\+\_\+dist command
+\item an integer q Computes the q-\/th Wasserstein distance 
+\end{DoxyItemize}\\
+\hline
+{\em rel\+Error} & 
+\begin{DoxyItemize}
+\item An input to both bottleneck\+\_\+dist and wasserstein\+\_\+dist.
+\begin{DoxyItemize}
+\item For wasserstein\+\_\+dist from hera documentation\+: If two diagrams are equal, then the exact distance 0.\+0 is printed (the order of points in file1 and file2 need not be the same). Otherwise the output is an approximation of the exact distance. Precisely\+: if d\+\_\+exact is the true distance and d\+\_\+approx is the output, then \begin{DoxyVerb}\frac{| d_{exact} - d_{approx} |}{ d_{exact} } < \mathrm{relativeError}.
+\end{DoxyVerb}
+
+\item For bottleneck\+\_\+dist from hera documentation\+: If two diagrams are equal, then the exact distance 0.\+0 is printed (the order of points in file1 and file2 need not be the same). Otherwise the output is an approximation of the exact distance. Precisely\+: if d\+\_\+exact is the true distance and d\+\_\+approx is the output, then \[ \frac{| d_{exact} - d_{approx} |}{ d_{exact} } < \mathrm{relativeError}. \]
+\end{DoxyItemize}
+\item Default value in Hera is 0.\+01 for Wasserstein distance and 0 (exact computation) for bottleneck distance.
+\item Values passed to hera must be positive.
+\end{DoxyItemize}\\
+\hline
+\end{DoxyParams}
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000002}{Todo}]\+: Does this mean strictly positive? What is the behavior when passing 0? \end{DoxyRefDesc}
+
+\begin{DoxyParams}{Parameters}
+{\em internal\+\_\+p} & This is only controllable for Wasserstein distance computation. Matched points are measured by $L_p$ distance. Default is internal\+\_\+p = infinity. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000003}{Todo}]\+: Check that bottleneck\+\_\+dist uses infinity even though it doesn\textquotesingle{}t explicitly say so in the documentation.\end{DoxyRefDesc}
+
+
+\begin{DoxyReturn}{Returns}
+A float for the distance between the diagrams 
+\end{DoxyReturn}

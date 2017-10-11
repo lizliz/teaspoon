@@ -14,6 +14,12 @@
 <script type="text/javascript">
   $(document).ready(function() { init_search(); });
 </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    extensions: ["tex2jax.js"],
+    jax: ["input/TeX","output/HTML-CSS"],
+});
+</script><script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js"></script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
@@ -22,6 +28,7 @@
 <table cellspacing="0" cellpadding="0">
  <tbody>
  <tr style="height: 56px;">
+  <td id="projectlogo"><img alt="Logo" src="teaspoon.png"/></td>
   <td id="projectalign" style="padding-left: 0.5em;">
    <div id="projectname">teaspoon
    </div>
@@ -193,7 +200,7 @@ dictionary&#160;</td><td class="memItemRight" valign="bottom"><b>Dgms</b> = {}</
 <li>matrix must be 2-dimensional</li>
 </ul>
 </dd></dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>Update this to accept higher dimensional cubical complexes</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>Update this to accept higher dimensional cubical complexes</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">M</td><td>a 2D numpy array </td></tr>
@@ -218,7 +225,7 @@ dictionary&#160;</td><td class="memItemRight" valign="bottom"><b>Dgms</b> = {}</
         </tr>
       </table>
 </div><div class="memdoc">
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd></dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd></dd></dl>
 
 </div>
 </div>
@@ -320,7 +327,7 @@ dictionary&#160;</td><td class="memItemRight" valign="bottom"><b>Dgms</b> = {}</
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>A dictionary with integer keys 0,1,...,N </dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A dictionary with integer keys 0,1,...,N The key gives the dimension of the persistence diagram. </dd></dl>
 
 </div>
 </div>

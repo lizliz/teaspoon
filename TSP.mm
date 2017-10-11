@@ -3,11 +3,38 @@
 <node CREATED="1498764738275" ID="ID_447403705" MODIFIED="1499007808955" TEXT="TSP">
 <node CREATED="1498764747810" ID="ID_592386528" MODIFIED="1499522011852" POSITION="right" TEXT="TDA">
 <node CREATED="1499008102554" ID="ID_478520211" MODIFIED="1499008116607" TEXT="Persistence">
-<node CREATED="1498764834181" ID="ID_258783488" MODIFIED="1499385999275" TEXT="imagePers(M,numDigits=2)"/>
-<node CREATED="1499389321907" ID="ID_1068356798" MODIFIED="1499389332993" TEXT="VRperseus()"/>
+<node CREATED="1498764834181" ID="ID_258783488" MODIFIED="1503411318619" TEXT="Cubical_Perseus(M,numDigits=2)">
+<icon BUILTIN="button_ok"/>
+</node>
+<node CREATED="1499389321907" ID="ID_1068356798" MODIFIED="1503411291950" TEXT="VR_Perseus(.....)">
+<richcontent TYPE="NOTE"><html>
+  <head>
+    
+  </head>
+  <body>
+    <p>
+      VR_Perseus(P, dim=1, maxRadius=3, numSteps=100, stepSize=None, suppressOutput=True)
+    </p>
+  </body>
+</html>
+</richcontent>
+<icon BUILTIN="button_ok"/>
+</node>
+<node CREATED="1503411190456" ID="ID_1426537941" MODIFIED="1503411340001" TEXT="VR_Ripser(P,maxDim=1)">
+<icon BUILTIN="button_ok"/>
+</node>
+<node CREATED="1503411366069" ID="ID_847457640" MODIFIED="1503411397626" TEXT="distMat_Ripser(distMat, maxdim =1)">
+<icon BUILTIN="button_ok"/>
+</node>
+<node CREATED="1503411382663" ID="ID_559082998" MODIFIED="1503411404486" TEXT="distMat_Perseus()">
+<icon BUILTIN="button_cancel"/>
+</node>
 </node>
 <node CREATED="1499008123077" ID="ID_820071558" MODIFIED="1499008126538" TEXT="Distance">
-<node CREATED="1498764902202" ID="ID_1336731532" MODIFIED="1498765147282" TEXT="DgmDist()"/>
+<node CREATED="1498764902202" ID="ID_1336731532" MODIFIED="1503426440409" TEXT="dgmDist_Hera(D1,D2,wassDeg=&apos;Bottleneck&apos;, relError=None, internal_p = None))">
+<font NAME="Noto Sans CJK TC Black" SIZE="12"/>
+<icon BUILTIN="button_ok"/>
+</node>
 </node>
 </node>
 <node CREATED="1498764812377" ID="ID_1315527511" MODIFIED="1499008265353" POSITION="right" TEXT="Draw">
