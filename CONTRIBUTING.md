@@ -11,7 +11,7 @@ While I'm sure this workflow will change as we go, here are some links to get yo
 
 When you're going to start messing with something, create a branch for it.  This will likely just be done on your local machine.  When you think it's ready to be merged into the master branch, go to the merge request page on gilab and submit your merge request.
 
-Disscussions, comments, and updates can be done on the gitlab merge request page.  
+Discussions, comments, and updates can be done on the gitlab merge request page.  
 
 # Documentation
 

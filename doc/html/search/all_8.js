@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['writematrixfileforperseus',['writeMatrixFileForPerseus',['../namespaceteaspoon_1_1_t_d_a_1_1_persistence.html#a7ee47776929d1ade75b059415918a328',1,'teaspoon::TDA::Persistence']]]
+  ['sphere',['Sphere',['../namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#af130e51668240f775bca4ff195be2bea',1,'teaspoon::MakeData::PointCloud']]]
 ];

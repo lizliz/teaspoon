@@ -1,0 +1,133 @@
+\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents}{}\section{teaspoon.\+M\+L.\+tents Namespace Reference}
+\label{namespaceteaspoon_1_1_m_l_1_1tents}\index{teaspoon.\+M\+L.\+tents@{teaspoon.\+M\+L.\+tents}}
+
+
+Machine learning featurization method.  
+
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket}{Parameter\+Bucket}
+\begin{DoxyCompactList}\small\item\em A class for storing all of the chosen parameters for a data frame and computation of ML. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_a7e54522bba1f674736551ec0522828fa}{tent} (x, y, i, j, delta=1, epsilon=0)
+\begin{DoxyCompactList}\small\item\em Evaluates the (i,j)th tent function on the point (x,y) in (birth, death) plane. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_a2656d1f10bf5c93cc9039a2d524c8bfd}{build\+\_\+\+Gm} (Dgm, d=10, delta=1, epsilon=0, return\+Square=False)
+\begin{DoxyCompactList}\small\item\em Generates row of features for the given diagram. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_a86c1ddf6fc99d9e3ab9cc05909983edb}{build\+\_\+G} (Dgms, d=10, delta=1, epsilon=0, max\+Power=1)
+\begin{DoxyCompactList}\small\item\em Builds matrix of features, where each row corresponds to an input persistence diagram. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Machine learning featurization method. 
+
+If you make use of this code, please cite the following paper\+: J.\+A. Perea, E. Munch, and F. Khasawneh. \char`\"{}\+Approximating Continuous Functions On Persistence Diagrams.\char`\"{} Preprint, 2017. 
+
+\subsection{Function Documentation}
+\index{teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}!build\+\_\+G@{build\+\_\+G}}
+\index{build\+\_\+G@{build\+\_\+G}!teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}}
+\subsubsection[{\texorpdfstring{build\+\_\+\+G(\+Dgms, d=10, delta=1, epsilon=0, max\+Power=1)}{build_G(Dgms, d=10, delta=1, epsilon=0, maxPower=1)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+M\+L.\+tents.\+build\+\_\+G (
+\begin{DoxyParamCaption}
+\item[{}]{Dgms, }
+\item[{}]{d = {\ttfamily 10}, }
+\item[{}]{delta = {\ttfamily 1}, }
+\item[{}]{epsilon = {\ttfamily 0}, }
+\item[{}]{max\+Power = {\ttfamily 1}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a86c1ddf6fc99d9e3ab9cc05909983edb}{}\label{namespaceteaspoon_1_1_m_l_1_1tents_a86c1ddf6fc99d9e3ab9cc05909983edb}
+
+
+Builds matrix of features, where each row corresponds to an input persistence diagram. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Dgms} & A list or pd.\+Series with length M. Each entry is an N x 2 numpy array with off diagonal points from the persistence diagram. \\
+\hline
+{\em d} & An integer, the number of elements for griding up the x and y axis of the diagram. Will result in $d\times(d+1)$ tent functions. \\
+\hline
+{\em delta} & Width of mesh elements for x and y axis of the diagram.\\
+\hline
+{\em epsilon} & The amount to shift the grid up. \\
+\hline
+{\em max\+Power} & We want to output a matrix with monomials in the given base features up to power max\+Power.\\
+\hline
+\end{DoxyParams}
+Specifically, the support in the (birth, death) plane is a parallelogram with vertices (0,0 + epsilon) (0,d$\ast$delta + epsilon) (d$\ast$delta, d$\ast$delta + epsilon) (d$\ast$delta,2$\ast$d$\ast$delta + epsilon)
+
+\begin{DoxyReturn}{Returns}
+G a numpy ndarray shape = d$\ast$(d+1)$\ast$choose( d$\ast$(d+1), max\+Power)
+\end{DoxyReturn}
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000002}{Todo}]Add figure for parallelogram. \end{DoxyRefDesc}
+\index{teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}!build\+\_\+\+Gm@{build\+\_\+\+Gm}}
+\index{build\+\_\+\+Gm@{build\+\_\+\+Gm}!teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}}
+\subsubsection[{\texorpdfstring{build\+\_\+\+Gm(\+Dgm, d=10, delta=1, epsilon=0, return\+Square=\+False)}{build_Gm(Dgm, d=10, delta=1, epsilon=0, returnSquare=False)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+M\+L.\+tents.\+build\+\_\+\+Gm (
+\begin{DoxyParamCaption}
+\item[{}]{Dgm, }
+\item[{}]{d = {\ttfamily 10}, }
+\item[{}]{delta = {\ttfamily 1}, }
+\item[{}]{epsilon = {\ttfamily 0}, }
+\item[{}]{return\+Square = {\ttfamily False}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a2656d1f10bf5c93cc9039a2d524c8bfd}{}\label{namespaceteaspoon_1_1_m_l_1_1tents_a2656d1f10bf5c93cc9039a2d524c8bfd}
+
+
+Generates row of features for the given diagram. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Dgms} & A list or pd.\+Series. Length = M. Each entry is an N x 2 numpy array with off diagonal points from the persistence diagram \\
+\hline
+{\em d} & An integer, the number of elements for griding up the x and y axis of the diagram. Will result in dx(d+1) tent functions \\
+\hline
+{\em delta} & Width of mesh elements for x and y axis of the diagram.\\
+\hline
+{\em epsilon} & The amount to shift the grid up. \\
+\hline
+{\em return\+Square} & Stops the code from doing the final flattening.\\
+\hline
+\end{DoxyParams}
+The resulting parallelogram in the diagram has vertices (0,0 + epsilon) (0,d$\ast$delta + epsilon) (d$\ast$delta, d$\ast$delta + epsilon) (d$\ast$delta,2$\ast$d$\ast$delta + epsilon)
+
+\begin{DoxyReturn}{Returns}
+A numpy ndarray with
+\begin{DoxyItemize}
+\item shape\+: {\ttfamily ( d$\ast$(d+1), )} if return\+Square = False
+\item entries\+: $ \displaystyle{\sum_{x \in Dgm}} g_{i,j}(x) $ for tent functions $g_{i,j}$ 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000001}{Todo}]Check for shape output if return\+Square = True. \end{DoxyRefDesc}
+\index{teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}!tent@{tent}}
+\index{tent@{tent}!teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}}
+\subsubsection[{\texorpdfstring{tent(x, y, i, j, delta=1, epsilon=0)}{tent(x, y, i, j, delta=1, epsilon=0)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+M\+L.\+tents.\+tent (
+\begin{DoxyParamCaption}
+\item[{}]{x, }
+\item[{}]{y, }
+\item[{}]{i, }
+\item[{}]{j, }
+\item[{}]{delta = {\ttfamily 1}, }
+\item[{}]{epsilon = {\ttfamily 0}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a7e54522bba1f674736551ec0522828fa}{}\label{namespaceteaspoon_1_1_m_l_1_1tents_a7e54522bba1f674736551ec0522828fa}
+
+
+Evaluates the (i,j)th tent function on the point (x,y) in (birth, death) plane. 
+
+Tent (i,j) evaluates to 1 at $x=i,y = j + i + \epsilon$ and diameter of support is controlled by $\delta$.
+
+We are shifting the entire grid up by a predetermined value epsilon. This is to keep the tent functions from being non-\/zero in every nbhd of the diagonal.
+
+
+\begin{DoxyParams}{Parameters}
+{\em x,y} & Point in persistence diagram given as (birth, death). This code assumes all points above diagonal, so y$>$x \\
+\hline
+{\em i,j} & Integers giving coordinate of the tent function.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$g_{i,j}(x,y)$ where \[g_{i,j}(x,y) = \bigg| 1- \max\left\{ \left|\frac{x}{\delta} - i\right|, \left|\frac{y-x}{\delta} - j\right|\right\} \bigg|_+\] where $| * |_+$ is positive part; equivalently, min of $*$ and 0. 
+\end{DoxyReturn}

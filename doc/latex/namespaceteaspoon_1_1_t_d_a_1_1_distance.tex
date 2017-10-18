@@ -33,7 +33,7 @@ Has code for computing pairwise distance for diagrams.
 Computes the distance using the geom\+\_\+bottleneck and geom\+\_\+matching code from \href{https://bitbucket.org/grey_narn/hera}{\tt Hera}. 
 
 \begin{DoxyRefDesc}{Todo}
-\item[\hyperlink{todo__todo000001}{Todo}]This documentation needs cleaning and updating.\end{DoxyRefDesc}
+\item[\hyperlink{todo__todo000003}{Todo}]This documentation needs cleaning and updating.\end{DoxyRefDesc}
 
 
 Need to build the C++ code, then add bottleneck\+\_\+dist folder and wasserstein\+\_\+dist to path On Liz\textquotesingle{}s machine, this involves adding the following lines to the $\sim$/.bashrc export P\+A\+TH=\char`\"{}/home/liz/\+Dropbox/\+Math/\+Code/hera/geom\+\_\+matching/wasserstein/build\+:\$\+P\+A\+T\+H\char`\"{} export P\+A\+TH=\char`\"{}/home/liz/\+Dropbox/\+Math/\+Code/hera/geom\+\_\+bottleneck/build/example\+:\$\+P\+A\+T\+H\char`\"{}
@@ -79,14 +79,14 @@ hera input format\+:
 \hline
 \end{DoxyParams}
 \begin{DoxyRefDesc}{Todo}
-\item[\hyperlink{todo__todo000002}{Todo}]\+: Does this mean strictly positive? What is the behavior when passing 0? \end{DoxyRefDesc}
+\item[\hyperlink{todo__todo000004}{Todo}]\+: Does this mean strictly positive? What is the behavior when passing 0? \end{DoxyRefDesc}
 
 \begin{DoxyParams}{Parameters}
 {\em internal\+\_\+p} & This is only controllable for Wasserstein distance computation. Matched points are measured by $L_p$ distance. Default is internal\+\_\+p = infinity. \\
 \hline
 \end{DoxyParams}
 \begin{DoxyRefDesc}{Todo}
-\item[\hyperlink{todo__todo000003}{Todo}]\+: Check that bottleneck\+\_\+dist uses infinity even though it doesn\textquotesingle{}t explicitly say so in the documentation.\end{DoxyRefDesc}
+\item[\hyperlink{todo__todo000005}{Todo}]\+: Check that bottleneck\+\_\+dist uses infinity even though it doesn\textquotesingle{}t explicitly say so in the documentation.\end{DoxyRefDesc}
 
 
 \begin{DoxyReturn}{Returns}
