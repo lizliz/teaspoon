@@ -31,7 +31,7 @@ In order to use all wrappers in teaspoon.\+T\+DA, the following need to be insta
 \item \href{https://bitbucket.org/grey_narn/hera}{\tt Hera}. Code by Michael Kerber, Dmitriy Morozov, and Arnur Nigmetov for computing bottleneck and Wasserstein distances.
 \end{DoxyItemize}
 
-Warning\+: the teaspoon installation will not install nor check for the install of these packages. In particular, perseus should be installed so that typing {\ttfamily perseus} runs it, even though some operating systems end up with an executable with a different name.
+Warning\+: the teaspoon installation will not install nor check for the install of these packages. In particular, perseus should be installed so that typing {\ttfamily perseus} in a terminal runs it, even though the default perseus installation for some operating systems ends up with an executable with a different name.
 
 \section*{Installation }
 
@@ -41,19 +41,17 @@ This code is still pre-\/alpha. In particular, using the pip install seems to be
 
 \subsubsection*{Installing using pip\+:}
 
-As this code is still pre-\/alpha, your best bet is to cd into the folder containing teaspoon (should have setup.\+py there) and run
+So far, the most success has been had with pip installation. Run the following commands to clone and install teaspoon. In particular, the {\ttfamily pip install .} command needs to be run in the folder with the {\ttfamily setup.\+py} file.
 
 
 \begin{DoxyCode}
-1 pip install .
+1 git clone https://gitlab.msu.edu/TSAwithTDA/teaspoon
+2 cd teaspoon
+3 pip install .
 \end{DoxyCode}
 
 
-If you want the developmental installation for pip run 
-\begin{DoxyCode}
-1 pip install -e .
-\end{DoxyCode}
- When things get more stable, we can remove the -\/e part. If you already have teaspoon installed but want to update to a newer version, run 
+If you already have teaspoon installed but want to update to a newer version, run the following from the teaspoon folder. 
 \begin{DoxyCode}
 1 pip install -U .
 \end{DoxyCode}
@@ -65,22 +63,26 @@ According to the internet, the pip version of install appears to be better. Howe
 
 
 \begin{DoxyCode}
-1 python setup.py develop
+1 python setup.py install
 \end{DoxyCode}
 
 
-Again, this is the developer version of the installation. Eventually, we will want to be doing
+\subsubsection*{Alternatively, just add the folder to the python path.}
 
-
+If the above aren\textquotesingle{}t working, add the following line to your {\ttfamily .bashrc} file. 
 \begin{DoxyCode}
-1 python setup.py install
+1 export PYTHONPATH="$\{PYTHONPATH\}:/path/to/teaspoon
 \end{DoxyCode}
 
 
 \section*{Documentation }
 
-Documentation is done using \href{http://www.doxygen.org}{\tt doxygen}. Documentation can be found in the \href{https://gitlab.msu.edu/TSAwithTDA/teaspoon/doc/html/index.html}{\tt doc folder}. Further info can be found in the https\+://gitlab.msu.\+edu/\+T\+S\+Awith\+T\+D\+A/teaspoon/blob/master/\+C\+O\+N\+T\+R\+I\+B\+U\+T\+I\+NG.md \char`\"{}contributing\char`\"{} page.
+Documentation is done using \href{http://www.doxygen.org}{\tt doxygen}. The most recent version of the \href{http://elizabethmunch.com/math/teaspoon/index.html}{\tt teaspoon documentation is hosted here}, but can also be found locally in the \href{https://gitlab.msu.edu/TSAwithTDA/teaspoon/doc/html/index.html}{\tt doc folder}. Further info on documentation can be found in the https\+://gitlab.msu.\+edu/\+T\+S\+Awith\+T\+D\+A/teaspoon/blob/master/\+C\+O\+N\+T\+R\+I\+B\+U\+T\+I\+NG.md \char`\"{}contributing\char`\"{} page.
 
 \section*{Contributing }
 
-See the https\+://gitlab.msu.\+edu/\+T\+S\+Awith\+T\+D\+A/teaspoon/blob/master/\+C\+O\+N\+T\+R\+I\+B\+U\+T\+I\+NG.md \char`\"{}contributing\char`\"{} page for more information on workflows. 
+See the https\+://gitlab.msu.\+edu/\+T\+S\+Awith\+T\+D\+A/teaspoon/blob/master/\+C\+O\+N\+T\+R\+I\+B\+U\+T\+I\+NG.md \char`\"{}contributing\char`\"{} page for more information on workflows.
+
+\section*{Contact }
+
+Liz Munch\+: \href{mailto:muncheli@egr.msu.edu}{\tt muncheli@egr.\+msu.\+edu} 

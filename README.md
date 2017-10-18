@@ -35,7 +35,7 @@ In order to use all wrappers in teaspoon.TDA, the following need to be installed
 - [Perseus](http://people.maths.ox.ac.uk/nanda/perseus/index.html). Code by Vidit Nanda for computing persistent homology of point clouds, cubical complexes, and distance matrices. 
 - [Hera](https://bitbucket.org/grey_narn/hera). Code by Michael Kerber, Dmitriy Morozov, and Arnur Nigmetov for computing bottleneck and Wasserstein distances.
 
-<span style="color:red">Warning</span>: the teaspoon installation will not install nor check for the install of these packages. In particular, perseus should be installed so that typing `perseus ` runs it, even though some operating systems end up with an executable with a different name.
+<span style="color:red">Warning</span>: the teaspoon installation will not install nor check for the install of these packages. In particular, perseus should be installed so that typing `perseus` in a terminal runs it, even though the default perseus installation for some operating systems ends up with an executable with a different name.
 
 
 Installation
@@ -49,18 +49,15 @@ If you are having installation issues, please make a note of what you've done, i
 
 ### Installing using pip:
 
-As this code is still pre-alpha, your best bet is to cd into the folder containing teaspoon (should have setup.py there) and run
+So far, the most success has been had with pip installation.  Run the following commands to clone and install teaspoon. In particular, the `pip install .` command needs to be run in the folder with the `setup.py` file.
 
 ```{bash}
+git clone https://gitlab.msu.edu/TSAwithTDA/teaspoon
+cd teaspoon
 pip install .
 ```
 
-If you want the developmental installation for pip run
-```{bash}
-pip install -e .
-```
-When things get more stable, we can remove the -e part.
-If you already have teaspoon installed but want to update to a newer version, run
+If you already have teaspoon installed but want to update to a newer version, run the following from the teaspoon folder.
 ```{bash}
 pip install -U .
 ```
@@ -70,22 +67,29 @@ pip install -U .
 According to the internet, the pip version of install appears to be better. However, if you don't use pip, another option is to cd into the teaspoon directory and run:
 
 ```{bash}
-python setup.py develop
+python setup.py install
 ```
 
-Again, this is the developer version of the installation.  Eventually, we will want to be doing 
+### Alternatively, just add the folder to the python path.
 
+If the above aren't working, add the following line to your `.bashrc` file.
 ```{bash}
-python setup.py install
+export PYTHONPATH="${PYTHONPATH}:/path/to/teaspoon
 ```
 
 Documentation
 =============
 
-Documentation is done using [doxygen](http://www.doxygen.org).  Documentation can be found in the [doc folder](https://gitlab.msu.edu/TSAwithTDA/teaspoon/doc/html/index.html).  Further info can be found in the [contributing](https://gitlab.msu.edu/TSAwithTDA/teaspoon/blob/master/CONTRIBUTING.md) page.
+Documentation is done using [doxygen](http://www.doxygen.org).
+The most recent version of the [teaspoon documentation is hosted here](http://elizabethmunch.com/math/teaspoon/index.html), but can also be found locally in the [doc folder](https://gitlab.msu.edu/TSAwithTDA/teaspoon/doc/html/index.html).  Further info on documentation can be found in the [contributing](https://gitlab.msu.edu/TSAwithTDA/teaspoon/blob/master/CONTRIBUTING.md) page.
 
 
 Contributing
 =============
 
 See the [contributing](https://gitlab.msu.edu/TSAwithTDA/teaspoon/blob/master/CONTRIBUTING.md) page for more information on workflows.
+
+Contact
+=============
+Liz Munch: [muncheli@egr.msu.edu](mailto:muncheli@egr.msu.edu)
+

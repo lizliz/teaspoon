@@ -3,14 +3,52 @@
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
-def {\bfseries draw\+Dgm} (D, max=None, epsilon=.\+5)\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_draw_a7325ffa8f9e2955eb9bb40c45da477b3}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_draw_a7325ffa8f9e2955eb9bb40c45da477b3}
-
-\item 
-def {\bfseries draw\+Pt\+Cloud} (P)\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_draw_a204ad8c5e5fe84b51ab43fef94eb6645}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_draw_a204ad8c5e5fe84b51ab43fef94eb6645}
-
-\end{DoxyCompactItemize}
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_draw_a7d3fa76dab0dd537549437a5f6adfee2}{draw\+Dgm} (D, boundary=None, epsilon=.\+5)
+\begin{DoxyCompactList}\small\item\em Draws simple persistence diagram plot. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_draw_a204ad8c5e5fe84b51ab43fef94eb6645}{draw\+Pt\+Cloud} (P)
+\begin{DoxyCompactList}\small\item\em Draws simple point cloud plot. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
 \begin{DoxyVerb}Code for drawing various things.\end{DoxyVerb}
  
+
+\subsection{Function Documentation}
+\index{teaspoon\+::\+T\+D\+A\+::\+Draw@{teaspoon\+::\+T\+D\+A\+::\+Draw}!draw\+Dgm@{draw\+Dgm}}
+\index{draw\+Dgm@{draw\+Dgm}!teaspoon\+::\+T\+D\+A\+::\+Draw@{teaspoon\+::\+T\+D\+A\+::\+Draw}}
+\subsubsection[{\texorpdfstring{draw\+Dgm(\+D, boundary=\+None, epsilon=.\+5)}{drawDgm(D, boundary=None, epsilon=.5)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Draw.\+draw\+Dgm (
+\begin{DoxyParamCaption}
+\item[{}]{D, }
+\item[{}]{boundary = {\ttfamily None}, }
+\item[{}]{epsilon = {\ttfamily .5}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_draw_a7d3fa76dab0dd537549437a5f6adfee2}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_draw_a7d3fa76dab0dd537549437a5f6adfee2}
+
+
+Draws simple persistence diagram plot. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em D} & a persistence diagram, given as a Kx2 numpy array \\
+\hline
+{\em boundary} & \\
+\hline
+{\em epsilon} & The diagram is drawn on \mbox{[}0,boundary\mbox{]}x\mbox{[}0,boundary\mbox{]}. If boundary not given, then it is determined to be the max death time from the input diagram plus epsilon. \\
+\hline
+\end{DoxyParams}
+\index{teaspoon\+::\+T\+D\+A\+::\+Draw@{teaspoon\+::\+T\+D\+A\+::\+Draw}!draw\+Pt\+Cloud@{draw\+Pt\+Cloud}}
+\index{draw\+Pt\+Cloud@{draw\+Pt\+Cloud}!teaspoon\+::\+T\+D\+A\+::\+Draw@{teaspoon\+::\+T\+D\+A\+::\+Draw}}
+\subsubsection[{\texorpdfstring{draw\+Pt\+Cloud(\+P)}{drawPtCloud(P)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Draw.\+draw\+Pt\+Cloud (
+\begin{DoxyParamCaption}
+\item[{}]{P}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_draw_a204ad8c5e5fe84b51ab43fef94eb6645}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_draw_a204ad8c5e5fe84b51ab43fef94eb6645}
+
+
+Draws simple point cloud plot. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em P} & a point cloud, given as a KxD numpy array Even if D$>$2, only the first two coordinates are plotted. \\
+\hline
+\end{DoxyParams}
