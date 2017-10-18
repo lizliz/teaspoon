@@ -74,7 +74,7 @@ python setup.py install
 
 If the above aren't working, add the following line to your `.bashrc` file.
 ```{bash}
-export PYTHONPATH="${PYTHONPATH}:/path/to/teaspoon
+export PYTHONPATH="${PYTHONPATH}:/path/to/teaspoon"
 ```
 
 Documentation
@@ -91,5 +91,5 @@ See the [contributing](https://gitlab.msu.edu/TSAwithTDA/teaspoon/blob/master/CO
 
 Contact
 =============
-Liz Munch: [muncheli@egr.msu.edu](mailto:muncheli@egr.msu.edu)
+Liz Munch: [muncheli@egr.msu.edu](mailto:muncheli@egr.msu.edu).
 
