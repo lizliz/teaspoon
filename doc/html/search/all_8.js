@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sphere',['Sphere',['../namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#af130e51668240f775bca4ff195be2bea',1,'teaspoon::MakeData::PointCloud']]]
+  ['parameterbucket',['ParameterBucket',['../classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html',1,'teaspoon::ML::tents']]]
 ];

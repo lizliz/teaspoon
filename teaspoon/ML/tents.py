@@ -1,7 +1,7 @@
 ## @package teaspoon.ML.tents
 # Machine learning featurization method
 # 
-# If you make use of this code, please cite the following paper:
+# If you make use of this code, please cite the following paper:<br/>
 # J.A. Perea, E. Munch, and F. Khasawneh.  "Approximating Continuous Functions On Persistence Diagrams." Preprint, 2017.
 #
 # 
@@ -16,9 +16,8 @@ import pandas as pd
 
 
 from sklearn.linear_model import LogisticRegression, Ridge, RidgeCV, RidgeClassifierCV, LassoCV
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn import metrics
-from sklearn.cross_validation import cross_val_score
 
 
 
@@ -32,7 +31,9 @@ class ParameterBucket(object):
 					delta = 1,
 					epsilon = 0,
 					maxPower = 1,
-					clfClass = RidgeClassifierCV):
+					clfClass = RidgeClassifierCV,
+					seed = None,
+					test_size = .33):
 		"""!@brief Creates a new ParameterBucket object.
 
 	    This object is being used to keep track of all the parameters needed
@@ -46,7 +47,11 @@ class ParameterBucket(object):
 	    @param maxPower 
 	    	The maximum degree used for the monomial combinations of the tent functions.  Testing suggests we usually want this to be 1.  Increasing causes large increase in number of features. 
 	    @param clfClass
-	    	The choice of tool used for classification or regression, passed as the function.  This code has been tested using `sklearn` functions `RidgeClassiferCV` for classification and `RidgeCV` for regression. 
+	    	The choice of tool used for classification or regression, passed as the function.  This code has been tested using `sklearn` functions `RidgeClassiferCV` for classification and `RidgeCV` for regression.
+	    @param seed
+	    	The seed for the pseudo-random number generator.  Pass None if you don't want it fixed; otherwise, pass an integer.
+	    @param test_size
+	    	A number in \f$[0,1]\f$.  Gives the percentage of data points to be reserved for the testing set if this is being used for a train/test split experiment.  Otherwise, ignored. 
 
 	    """
 		self.description = description
@@ -56,6 +61,10 @@ class ParameterBucket(object):
 
 		self.maxPower = maxPower
 		self.clfClass = clfClass
+
+		self.seed = seed
+
+		self.test_size = test_size
 
 		# @todo The following settings don't appear to be ever used.  Commented in case that's not correct, but should be removed eventually.
 		# self.minBirth = None
@@ -70,9 +79,8 @@ class ParameterBucket(object):
 		"""
 		attrs = vars(self)
 		output = ''
-		output += '---'
 		output += 'Variables in parameter bucket\n'
-		output += '---'
+		output += '---\n'
 		for key in attrs.keys():
 			output += str(key) + ' : '
 			output += str(attrs[key])+ '\n'
@@ -297,7 +305,6 @@ def build_G(Dgms,
 # computes the G matrix using build_G.
 # Does classification using labels from labels_col in the data frame.
 # Returns instance of estimator
-# @warning this is not finished yet!
 #
 # 	@param DgmsDF
 # 		A pandas data frame containing, at least, a column of 
@@ -333,11 +340,12 @@ def TentML(DgmsDF,
 		print('You need to pass in a ParameterBucket. Exiting....')
 		return 
 	if params.d == None or params.delta == None or params.epsilon == None or params.maxPower == None:
-		print('You need to finish filling the parameter bucket. Currently:')
-		print('params.d = ', params.d)
-		print('params.delta = ', params.delta)
-		print('params.epsilon = ', params.epsilon)
-		print('params.maxPower = ', params.maxPower)
+		print('You need to finish filling the parameter bucket. ')
+		print(params)
+		# print('params.d = ', params.d)
+		# print('params.delta = ', params.delta)
+		# print('params.epsilon = ', params.epsilon)
+		# print('params.maxPower = ', params.maxPower)
 		print('Exiting....')
 		return
 
@@ -372,6 +380,9 @@ def TentML(DgmsDF,
 
 	G = np.concatenate(listOfG,axis = 1)
 
+	numFeatures = np.shape(G)[1]
+	print('Number of features used is', numFeatures,'...')
+
 
 	# Remove columns (features) that are entirely zero
 	# if params.remove0cols:
@@ -395,13 +406,114 @@ def TentML(DgmsDF,
 	score = clf.score(G,list(DgmsDF[labels_col]))
 	print('Score on training set: ' + str(score) + '.\n')
 
-	# clf.delta = params.delta
-	# clf.epsilon = params.epsilon
+	clf.delta = params.delta
+	clf.epsilon = params.epsilon
 	clf.trainingScore = score
-	# clf.d = params.d
+	clf.d = params.d
 	# if params.remove0cols:
 	# 	clf.remainingCols = nonzeroCols
 
 	return clf
+
+
+
+
+## Main testing function for classification or regression methods.  
+# Does train/test split, creates classifier, and returns score on test.
+#
+# 	@param DgmsDF
+# 		A pandas data frame containing, at least, a column of 
+# 		diagrams and a column of labels
+# 	@param labels_col
+# 		A string.  The label for the column in DgmsDF containing the training labels.
+# 	@param dgm_col 
+# 		A string or list of strings giving the label for the column containing the diagrams.
+# 	@param params
+# 		A class of type ParameterBucket
+# 		Should store:
+# 			- **d**:
+# 				An integer, the number of elements for griding up 
+# 				the x and y axis of the diagram.  Will result in 
+# 				d*(d+1) tent functions 
+# 			- **delta**, **epsilon**:
+# 				Controls location and width of mesh elements for x and y axis of the 
+# 				diagram. 
+# 			- **clfClass**:
+# 				The class which will be used for classification.  Currently tested
+#				using `sklearn.RidgeClassifierCV` and `sklearn.RidgeCV`.
+#			- **seed**:
+#				None if we don't want to mess with the seed for the train_test_split function. Else, pass integer.
+#			- **test_split**: 
+#				The percentage of the data to be reserved for the test part of the train/test split.
+#
+# 	@return
+#		Returned as a dictionary of entries:
+# 		- **score**
+# 			The percent correct when predicting on the test set.
+# 		- **DgmsDF**
+# 			The original data frame passed back with a column labeled
+# 			'Prediction' added with the predictions gotten for the
+# 			test set. Data points in the training set will have an 
+# 			entry of NaN
+# 		- **clf**
+# 			The classifier object.  
+#
+def getPercentScore(DgmsDF, 
+					labels_col = 'trainingLabel',  
+					dgm_col = 'Dgm1',
+					params = ParameterBucket(),
+					):
+
+	print('---')
+	print('Beginning experiment.')
+	print(params)
+
+	#check to see if only one column label was passed. If so, turn it into a list.
+	if type(dgm_col) == str:
+		dgm_col = [dgm_col,]
+
+	# Run actual train/test experiment using sklearn
+	D_train, D_test, L_train,L_test = train_test_split(DgmsDF,
+													DgmsDF[labels_col],
+													test_size=params.test_size,
+													random_state = params.seed
+													)
+
+	#--------Training------------#
+	print('Using ' + str(len(L_train)) + '/' + str(len(DgmsDF)) + ' to train...')
+	clf = TentML(D_train,
+					labels_col = labels_col,
+					dgm_col = dgm_col,
+					params = params)
+
+	#--------Testing-------------#
+	print('Using ' + str(len(L_test)) + '/' + str(len(DgmsDF)) + ' to test...')
+	listOfG = []
+	for dgmColLabel in dgm_col:
+		G = build_G(D_test[dgmColLabel],params.d,params.delta,params.epsilon,params.maxPower)
+		listOfG.append(G)
+
+	G = np.concatenate(listOfG,axis = 1)
+
+
+	# Compute predictions and add to DgmsDF data frame
+	L_predict = pd.Series(clf.predict(G),index = L_test.index)
+	DgmsDF['Prediction'] = L_predict
+
+	# Compute score
+	score = clf.score(G,list(L_test))
+
+	print('Score on testing set: ' + str(score) +"...\n")
+
+	print('Finished with train/test experiment.')
+
+	output = {}
+	output['score'] = score
+	output['DgmsDF'] = DgmsDF
+	output['clf'] = clf
+
+	return output
+
+
 
 

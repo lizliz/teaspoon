@@ -124,10 +124,14 @@ Functions</h2></td></tr>
 <tr class="memitem:aedb3c3fb1a8c0faa8bbe358db170f5bb"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#aedb3c3fb1a8c0faa8bbe358db170f5bb">TentML</a> (DgmsDF, labels_col='trainingLabel', dgm_col='Dgm1', params=None)</td></tr>
 <tr class="memdesc:aedb3c3fb1a8c0faa8bbe358db170f5bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main function to run ML with tents on persistence diagrams.  <a href="#aedb3c3fb1a8c0faa8bbe358db170f5bb">More...</a><br /></td></tr>
 <tr class="separator:aedb3c3fb1a8c0faa8bbe358db170f5bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a90cc7e8be9f3e13ef4528d1239fda660"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#a90cc7e8be9f3e13ef4528d1239fda660">getPercentScore</a> (DgmsDF, labels_col='trainingLabel', dgm_col='Dgm1', params=<a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html">ParameterBucket</a>())</td></tr>
+<tr class="memdesc:a90cc7e8be9f3e13ef4528d1239fda660"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main testing function for classification or regression methods.  <a href="#a90cc7e8be9f3e13ef4528d1239fda660">More...</a><br /></td></tr>
+<tr class="separator:a90cc7e8be9f3e13ef4528d1239fda660"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Machine learning featurization method. </p>
-<p>If you make use of this code, please cite the following paper: J.A. Perea, E. Munch, and F. Khasawneh. "Approximating Continuous Functions On Persistence Diagrams." Preprint, 2017. </p>
+<p>If you make use of this code, please cite the following paper:<br />
+ J.A. Perea, E. Munch, and F. Khasawneh. "Approximating Continuous Functions On Persistence Diagrams." Preprint, 2017. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a19cc99365f3d375bf1ea7535095c15e3"></a>
 <div class="memitem">
@@ -265,6 +269,69 @@ Functions</h2></td></tr>
 
 </div>
 </div>
+<a class="anchor" id="a90cc7e8be9f3e13ef4528d1239fda660"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def teaspoon.ML.tents.getPercentScore </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>DgmsDF</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>labels_col</em> = <code>'trainingLabel'</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>dgm_col</em> = <code>'Dgm1'</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>params</em> = <code><a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html">ParameterBucket</a>()</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Main testing function for classification or regression methods. </p>
+<p>Does train/test split, creates classifier, and returns score on test.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">DgmsDF</td><td>A pandas data frame containing, at least, a column of diagrams and a column of labels </td></tr>
+    <tr><td class="paramname">labels_col</td><td>A string. The label for the column in DgmsDF containing the training labels. </td></tr>
+    <tr><td class="paramname">dgm_col</td><td>A string or list of strings giving the label for the column containing the diagrams. </td></tr>
+    <tr><td class="paramname">params</td><td>A class of type <a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html" title="A class for storing all of the chosen parameters for a data frame and computation of ML...">ParameterBucket</a> Should store:<ul>
+<li><b>d</b>: An integer, the number of elements for griding up the x and y axis of the diagram. Will result in d*(d+1) tent functions</li>
+<li><b>delta</b>, <b>epsilon</b>: Controls location and width of mesh elements for x and y axis of the diagram.</li>
+<li><b>clfClass</b>: The class which will be used for classification. Currently tested using <code>sklearn.RidgeClassifierCV</code> and <code>sklearn.RidgeCV</code>.</li>
+<li><b>seed</b>: None if we don't want to mess with the seed for the train_test_split function. Else, pass integer.</li>
+<li><b>test_split</b>: The percentage of the data to be reserved for the test part of the train/test split.</li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Returned as a dictionary of entries:<ul>
+<li><b>score</b> The percent correct when predicting on the test set.</li>
+<li><b>DgmsDF</b> The original data frame passed back with a column labeled 'Prediction' added with the predictions gotten for the test set. Data points in the training set will have an entry of NaN</li>
+<li><b>clf</b> The classifier object. </li>
+</ul>
+</dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="a7e54522bba1f674736551ec0522828fa"></a>
 <div class="memitem">
 <div class="memproto">
@@ -367,7 +434,7 @@ Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Main function to run ML with tents on persistence diagrams. </p>
-<p>Takes data frame DgmsDF and specified persistence diagram column labels, computes the G matrix using build_G. Does classification using labels from labels_col in the data frame. Returns instance of estimator </p><dl class="section warning"><dt>Warning</dt><dd>this is not finished yet!</dd></dl>
+<p>Takes data frame DgmsDF and specified persistence diagram column labels, computes the G matrix using build_G. Does classification using labels from labels_col in the data frame. Returns instance of estimator</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">DgmsDF</td><td>A pandas data frame containing, at least, a column of diagrams and a column of labels </td></tr>
