@@ -115,18 +115,21 @@ Functions</h2></td></tr>
 <tr class="memitem:a7e54522bba1f674736551ec0522828fa"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#a7e54522bba1f674736551ec0522828fa">tent</a> (x, y, i, j, delta=1, epsilon=0)</td></tr>
 <tr class="memdesc:a7e54522bba1f674736551ec0522828fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Evaluates the (i,j)th tent function on the point (x,y) in (birth, death) plane.  <a href="#a7e54522bba1f674736551ec0522828fa">More...</a><br /></td></tr>
 <tr class="separator:a7e54522bba1f674736551ec0522828fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2656d1f10bf5c93cc9039a2d524c8bfd"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#a2656d1f10bf5c93cc9039a2d524c8bfd">build_Gm</a> (Dgm, d=10, delta=1, epsilon=0, returnSquare=False)</td></tr>
-<tr class="memdesc:a2656d1f10bf5c93cc9039a2d524c8bfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates row of features for the given diagram.  <a href="#a2656d1f10bf5c93cc9039a2d524c8bfd">More...</a><br /></td></tr>
-<tr class="separator:a2656d1f10bf5c93cc9039a2d524c8bfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a86c1ddf6fc99d9e3ab9cc05909983edb"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#a86c1ddf6fc99d9e3ab9cc05909983edb">build_G</a> (Dgms, d=10, delta=1, epsilon=0, maxPower=1)</td></tr>
-<tr class="memdesc:a86c1ddf6fc99d9e3ab9cc05909983edb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builds matrix of features, where each row corresponds to an input persistence diagram.  <a href="#a86c1ddf6fc99d9e3ab9cc05909983edb">More...</a><br /></td></tr>
-<tr class="separator:a86c1ddf6fc99d9e3ab9cc05909983edb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac230b402d60eb765d2c2776027afaaa9"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#ac230b402d60eb765d2c2776027afaaa9">build_Gm</a> (Dgm, d=10, delta=1, epsilon=0, featureFunc=<a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#a7e54522bba1f674736551ec0522828fa">tent</a>, returnSquare=False)</td></tr>
+<tr class="memdesc:ac230b402d60eb765d2c2776027afaaa9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates row of features for the given diagram.  <a href="#ac230b402d60eb765d2c2776027afaaa9">More...</a><br /></td></tr>
+<tr class="separator:ac230b402d60eb765d2c2776027afaaa9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19cc99365f3d375bf1ea7535095c15e3"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#a19cc99365f3d375bf1ea7535095c15e3">build_G</a> (Dgms, d=10, delta=1, epsilon=0, maxPower=1, featureFunc=<a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#a7e54522bba1f674736551ec0522828fa">tent</a>)</td></tr>
+<tr class="memdesc:a19cc99365f3d375bf1ea7535095c15e3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Builds matrix of features, where each row corresponds to an input persistence diagram.  <a href="#a19cc99365f3d375bf1ea7535095c15e3">More...</a><br /></td></tr>
+<tr class="separator:a19cc99365f3d375bf1ea7535095c15e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aedb3c3fb1a8c0faa8bbe358db170f5bb"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#aedb3c3fb1a8c0faa8bbe358db170f5bb">TentML</a> (DgmsDF, labels_col='trainingLabel', dgm_col='Dgm1', params=None)</td></tr>
+<tr class="memdesc:aedb3c3fb1a8c0faa8bbe358db170f5bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main function to run ML with tents on persistence diagrams.  <a href="#aedb3c3fb1a8c0faa8bbe358db170f5bb">More...</a><br /></td></tr>
+<tr class="separator:aedb3c3fb1a8c0faa8bbe358db170f5bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Machine learning featurization method. </p>
 <p>If you make use of this code, please cite the following paper: J.A. Perea, E. Munch, and F. Khasawneh. "Approximating Continuous Functions On Persistence Diagrams." Preprint, 2017. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
-<a class="anchor" id="a86c1ddf6fc99d9e3ab9cc05909983edb"></a>
+<a class="anchor" id="a19cc99365f3d375bf1ea7535095c15e3"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -158,7 +161,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>maxPower</em> = <code>1</code>&#160;</td>
+          <td class="paramname"><em>maxPower</em> = <code>1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>featureFunc</em> = <code><a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#a7e54522bba1f674736551ec0522828fa">tent</a></code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -175,7 +184,8 @@ Functions</h2></td></tr>
     <tr><td class="paramname">d</td><td>An integer, the number of elements for griding up the x and y axis of the diagram. Will result in \(d\times(d+1)\) tent functions. </td></tr>
     <tr><td class="paramname">delta</td><td>Width of mesh elements for x and y axis of the diagram.</td></tr>
     <tr><td class="paramname">epsilon</td><td>The amount to shift the grid up. </td></tr>
-    <tr><td class="paramname">maxPower</td><td>We want to output a matrix with monomials in the given base features up to power maxPower.</td></tr>
+    <tr><td class="paramname">maxPower</td><td>We want to output a matrix with monomials in the given base features up to power maxPower. </td></tr>
+    <tr><td class="paramname">featureFunc</td><td>If we want to use a different feature function than the tent function, it can be set here. This function needs to accept inputs in the same format as the <code>tent</code> function.</td></tr>
   </table>
   </dd>
 </dl>
@@ -185,7 +195,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a2656d1f10bf5c93cc9039a2d524c8bfd"></a>
+<a class="anchor" id="ac230b402d60eb765d2c2776027afaaa9"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -217,6 +227,12 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>featureFunc</em> = <code><a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#a7e54522bba1f674736551ec0522828fa">tent</a></code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
           <td class="paramname"><em>returnSquare</em> = <code>False</code>&#160;</td>
         </tr>
         <tr>
@@ -234,7 +250,8 @@ Functions</h2></td></tr>
     <tr><td class="paramname">d</td><td>An integer, the number of elements for griding up the x and y axis of the diagram. Will result in dx(d+1) tent functions </td></tr>
     <tr><td class="paramname">delta</td><td>Width of mesh elements for x and y axis of the diagram.</td></tr>
     <tr><td class="paramname">epsilon</td><td>The amount to shift the grid up. </td></tr>
-    <tr><td class="paramname">returnSquare</td><td>Stops the code from doing the final flattening.</td></tr>
+    <tr><td class="paramname">returnSquare</td><td>Stops the code from doing the final flattening. </td></tr>
+    <tr><td class="paramname">featureFunc</td><td>If we want to use a different feature function than the tent function, it can be set here. This function needs to accept inputs in the same format as the <code>tent</code> function.</td></tr>
   </table>
   </dd>
 </dl>
@@ -310,6 +327,62 @@ Functions</h2></td></tr>
 \[g_{i,j}(x,y) = \bigg| 1- \max\left\{ \left|\frac{x}{\delta} - i\right|, \left|\frac{y-x}{\delta} - j\right|\right\} \bigg|_+\]
 </p>
  where \(| * |_+\) is positive part; equivalently, min of \(*\) and 0. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="aedb3c3fb1a8c0faa8bbe358db170f5bb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def teaspoon.ML.tents.TentML </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>DgmsDF</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>labels_col</em> = <code>'trainingLabel'</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>dgm_col</em> = <code>'Dgm1'</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>params</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Main function to run ML with tents on persistence diagrams. </p>
+<p>Takes data frame DgmsDF and specified persistence diagram column labels, computes the G matrix using build_G. Does classification using labels from labels_col in the data frame. Returns instance of estimator </p><dl class="section warning"><dt>Warning</dt><dd>this is not finished yet!</dd></dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">DgmsDF</td><td>A pandas data frame containing, at least, a column of diagrams and a column of labels </td></tr>
+    <tr><td class="paramname">labels_col</td><td>A string. The label for the column in DgmsDF containing the training labels. </td></tr>
+    <tr><td class="paramname">dgm_col</td><td>The label(s) for the column containing the diagrams given as a string or list of strings. </td></tr>
+    <tr><td class="paramname">params</td><td>A class of type <a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html" title="A class for storing all of the chosen parameters for a data frame and computation of ML...">ParameterBucket</a> Should store:<ul>
+<li><b>d</b>: An integer, the number of elements for griding up the x and y axis of the diagram. Will result in d*(d+1) tent functions</li>
+<li><b>delta</b>, <b>epsilon</b>: Controls location and width of mesh elements for x and y axis of the diagram.</li>
+<li><b>clfClass</b>: The class which will be used for classification. Currently tested using <code>sklearn.RidgeClassifierCV</code> and <code>sklearn.RidgeCV</code>. </li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The classifier object. Coefficients can be found from clf.coef_ </dd></dl>
 
 </div>
 </div>

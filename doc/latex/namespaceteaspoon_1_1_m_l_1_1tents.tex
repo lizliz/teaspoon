@@ -15,10 +15,12 @@ class \hyperlink{classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket}{Parameter\
 \item 
 def \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_a7e54522bba1f674736551ec0522828fa}{tent} (x, y, i, j, delta=1, epsilon=0)
 \begin{DoxyCompactList}\small\item\em Evaluates the (i,j)th tent function on the point (x,y) in (birth, death) plane. \end{DoxyCompactList}\item 
-def \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_a2656d1f10bf5c93cc9039a2d524c8bfd}{build\+\_\+\+Gm} (Dgm, d=10, delta=1, epsilon=0, return\+Square=False)
+def \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_ac230b402d60eb765d2c2776027afaaa9}{build\+\_\+\+Gm} (Dgm, d=10, delta=1, epsilon=0, feature\+Func=\hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_a7e54522bba1f674736551ec0522828fa}{tent}, return\+Square=False)
 \begin{DoxyCompactList}\small\item\em Generates row of features for the given diagram. \end{DoxyCompactList}\item 
-def \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_a86c1ddf6fc99d9e3ab9cc05909983edb}{build\+\_\+G} (Dgms, d=10, delta=1, epsilon=0, max\+Power=1)
-\begin{DoxyCompactList}\small\item\em Builds matrix of features, where each row corresponds to an input persistence diagram. \end{DoxyCompactList}\end{DoxyCompactItemize}
+def \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_a19cc99365f3d375bf1ea7535095c15e3}{build\+\_\+G} (Dgms, d=10, delta=1, epsilon=0, max\+Power=1, feature\+Func=\hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_a7e54522bba1f674736551ec0522828fa}{tent})
+\begin{DoxyCompactList}\small\item\em Builds matrix of features, where each row corresponds to an input persistence diagram. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_aedb3c3fb1a8c0faa8bbe358db170f5bb}{Tent\+ML} (Dgms\+DF, labels\+\_\+col=\textquotesingle{}training\+Label\textquotesingle{}, dgm\+\_\+col=\textquotesingle{}Dgm1\textquotesingle{}, params=None)
+\begin{DoxyCompactList}\small\item\em Main function to run ML with tents on persistence diagrams. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
@@ -29,15 +31,16 @@ If you make use of this code, please cite the following paper\+: J.\+A. Perea, E
 \subsection{Function Documentation}
 \index{teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}!build\+\_\+G@{build\+\_\+G}}
 \index{build\+\_\+G@{build\+\_\+G}!teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}}
-\subsubsection[{\texorpdfstring{build\+\_\+\+G(\+Dgms, d=10, delta=1, epsilon=0, max\+Power=1)}{build_G(Dgms, d=10, delta=1, epsilon=0, maxPower=1)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+M\+L.\+tents.\+build\+\_\+G (
+\subsubsection[{\texorpdfstring{build\+\_\+\+G(\+Dgms, d=10, delta=1, epsilon=0, max\+Power=1, feature\+Func=tent)}{build_G(Dgms, d=10, delta=1, epsilon=0, maxPower=1, featureFunc=tent)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+M\+L.\+tents.\+build\+\_\+G (
 \begin{DoxyParamCaption}
 \item[{}]{Dgms, }
 \item[{}]{d = {\ttfamily 10}, }
 \item[{}]{delta = {\ttfamily 1}, }
 \item[{}]{epsilon = {\ttfamily 0}, }
-\item[{}]{max\+Power = {\ttfamily 1}}
+\item[{}]{max\+Power = {\ttfamily 1}, }
+\item[{}]{feature\+Func = {\ttfamily {\bf tent}}}
 \end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a86c1ddf6fc99d9e3ab9cc05909983edb}{}\label{namespaceteaspoon_1_1_m_l_1_1tents_a86c1ddf6fc99d9e3ab9cc05909983edb}
+)}\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a19cc99365f3d375bf1ea7535095c15e3}{}\label{namespaceteaspoon_1_1_m_l_1_1tents_a19cc99365f3d375bf1ea7535095c15e3}
 
 
 Builds matrix of features, where each row corresponds to an input persistence diagram. 
@@ -52,7 +55,9 @@ Builds matrix of features, where each row corresponds to an input persistence di
 \hline
 {\em epsilon} & The amount to shift the grid up. \\
 \hline
-{\em max\+Power} & We want to output a matrix with monomials in the given base features up to power max\+Power.\\
+{\em max\+Power} & We want to output a matrix with monomials in the given base features up to power max\+Power. \\
+\hline
+{\em feature\+Func} & If we want to use a different feature function than the tent function, it can be set here. This function needs to accept inputs in the same format as the {\ttfamily tent} function.\\
 \hline
 \end{DoxyParams}
 Specifically, the support in the (birth, death) plane is a parallelogram with vertices (0,0 + epsilon) (0,d$\ast$delta + epsilon) (d$\ast$delta, d$\ast$delta + epsilon) (d$\ast$delta,2$\ast$d$\ast$delta + epsilon)
@@ -64,15 +69,16 @@ G a numpy ndarray shape = d$\ast$(d+1)$\ast$choose( d$\ast$(d+1), max\+Power)
 \item[\hyperlink{todo__todo000002}{Todo}]Add figure for parallelogram. \end{DoxyRefDesc}
 \index{teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}!build\+\_\+\+Gm@{build\+\_\+\+Gm}}
 \index{build\+\_\+\+Gm@{build\+\_\+\+Gm}!teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}}
-\subsubsection[{\texorpdfstring{build\+\_\+\+Gm(\+Dgm, d=10, delta=1, epsilon=0, return\+Square=\+False)}{build_Gm(Dgm, d=10, delta=1, epsilon=0, returnSquare=False)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+M\+L.\+tents.\+build\+\_\+\+Gm (
+\subsubsection[{\texorpdfstring{build\+\_\+\+Gm(\+Dgm, d=10, delta=1, epsilon=0, feature\+Func=tent, return\+Square=\+False)}{build_Gm(Dgm, d=10, delta=1, epsilon=0, featureFunc=tent, returnSquare=False)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+M\+L.\+tents.\+build\+\_\+\+Gm (
 \begin{DoxyParamCaption}
 \item[{}]{Dgm, }
 \item[{}]{d = {\ttfamily 10}, }
 \item[{}]{delta = {\ttfamily 1}, }
 \item[{}]{epsilon = {\ttfamily 0}, }
+\item[{}]{feature\+Func = {\ttfamily {\bf tent}}, }
 \item[{}]{return\+Square = {\ttfamily False}}
 \end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a2656d1f10bf5c93cc9039a2d524c8bfd}{}\label{namespaceteaspoon_1_1_m_l_1_1tents_a2656d1f10bf5c93cc9039a2d524c8bfd}
+)}\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_ac230b402d60eb765d2c2776027afaaa9}{}\label{namespaceteaspoon_1_1_m_l_1_1tents_ac230b402d60eb765d2c2776027afaaa9}
 
 
 Generates row of features for the given diagram. 
@@ -87,7 +93,9 @@ Generates row of features for the given diagram.
 \hline
 {\em epsilon} & The amount to shift the grid up. \\
 \hline
-{\em return\+Square} & Stops the code from doing the final flattening.\\
+{\em return\+Square} & Stops the code from doing the final flattening. \\
+\hline
+{\em feature\+Func} & If we want to use a different feature function than the tent function, it can be set here. This function needs to accept inputs in the same format as the {\ttfamily tent} function.\\
 \hline
 \end{DoxyParams}
 The resulting parallelogram in the diagram has vertices (0,0 + epsilon) (0,d$\ast$delta + epsilon) (d$\ast$delta, d$\ast$delta + epsilon) (d$\ast$delta,2$\ast$d$\ast$delta + epsilon)
@@ -130,4 +138,40 @@ We are shifting the entire grid up by a predetermined value epsilon. This is to 
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 $g_{i,j}(x,y)$ where \[g_{i,j}(x,y) = \bigg| 1- \max\left\{ \left|\frac{x}{\delta} - i\right|, \left|\frac{y-x}{\delta} - j\right|\right\} \bigg|_+\] where $| * |_+$ is positive part; equivalently, min of $*$ and 0. 
+\end{DoxyReturn}
+\index{teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}!Tent\+ML@{Tent\+ML}}
+\index{Tent\+ML@{Tent\+ML}!teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}}
+\subsubsection[{\texorpdfstring{Tent\+M\+L(\+Dgms\+D\+F, labels\+\_\+col=\textquotesingle{}training\+Label\textquotesingle{}, dgm\+\_\+col=\textquotesingle{}\+Dgm1\textquotesingle{}, params=\+None)}{TentML(DgmsDF, labels_col='trainingLabel', dgm_col='Dgm1', params=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+M\+L.\+tents.\+Tent\+ML (
+\begin{DoxyParamCaption}
+\item[{}]{Dgms\+DF, }
+\item[{}]{labels\+\_\+col = {\ttfamily \textquotesingle{}trainingLabel\textquotesingle{}}, }
+\item[{}]{dgm\+\_\+col = {\ttfamily \textquotesingle{}Dgm1\textquotesingle{}}, }
+\item[{}]{params = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_aedb3c3fb1a8c0faa8bbe358db170f5bb}{}\label{namespaceteaspoon_1_1_m_l_1_1tents_aedb3c3fb1a8c0faa8bbe358db170f5bb}
+
+
+Main function to run ML with tents on persistence diagrams. 
+
+Takes data frame Dgms\+DF and specified persistence diagram column labels, computes the G matrix using build\+\_\+G. Does classification using labels from labels\+\_\+col in the data frame. Returns instance of estimator \begin{DoxyWarning}{Warning}
+this is not finished yet!
+\end{DoxyWarning}
+
+\begin{DoxyParams}{Parameters}
+{\em Dgms\+DF} & A pandas data frame containing, at least, a column of diagrams and a column of labels \\
+\hline
+{\em labels\+\_\+col} & A string. The label for the column in Dgms\+DF containing the training labels. \\
+\hline
+{\em dgm\+\_\+col} & The label(s) for the column containing the diagrams given as a string or list of strings. \\
+\hline
+{\em params} & A class of type \hyperlink{classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket}{Parameter\+Bucket} Should store\+:
+\begin{DoxyItemize}
+\item {\bfseries d}\+: An integer, the number of elements for griding up the x and y axis of the diagram. Will result in d$\ast$(d+1) tent functions
+\item {\bfseries delta}, {\bfseries epsilon}\+: Controls location and width of mesh elements for x and y axis of the diagram.
+\item {\bfseries clf\+Class}\+: The class which will be used for classification. Currently tested using {\ttfamily sklearn.\+Ridge\+Classifier\+CV} and {\ttfamily sklearn.\+Ridge\+CV}. 
+\end{DoxyItemize}\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The classifier object. Coefficients can be found from clf.\+coef\+\_\+ 
 \end{DoxyReturn}
