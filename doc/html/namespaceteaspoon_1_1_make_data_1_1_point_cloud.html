@@ -99,6 +99,9 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <div class="title">teaspoon.MakeData.PointCloud Namespace Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Generates data sets related to persistence diagrams and point clouds.  
+<a href="#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -114,18 +117,26 @@ Functions</h2></td></tr>
 <tr class="separator:ad2738d11d9b3018aab5d163587239518"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a130af3abbe5cb02a99c3f64d3f3dd979"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#a130af3abbe5cb02a99c3f64d3f3dd979">Clusters</a> (N=100, centers=np.array(((0, 0),(3, 3))), sd=1, seed=None)</td></tr>
 <tr class="separator:a130af3abbe5cb02a99c3f64d3f3dd979"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afb6f087ced9440d9c2834a2a35e4344c"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c">normalDiagram</a> (N=20, mu=(2, 4), sd=1, seed=None)</td></tr>
+<tr class="memdesc:afb6f087ced9440d9c2834a2a35e4344c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a diagram with points drawn from a normal distribution in the persistence diagram plane.  <a href="#afb6f087ced9440d9c2834a2a35e4344c">More...</a><br /></td></tr>
+<tr class="separator:afb6f087ced9440d9c2834a2a35e4344c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad06993de8a3ffe4db7b73ca30c85da4e"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#ad06993de8a3ffe4db7b73ca30c85da4e">testSetClassification</a> (N=20, numDgms=(10, 10), muRed=(1, 3), muBlue=(2, 5), sd=1, permute=True, seed=None)</td></tr>
+<tr class="memdesc:ad06993de8a3ffe4db7b73ca30c85da4e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a collection of diagrams using the <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c" title="Generates a diagram with points drawn from a normal distribution in the persistence diagram plane...">normalDiagram()</a> function for classification tests.  <a href="#ad06993de8a3ffe4db7b73ca30c85da4e">More...</a><br /></td></tr>
+<tr class="separator:ad06993de8a3ffe4db7b73ca30c85da4e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a438eee01f88fa160eac50510250b536d"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#a438eee01f88fa160eac50510250b536d">testSetRegressionLine</a> (N=20, numDgms=40, muStart=(1, 3), muEnd=(2, 5), sd=1, permute=True, seed=None)</td></tr>
+<tr class="memdesc:a438eee01f88fa160eac50510250b536d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a collection of diagrams with means distributed along a line using the <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c" title="Generates a diagram with points drawn from a normal distribution in the persistence diagram plane...">normalDiagram()</a> function for regression tests.  <a href="#a438eee01f88fa160eac50510250b536d">More...</a><br /></td></tr>
+<tr class="separator:a438eee01f88fa160eac50510250b536d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d59e8a0b850c8d65c3f421d72486d35"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#a5d59e8a0b850c8d65c3f421d72486d35">testSetRegressionBall</a> (N=20, numDgms=40, muCenter=(1, 3), sd=1, permute=True, seed=None)</td></tr>
+<tr class="memdesc:a5d59e8a0b850c8d65c3f421d72486d35"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate a collection of diagrams with means distributed normally using the <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c" title="Generates a diagram with points drawn from a normal distribution in the persistence diagram plane...">normalDiagram()</a> function; used for regression tests.  <a href="#a5d59e8a0b850c8d65c3f421d72486d35">More...</a><br /></td></tr>
+<tr class="separator:a5d59e8a0b850c8d65c3f421d72486d35"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d9c892f9f0a63f64437cbbde9048aeb"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#a5d9c892f9f0a63f64437cbbde9048aeb">testSetManifolds</a> (numDgms=50, numPts=300, permute=True, seed=None)</td></tr>
+<tr class="memdesc:a5d9c892f9f0a63f64437cbbde9048aeb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generates a collection of diagrams from different underlying topological spaces.  <a href="#a5d9c892f9f0a63f64437cbbde9048aeb">More...</a><br /></td></tr>
+<tr class="separator:a5d9c892f9f0a63f64437cbbde9048aeb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><pre class="fragment">Generates point clouds of different types.  
-
-Currently goals are:
-1) Circle
-2) Annulus
-3) Ellipse (Buggy)
-4) Torus
-
-All point clouds should be returned as a numpy array, 
-</pre> </div><h2 class="groupheader">Function Documentation</h2>
+<div class="textblock"><p>Generates data sets related to persistence diagrams and point clouds. </p>
+<p>All point clouds are returned as a numpy array, larger collection data is returned as a pandas DataFrame. </p>
+</div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a3720c7f39eecd56c7e4375cc0feef4ed"></a>
 <div class="memitem">
 <div class="memproto">
@@ -345,6 +356,56 @@ P -
     A Nxdim numpy array with the points drawn as the rows.</pre> 
 </div>
 </div>
+<a class="anchor" id="afb6f087ced9440d9c2834a2a35e4344c"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def teaspoon.MakeData.PointCloud.normalDiagram </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>N</em> = <code>20</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>mu</em> = <code>(2,4)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>sd</em> = <code>1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>seed</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Generates a diagram with points drawn from a normal distribution in the persistence diagram plane. </p>
+<p>Pulls <code>N</code> points from a normal distribution with mean <code>mu</code> and standard deviation <code>sd</code>, then discards any points that are below the diagonal. Note, however, that this does not get rid of negative birth times.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">N</td><td>Original number of points drawn for the persistence diagram. </td></tr>
+    <tr><td class="paramname">mu,sd</td><td>Mean and standard deviation of the normal distribution used to generate the points. </td></tr>
+    <tr><td class="paramname">seed</td><td>Used to fix the seed if passed an integer; otherwise should be <code>None</code>. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A persistence diagram given as a numpy array of size <code>Kx2</code>. </dd></dl>
+
+</div>
+</div>
 <a class="anchor" id="af130e51668240f775bca4ff195be2bea"></a>
 <div class="memitem">
 <div class="memproto">
@@ -399,6 +460,269 @@ Returns
 -------
 P -  
     A Nx3 numpy array with the points drawn as the rows.</pre> 
+</div>
+</div>
+<a class="anchor" id="ad06993de8a3ffe4db7b73ca30c85da4e"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def teaspoon.MakeData.PointCloud.testSetClassification </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>N</em> = <code>20</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>numDgms</em> = <code>(10,10)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>muRed</em> = <code>(1,3)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>muBlue</em> = <code>(2,5)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>sd</em> = <code>1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>permute</em> = <code>True</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>seed</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Generate a collection of diagrams using the <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c" title="Generates a diagram with points drawn from a normal distribution in the persistence diagram plane...">normalDiagram()</a> function for classification tests. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">N</td><td>The number of initial diagrams pulled to create each diagram. Diagrams could end up with fewer than <code>N</code> pts as the pts drawn below the diagonal will be discarded. See <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c" title="Generates a diagram with points drawn from a normal distribution in the persistence diagram plane...">normalDiagram()</a> for more information. </td></tr>
+    <tr><td class="paramname">numDgms</td><td>The number of diagrams for the collection. Can either be an integer, in which case <code>numDgms</code> is the number of diagrams of <em>each type</em> that are generated, thus returning a data set with <code>2*numDgms</code> diagrams. Alternatively, <code>numDgms</code> can be passed as a length two list <code>(n,m)</code> where <code>n</code> diagrams of the first type and <code>m</code> diagrams of the second type are drawn, for a total of <code>n+m</code> diagrams. </td></tr>
+    <tr><td class="paramname">muRed,muBlue</td><td>The means used for the normal distribution in <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c" title="Generates a diagram with points drawn from a normal distribution in the persistence diagram plane...">normalDiagram()</a> for the two different types. </td></tr>
+    <tr><td class="paramname">sd</td><td>The standard deviation for the normal distribution used for <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c" title="Generates a diagram with points drawn from a normal distribution in the persistence diagram plane...">normalDiagram()</a>. </td></tr>
+    <tr><td class="paramname">permute</td><td>If <code>permute=True</code>, the data frame returned has its rows randomly permuted. If <code>False</code>, the rows will be red type followed by blue type. </td></tr>
+    <tr><td class="paramname">seed</td><td>Used to fix the seed if passed an integer; otherwise should be <code>None</code>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pandas dataframe with columns <code>['Dgm', 'mean', 'sd', 'trainingLabel']</code>. In this case, the entry in <code>trainingLabel</code> is -1 if the diagram was drawn from the red type, and 1 if drawn from the blue type. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a5d9c892f9f0a63f64437cbbde9048aeb"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def teaspoon.MakeData.PointCloud.testSetManifolds </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>numDgms</em> = <code>50</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>numPts</em> = <code>300</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>permute</em> = <code>True</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>seed</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Generates a collection of diagrams from different underlying topological spaces. </p>
+<p>This set is useful for testing classification tasks.</p>
+<p>The types of underlying spaces with their entry in the <code>trainingLabel</code> column is as follows. Each function uses the default values (except for the number of points) unless otherwise noted.</p><ul>
+<li><b>Torus</b>: A torus embedded in \(\mathbb{R}^3\) using the function <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#a85b2e43a1f8feda494c13d9c8537c0a2">Torus()</a>.</li>
+<li><b>Annulus</b>: An annulus generated with default inputs of <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#a3720c7f39eecd56c7e4375cc0feef4ed">Annulus()</a>.</li>
+<li><b>Cube</b>: Points drawn uniformly from the cube \([0,1]^3 \subset \mathbb{R}^3\) using the function <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#ad2738d11d9b3018aab5d163587239518">Cube()</a>.</li>
+<li><b>3Cluster</b>: Points are drawn using <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#a130af3abbe5cb02a99c3f64d3f3dd979">Clusters()</a> with centers <code>[0,0], [0,1.5], [1.5,0]</code> with <code>sd = 0.05</code>.</li>
+<li><b>3Clusters of 3Clusters</b>: Points are drawn with 9 different centers, which can be loosely grouped into three groups of three; again uses <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#a130af3abbe5cb02a99c3f64d3f3dd979">Clusters()</a> with <code>sd = 0.05</code>. The centers are <code>[0,0], [0,1.5], [1.5,0]</code>; this set rotated 45 degrees and shifted up by 4; and the first set shifted right 3 and up 4.</li>
+<li><b>Sphere</b>: Points drawn from a sphere using <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#af130e51668240f775bca4ff195be2bea">Sphere()</a> with <code>noise = .05</code>.</li>
+</ul>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">numDgms</td><td>The number of diagrams generated of each type. The resulting dataset will have <code>6*numDgms</code> diagrams. </td></tr>
+    <tr><td class="paramname">numPts</td><td>The number of points in each point cloud. </td></tr>
+    <tr><td class="paramname">permute</td><td>If <code>permute=True</code>, the data frame returned has its rows randomly permuted. If <code>False</code>, the rows will be red type followed by blue type. </td></tr>
+    <tr><td class="paramname">seed</td><td>Used to fix the seed if passed an integer; otherwise should be <code>None</code>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pandas DataFrame with columns <code>['Dgm0', 'Dgm1', 'trainingLabel']</code>. The <code>trainingLabel</code> row has entries with labels given as the boldface above. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a5d59e8a0b850c8d65c3f421d72486d35"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def teaspoon.MakeData.PointCloud.testSetRegressionBall </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>N</em> = <code>20</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>numDgms</em> = <code>40</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>muCenter</em> = <code>(1,3)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>sd</em> = <code>1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>permute</em> = <code>True</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>seed</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Generate a collection of diagrams with means distributed normally using the <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c" title="Generates a diagram with points drawn from a normal distribution in the persistence diagram plane...">normalDiagram()</a> function; used for regression tests. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">N</td><td>The number of initial diagrams pulled to create each diagram. Diagrams could end up with fewer than <code>N</code> pts as the pts drawn below the diagonal will be discarded. See <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c" title="Generates a diagram with points drawn from a normal distribution in the persistence diagram plane...">normalDiagram()</a> for more information. </td></tr>
+    <tr><td class="paramname">numDgms</td><td>The number of diagrams for the collection given as an integer. </td></tr>
+    <tr><td class="paramname">muCenter</td><td>The means used for the normal distribution in <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c" title="Generates a diagram with points drawn from a normal distribution in the persistence diagram plane...">normalDiagram()</a> are drawn from the normal distribution with mean <code>muCenter</code>. </td></tr>
+    <tr><td class="paramname">sd</td><td>The standard deviation for the normal distribution used for <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c" title="Generates a diagram with points drawn from a normal distribution in the persistence diagram plane...">normalDiagram()</a>, as well as for the standard deviation passed to <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c" title="Generates a diagram with points drawn from a normal distribution in the persistence diagram plane...">normalDiagram()</a>. </td></tr>
+    <tr><td class="paramname">permute</td><td>If <code>permute=True</code>, the data frame returned has its rows randomly permuted. If <code>False</code>, the rows will be be sorted by the location of the means. </td></tr>
+    <tr><td class="paramname">seed</td><td>Used to fix the seed if passed an integer; otherwise should be <code>None</code>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pandas dataframe with columns <code>['Dgm', 'mean', 'sd', 'trainingLabel']</code>. In this case, <code>trainingLabel</code> is the distance from the mean used for that persistence diagram to <code>muCenter</code>. </dd></dl>
+
+</div>
+</div>
+<a class="anchor" id="a438eee01f88fa160eac50510250b536d"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def teaspoon.MakeData.PointCloud.testSetRegressionLine </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>N</em> = <code>20</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>numDgms</em> = <code>40</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>muStart</em> = <code>(1,3)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>muEnd</em> = <code>(2,5)</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>sd</em> = <code>1</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>permute</em> = <code>True</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>seed</em> = <code>None</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Generate a collection of diagrams with means distributed along a line using the <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c" title="Generates a diagram with points drawn from a normal distribution in the persistence diagram plane...">normalDiagram()</a> function for regression tests. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">N</td><td>The number of initial diagrams pulled to create each diagram. Diagrams could end up with fewer than <code>N</code> pts as the pts drawn below the diagonal will be discarded. See <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c" title="Generates a diagram with points drawn from a normal distribution in the persistence diagram plane...">normalDiagram()</a> for more information. </td></tr>
+    <tr><td class="paramname">numDgms</td><td>The number of diagrams for the collection given as an integer. </td></tr>
+    <tr><td class="paramname">muStart,muEnd</td><td>The means used for the normal distribution in <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c" title="Generates a diagram with points drawn from a normal distribution in the persistence diagram plane...">normalDiagram()</a> are evenly spread along the line segment spanned by <code>muStart</code> and <code>muEnd</code>. </td></tr>
+    <tr><td class="paramname">sd</td><td>The standard deviation for the normal distribution used for <a class="el" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c" title="Generates a diagram with points drawn from a normal distribution in the persistence diagram plane...">normalDiagram()</a>. </td></tr>
+    <tr><td class="paramname">permute</td><td>If <code>permute=True</code>, the data frame returned has its rows randomly permuted. If <code>False</code>, the rows will be be sorted by the location of the means. </td></tr>
+    <tr><td class="paramname">seed</td><td>Used to fix the seed if passed an integer; otherwise should be <code>None</code>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A pandas dataframe with columns <code>['Dgm', 'mean', 'sd', 'trainingLabel']</code>. In this case, <code>trainingLabel</code> is the distance from the mean used for that persistence diagram to <code>muStart</code>. </dd></dl>
+
 </div>
 </div>
 <a class="anchor" id="a85b2e43a1f8feda494c13d9c8537c0a2"></a>

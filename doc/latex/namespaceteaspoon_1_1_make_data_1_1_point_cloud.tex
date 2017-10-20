@@ -1,5 +1,10 @@
 \hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud}{}\section{teaspoon.\+Make\+Data.\+Point\+Cloud Namespace Reference}
 \label{namespaceteaspoon_1_1_make_data_1_1_point_cloud}\index{teaspoon.\+Make\+Data.\+Point\+Cloud@{teaspoon.\+Make\+Data.\+Point\+Cloud}}
+
+
+Generates data sets related to persistence diagrams and point clouds.  
+
+
 \subsection*{Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -14,21 +19,23 @@ def \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a85b2e43a1f8feda4
 def \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_ad2738d11d9b3018aab5d163587239518}{Cube} (N=100, diam=1, dim=2, seed=None)
 \item 
 def \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a130af3abbe5cb02a99c3f64d3f3dd979}{Clusters} (N=100, centers=np.\+array(((0, 0),(3, 3))), sd=1, seed=None)
-\end{DoxyCompactItemize}
+\item 
+def \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram} (N=20, mu=(2, 4), sd=1, seed=None)
+\begin{DoxyCompactList}\small\item\em Generates a diagram with points drawn from a normal distribution in the persistence diagram plane. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_ad06993de8a3ffe4db7b73ca30c85da4e}{test\+Set\+Classification} (N=20, num\+Dgms=(10, 10), mu\+Red=(1, 3), mu\+Blue=(2, 5), sd=1, permute=True, seed=None)
+\begin{DoxyCompactList}\small\item\em Generate a collection of diagrams using the \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()} function for classification tests. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a438eee01f88fa160eac50510250b536d}{test\+Set\+Regression\+Line} (N=20, num\+Dgms=40, mu\+Start=(1, 3), mu\+End=(2, 5), sd=1, permute=True, seed=None)
+\begin{DoxyCompactList}\small\item\em Generate a collection of diagrams with means distributed along a line using the \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()} function for regression tests. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a5d59e8a0b850c8d65c3f421d72486d35}{test\+Set\+Regression\+Ball} (N=20, num\+Dgms=40, mu\+Center=(1, 3), sd=1, permute=True, seed=None)
+\begin{DoxyCompactList}\small\item\em Generate a collection of diagrams with means distributed normally using the \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()} function; used for regression tests. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a5d9c892f9f0a63f64437cbbde9048aeb}{test\+Set\+Manifolds} (num\+Dgms=50, num\+Pts=300, permute=True, seed=None)
+\begin{DoxyCompactList}\small\item\em Generates a collection of diagrams from different underlying topological spaces. \end{DoxyCompactList}\end{DoxyCompactItemize}
 
 
 \subsection{Detailed Description}
-\begin{DoxyVerb}Generates point clouds of different types.  
+Generates data sets related to persistence diagrams and point clouds. 
 
-Currently goals are:
-1) Circle
-2) Annulus
-3) Ellipse (Buggy)
-4) Torus
-
-All point clouds should be returned as a numpy array, 
-\end{DoxyVerb}
- 
+All point clouds are returned as a numpy array, larger collection data is returned as a pandas Data\+Frame. 
 
 \subsection{Function Documentation}
 \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Annulus@{Annulus}}
@@ -147,7 +154,35 @@ Returns
 -------
 P -  
     A Nxdim numpy array with the points drawn as the rows.\end{DoxyVerb}
- \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Sphere@{Sphere}}
+ \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!normal\+Diagram@{normal\+Diagram}}
+\index{normal\+Diagram@{normal\+Diagram}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
+\subsubsection[{\texorpdfstring{normal\+Diagram(\+N=20, mu=(2, 4), sd=1, seed=\+None)}{normalDiagram(N=20, mu=(2, 4), sd=1, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+normal\+Diagram (
+\begin{DoxyParamCaption}
+\item[{}]{N = {\ttfamily 20}, }
+\item[{}]{mu = {\ttfamily (2,4)}, }
+\item[{}]{sd = {\ttfamily 1}, }
+\item[{}]{seed = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}
+
+
+Generates a diagram with points drawn from a normal distribution in the persistence diagram plane. 
+
+Pulls {\ttfamily N} points from a normal distribution with mean {\ttfamily mu} and standard deviation {\ttfamily sd}, then discards any points that are below the diagonal. Note, however, that this does not get rid of negative birth times.
+
+
+\begin{DoxyParams}{Parameters}
+{\em N} & Original number of points drawn for the persistence diagram. \\
+\hline
+{\em mu,sd} & Mean and standard deviation of the normal distribution used to generate the points. \\
+\hline
+{\em seed} & Used to fix the seed if passed an integer; otherwise should be {\ttfamily None}. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A persistence diagram given as a numpy array of size {\ttfamily Kx2}. 
+\end{DoxyReturn}
+\index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Sphere@{Sphere}}
 \index{Sphere@{Sphere}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
 \subsubsection[{\texorpdfstring{Sphere(\+N=100, r=1, noise=0, seed=\+None)}{Sphere(N=100, r=1, noise=0, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Sphere (
 \begin{DoxyParamCaption}
@@ -176,7 +211,151 @@ Returns
 -------
 P -  
     A Nx3 numpy array with the points drawn as the rows.\end{DoxyVerb}
- \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Torus@{Torus}}
+ \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!test\+Set\+Classification@{test\+Set\+Classification}}
+\index{test\+Set\+Classification@{test\+Set\+Classification}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
+\subsubsection[{\texorpdfstring{test\+Set\+Classification(\+N=20, num\+Dgms=(10, 10), mu\+Red=(1, 3), mu\+Blue=(2, 5), sd=1, permute=\+True, seed=\+None)}{testSetClassification(N=20, numDgms=(10, 10), muRed=(1, 3), muBlue=(2, 5), sd=1, permute=True, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+test\+Set\+Classification (
+\begin{DoxyParamCaption}
+\item[{}]{N = {\ttfamily 20}, }
+\item[{}]{num\+Dgms = {\ttfamily (10,10)}, }
+\item[{}]{mu\+Red = {\ttfamily (1,3)}, }
+\item[{}]{mu\+Blue = {\ttfamily (2,5)}, }
+\item[{}]{sd = {\ttfamily 1}, }
+\item[{}]{permute = {\ttfamily True}, }
+\item[{}]{seed = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_ad06993de8a3ffe4db7b73ca30c85da4e}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_ad06993de8a3ffe4db7b73ca30c85da4e}
+
+
+Generate a collection of diagrams using the \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()} function for classification tests. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em N} & The number of initial diagrams pulled to create each diagram. Diagrams could end up with fewer than {\ttfamily N} pts as the pts drawn below the diagonal will be discarded. See \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()} for more information. \\
+\hline
+{\em num\+Dgms} & The number of diagrams for the collection. Can either be an integer, in which case {\ttfamily num\+Dgms} is the number of diagrams of {\itshape each type} that are generated, thus returning a data set with {\ttfamily 2$\ast$num\+Dgms} diagrams. Alternatively, {\ttfamily num\+Dgms} can be passed as a length two list {\ttfamily (n,m)} where {\ttfamily n} diagrams of the first type and {\ttfamily m} diagrams of the second type are drawn, for a total of {\ttfamily n+m} diagrams. \\
+\hline
+{\em mu\+Red,mu\+Blue} & The means used for the normal distribution in \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()} for the two different types. \\
+\hline
+{\em sd} & The standard deviation for the normal distribution used for \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()}. \\
+\hline
+{\em permute} & If {\ttfamily permute=True}, the data frame returned has its rows randomly permuted. If {\ttfamily False}, the rows will be red type followed by blue type. \\
+\hline
+{\em seed} & Used to fix the seed if passed an integer; otherwise should be {\ttfamily None}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pandas dataframe with columns {\ttfamily \mbox{[}\textquotesingle{}Dgm\textquotesingle{}, \textquotesingle{}mean\textquotesingle{}, \textquotesingle{}sd\textquotesingle{}, \textquotesingle{}training\+Label\textquotesingle{}\mbox{]}}. In this case, the entry in {\ttfamily training\+Label} is -\/1 if the diagram was drawn from the red type, and 1 if drawn from the blue type. 
+\end{DoxyReturn}
+\index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!test\+Set\+Manifolds@{test\+Set\+Manifolds}}
+\index{test\+Set\+Manifolds@{test\+Set\+Manifolds}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
+\subsubsection[{\texorpdfstring{test\+Set\+Manifolds(num\+Dgms=50, num\+Pts=300, permute=\+True, seed=\+None)}{testSetManifolds(numDgms=50, numPts=300, permute=True, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+test\+Set\+Manifolds (
+\begin{DoxyParamCaption}
+\item[{}]{num\+Dgms = {\ttfamily 50}, }
+\item[{}]{num\+Pts = {\ttfamily 300}, }
+\item[{}]{permute = {\ttfamily True}, }
+\item[{}]{seed = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a5d9c892f9f0a63f64437cbbde9048aeb}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a5d9c892f9f0a63f64437cbbde9048aeb}
+
+
+Generates a collection of diagrams from different underlying topological spaces. 
+
+This set is useful for testing classification tasks.
+
+The types of underlying spaces with their entry in the {\ttfamily training\+Label} column is as follows. Each function uses the default values (except for the number of points) unless otherwise noted.
+\begin{DoxyItemize}
+\item {\bfseries Torus}\+: A torus embedded in $\mathbb{R}^3$ using the function \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a85b2e43a1f8feda494c13d9c8537c0a2}{Torus()}.
+\item {\bfseries Annulus}\+: An annulus generated with default inputs of \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a3720c7f39eecd56c7e4375cc0feef4ed}{Annulus()}.
+\item {\bfseries Cube}\+: Points drawn uniformly from the cube $[0,1]^3 \subset \mathbb{R}^3$ using the function \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_ad2738d11d9b3018aab5d163587239518}{Cube()}.
+\item {\bfseries 3\+Cluster}\+: Points are drawn using \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a130af3abbe5cb02a99c3f64d3f3dd979}{Clusters()} with centers {\ttfamily \mbox{[}0,0\mbox{]}, \mbox{[}0,1.\+5\mbox{]}, \mbox{[}1.\+5,0\mbox{]}} with {\ttfamily sd = 0.\+05}.
+\item {\bfseries 3\+Clusters of 3\+Clusters}\+: Points are drawn with 9 different centers, which can be loosely grouped into three groups of three; again uses \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a130af3abbe5cb02a99c3f64d3f3dd979}{Clusters()} with {\ttfamily sd = 0.\+05}. The centers are {\ttfamily \mbox{[}0,0\mbox{]}, \mbox{[}0,1.\+5\mbox{]}, \mbox{[}1.\+5,0\mbox{]}}; this set rotated 45 degrees and shifted up by 4; and the first set shifted right 3 and up 4.
+\item {\bfseries Sphere}\+: Points drawn from a sphere using \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_af130e51668240f775bca4ff195be2bea}{Sphere()} with {\ttfamily noise = .05}.
+\end{DoxyItemize}
+
+
+\begin{DoxyParams}{Parameters}
+{\em num\+Dgms} & The number of diagrams generated of each type. The resulting dataset will have {\ttfamily 6$\ast$num\+Dgms} diagrams. \\
+\hline
+{\em num\+Pts} & The number of points in each point cloud. \\
+\hline
+{\em permute} & If {\ttfamily permute=True}, the data frame returned has its rows randomly permuted. If {\ttfamily False}, the rows will be red type followed by blue type. \\
+\hline
+{\em seed} & Used to fix the seed if passed an integer; otherwise should be {\ttfamily None}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pandas Data\+Frame with columns {\ttfamily \mbox{[}\textquotesingle{}Dgm0\textquotesingle{}, \textquotesingle{}Dgm1\textquotesingle{}, \textquotesingle{}training\+Label\textquotesingle{}\mbox{]}}. The {\ttfamily training\+Label} row has entries with labels given as the boldface above. 
+\end{DoxyReturn}
+\index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!test\+Set\+Regression\+Ball@{test\+Set\+Regression\+Ball}}
+\index{test\+Set\+Regression\+Ball@{test\+Set\+Regression\+Ball}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
+\subsubsection[{\texorpdfstring{test\+Set\+Regression\+Ball(\+N=20, num\+Dgms=40, mu\+Center=(1, 3), sd=1, permute=\+True, seed=\+None)}{testSetRegressionBall(N=20, numDgms=40, muCenter=(1, 3), sd=1, permute=True, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+test\+Set\+Regression\+Ball (
+\begin{DoxyParamCaption}
+\item[{}]{N = {\ttfamily 20}, }
+\item[{}]{num\+Dgms = {\ttfamily 40}, }
+\item[{}]{mu\+Center = {\ttfamily (1,3)}, }
+\item[{}]{sd = {\ttfamily 1}, }
+\item[{}]{permute = {\ttfamily True}, }
+\item[{}]{seed = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a5d59e8a0b850c8d65c3f421d72486d35}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a5d59e8a0b850c8d65c3f421d72486d35}
+
+
+Generate a collection of diagrams with means distributed normally using the \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()} function; used for regression tests. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em N} & The number of initial diagrams pulled to create each diagram. Diagrams could end up with fewer than {\ttfamily N} pts as the pts drawn below the diagonal will be discarded. See \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()} for more information. \\
+\hline
+{\em num\+Dgms} & The number of diagrams for the collection given as an integer. \\
+\hline
+{\em mu\+Center} & The means used for the normal distribution in \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()} are drawn from the normal distribution with mean {\ttfamily mu\+Center}. \\
+\hline
+{\em sd} & The standard deviation for the normal distribution used for \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()}, as well as for the standard deviation passed to \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()}. \\
+\hline
+{\em permute} & If {\ttfamily permute=True}, the data frame returned has its rows randomly permuted. If {\ttfamily False}, the rows will be be sorted by the location of the means. \\
+\hline
+{\em seed} & Used to fix the seed if passed an integer; otherwise should be {\ttfamily None}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pandas dataframe with columns {\ttfamily \mbox{[}\textquotesingle{}Dgm\textquotesingle{}, \textquotesingle{}mean\textquotesingle{}, \textquotesingle{}sd\textquotesingle{}, \textquotesingle{}training\+Label\textquotesingle{}\mbox{]}}. In this case, {\ttfamily training\+Label} is the distance from the mean used for that persistence diagram to {\ttfamily mu\+Center}. 
+\end{DoxyReturn}
+\index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!test\+Set\+Regression\+Line@{test\+Set\+Regression\+Line}}
+\index{test\+Set\+Regression\+Line@{test\+Set\+Regression\+Line}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
+\subsubsection[{\texorpdfstring{test\+Set\+Regression\+Line(\+N=20, num\+Dgms=40, mu\+Start=(1, 3), mu\+End=(2, 5), sd=1, permute=\+True, seed=\+None)}{testSetRegressionLine(N=20, numDgms=40, muStart=(1, 3), muEnd=(2, 5), sd=1, permute=True, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+test\+Set\+Regression\+Line (
+\begin{DoxyParamCaption}
+\item[{}]{N = {\ttfamily 20}, }
+\item[{}]{num\+Dgms = {\ttfamily 40}, }
+\item[{}]{mu\+Start = {\ttfamily (1,3)}, }
+\item[{}]{mu\+End = {\ttfamily (2,5)}, }
+\item[{}]{sd = {\ttfamily 1}, }
+\item[{}]{permute = {\ttfamily True}, }
+\item[{}]{seed = {\ttfamily None}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a438eee01f88fa160eac50510250b536d}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a438eee01f88fa160eac50510250b536d}
+
+
+Generate a collection of diagrams with means distributed along a line using the \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()} function for regression tests. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em N} & The number of initial diagrams pulled to create each diagram. Diagrams could end up with fewer than {\ttfamily N} pts as the pts drawn below the diagonal will be discarded. See \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()} for more information. \\
+\hline
+{\em num\+Dgms} & The number of diagrams for the collection given as an integer. \\
+\hline
+{\em mu\+Start,mu\+End} & The means used for the normal distribution in \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()} are evenly spread along the line segment spanned by {\ttfamily mu\+Start} and {\ttfamily mu\+End}. \\
+\hline
+{\em sd} & The standard deviation for the normal distribution used for \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()}. \\
+\hline
+{\em permute} & If {\ttfamily permute=True}, the data frame returned has its rows randomly permuted. If {\ttfamily False}, the rows will be be sorted by the location of the means. \\
+\hline
+{\em seed} & Used to fix the seed if passed an integer; otherwise should be {\ttfamily None}.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A pandas dataframe with columns {\ttfamily \mbox{[}\textquotesingle{}Dgm\textquotesingle{}, \textquotesingle{}mean\textquotesingle{}, \textquotesingle{}sd\textquotesingle{}, \textquotesingle{}training\+Label\textquotesingle{}\mbox{]}}. In this case, {\ttfamily training\+Label} is the distance from the mean used for that persistence diagram to {\ttfamily mu\+Start}. 
+\end{DoxyReturn}
+\index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Torus@{Torus}}
 \index{Torus@{Torus}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
 \subsubsection[{\texorpdfstring{Torus(\+N=100, r=1, R=2, seed=\+None)}{Torus(N=100, r=1, R=2, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Torus (
 \begin{DoxyParamCaption}

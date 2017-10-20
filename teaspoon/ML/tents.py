@@ -150,7 +150,7 @@ def tent(x, y, i,j, delta = 1, epsilon = 0):
 ## Generates row of features for the given diagram
 #
 # 
-# 	@param Dgms
+# 	@param Dgm
 # 		A list or pd.Series. Length = M.
 # 		Each entry is an N x 2 numpy array with off diagonal 
 # 		points from the persistence diagram

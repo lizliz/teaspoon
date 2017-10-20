@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['outputfiles',['outputFiles',['../namespaceteaspoon_1_1_t_d_a_1_1_persistence.html#ae41c85513e98b32d96c75124929c4d2c',1,'teaspoon::TDA::Persistence']]]
+  ['normaldiagram',['normalDiagram',['../namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c',1,'teaspoon::MakeData::PointCloud']]]
 ];

@@ -1,19 +1,14 @@
-'''
-Generates point clouds of different types.  
-
-Currently goals are:
-1) Circle
-2) Annulus
-3) Ellipse (Buggy)
-4) Torus
-
-All point clouds should be returned as a numpy array, 
-'''
+## @package teaspoon.MakeData.PointCloud
+# Generates data sets related to persistence diagrams and point clouds.
+# 
+#All point clouds are returned as a numpy array, larger collection data is returned as a pandas DataFrame.
 
 import random
 import os
 import numpy as np
-
+import pandas as pd
+import teaspoon.TDA.Persistence as pP
+from scipy.spatial.distance import euclidean
 
 
 
@@ -231,13 +226,16 @@ def Cube(N = 100, diam = 1, dim = 2, seed = None):
 
     P = diam*np.random.random((N,dim))
 
-    return P.T
+    return P
 
 
 
 #----------------------------------------------------------------------#
 
-def Clusters(N = 100, centers = np.array(((0,0),(3,3))),sd = 1, seed = None):
+def Clusters(N = 100, 
+            centers = np.array(((0,0),(3,3))),
+            sd = 1, 
+            seed = None):
     """
     Generate k clusters of points, N points in total (evenly divided?)
     centers is a k x d numpy array, where centers[i,:] is the center of 
@@ -273,7 +271,8 @@ def Clusters(N = 100, centers = np.array(((0,0),(3,3))),sd = 1, seed = None):
     d = np.shape(centers)[1]
 
     # Identity matrix for covariance
-    I = np.eye(d)
+    I = sd * np.eye(d)
+
 
     # Number of clusters
     k = np.shape(centers)[0]
@@ -299,3 +298,335 @@ def Clusters(N = 100, centers = np.array(((0,0),(3,3))),sd = 1, seed = None):
 #----------------------------------------------------------------------#
 
 
+
+#----------------------------------------------------------------------#
+#----------------------------------------------------------------------#
+#----------------Sets of data for ML-----------------------------------#
+#----------------------------------------------------------------------#
+#----------------------------------------------------------------------#
+
+
+#----------------------------------------------------------------------#
+#------------Normally distributed points in (birth,death) plane--------#
+#----------------------------------------------------------------------#
+
+## Generates a diagram with points drawn from a normal distribution  in the persistence diagram plane.
+# Pulls `N` points from a normal distribution with mean `mu` and standard deviation `sd`, then discards any points that are below the diagonal.  Note, however, that this does not get rid of negative birth times.
+# 
+# @param N 
+#   Original number of points drawn for the persistence diagram.
+# @param mu, sd
+#   Mean and standard deviation of the normal distribution used to generate the points.
+# @param seed
+#   Used to fix the seed if passed an integer; otherwise should be `None`.
+# @return
+#   A persistence diagram given as a numpy array of size `Kx2`.
+def normalDiagram(N=20, mu=(2,4), sd=1, seed = None):
+
+
+    np.random.seed(seed)
+    dgm = np.zeros((20,2))
+    dgm[:,0] = np.random.normal(mu[0],sd,20).T
+    dgm[:,1] = np.random.normal(mu[1],sd,20).T
+
+    good = np.where(dgm[:,1]-dgm[:,0] > 0)
+    dgm = dgm[good,:]
+    dgm = dgm[0,:,:]
+
+
+    return dgm
+
+
+
+
+## Generate a collection of diagrams using the normalDiagram() function for classification tests.
+# @param N
+#   The number of initial diagrams pulled to create each diagram.  Diagrams could end up with fewer than `N` pts as the pts drawn below the diagonal will be discarded. See normalDiagram() for more information.
+# @param numDgms
+#   The number of diagrams for the collection.  Can either be an integer, in which case `numDgms` is the number of diagrams of *each type* that are generated, thus returning a data set with `2*numDgms` diagrams.  Alternatively, `numDgms` can be passed as a length two list `(n,m)` where `n` diagrams of the first type and `m` diagrams of the second type are drawn, for a total of `n+m` diagrams.
+# @param muRed, muBlue
+#   The means used for the normal distribution in normalDiagram() for the two different types.
+# @param sd
+#   The standard deviation for the normal distribution used for normalDiagram().
+# @param permute
+#   If ```permute=True```, the data frame returned has its rows randomly permuted.  If `False`, the rows will be red type followed by blue type.
+# @param seed
+#   Used to fix the seed if passed an integer; otherwise should be `None`.
+#
+# @return 
+#   A pandas dataframe with columns ```['Dgm', 'mean', 'sd', 'trainingLabel']```. In this case, the entry in `trainingLabel` is -1 if the diagram was drawn from the red type, and 1 if drawn from the blue type.
+def testSetClassification(N = 20,
+                    numDgms = (10,10),
+                    muRed = (1,3),
+                    muBlue = (2,5),
+                    sd = 1, 
+                    permute = True,
+                    seed = None):
+
+
+
+    if type(numDgms) == int:
+        numDgms = (numDgms,numDgms)
+
+    columns = ['Dgm', 'mean', 'sd', 'trainingLabel']
+    index = range(sum(numDgms))
+    DgmsDF = pd.DataFrame(columns = columns, index = index)
+
+
+    counter = 0 
+
+    for i in range(numDgms[0]):
+        if not seed == None:
+            seed += 1
+        dgm = normalDiagram(N=N, mu=muRed, sd=sd, seed = seed)
+        DgmsDF.loc[counter] = [dgm, muRed, sd, -1]
+        counter += 1
+        # Dgms.append(dgm)
+
+    for j in range(numDgms[1]):
+        if not seed == None:
+            seed += 1
+        dgm = normalDiagram(N=N, mu=muBlue, sd=sd, seed = seed)
+        DgmsDF.loc[counter] = [dgm, muBlue, sd, 1]
+        counter += 1
+        # Dgms.append(dgm)
+
+    # Permute the data
+    if permute:
+        DgmsDF = DgmsDF.reindex(np.random.permutation(DgmsDF.index))
+
+
+    return DgmsDF
+
+
+#------Experiment testing regression----------------------------
+#---------------LINEAR---------------------------------------
+#-----------------------------------------------
+
+## Generate a collection of diagrams with means distributed along a line using the normalDiagram() function for regression tests.
+# @param N
+#   The number of initial diagrams pulled to create each diagram.  Diagrams could end up with fewer than `N` pts as the pts drawn below the diagonal will be discarded. See normalDiagram() for more information.
+# @param numDgms
+#   The number of diagrams for the collection given as an integer.  
+# @param muStart, muEnd
+#   The means used for the normal distribution in normalDiagram() are evenly spread along the line segment spanned by `muStart` and `muEnd`.
+# @param sd
+#   The standard deviation for the normal distribution used for normalDiagram().
+# @param permute
+#   If ```permute=True```, the data frame returned has its rows randomly permuted.  If `False`, the rows will be be sorted by the location of the means.
+# @param seed
+#   Used to fix the seed if passed an integer; otherwise should be `None`.
+#
+# @return 
+#   A pandas dataframe with columns ```['Dgm', 'mean', 'sd', 'trainingLabel']```.  In this case, `trainingLabel` is the distance from the mean used for that persistence diagram to `muStart`. 
+def testSetRegressionLine(N = 20,
+                    numDgms = 40,
+                    muStart = (1,3),
+                    muEnd = (2,5),
+                    sd = 1, 
+                    permute = True,
+                    seed = None):
+    columns = ['Dgm', 'mean', 'sd', 'trainingLabel']
+    index = range(numDgms)
+    DgmsDF = pd.DataFrame(columns = columns, index = index)
+
+    t = np.random.random((numDgms,1))
+    centers = np.array((muStart))*t + np.array((muEnd))*(1-t)
+
+    for i in index:
+        if not seed == None:
+            seed += 1
+        mu = centers[i,:]
+        dgm = normalDiagram(N=N, mu=mu, sd=sd, seed = seed)
+        distToStart = euclidean(muStart,mu)
+        DgmsDF.loc[i] = [dgm, mu, sd, distToStart]
+
+
+
+    # Permute the data
+    if permute:
+        DgmsDF = DgmsDF.reindex(np.random.permutation(DgmsDF.index))
+
+
+    return DgmsDF
+
+
+#------Experiment testing regression----------------------------
+#---------------2D-ball around center-----------------------
+#-----------------------------------------------
+
+## Generate a collection of diagrams with means distributed normally using the normalDiagram() function; used for regression tests.
+# @param N
+#   The number of initial diagrams pulled to create each diagram.  Diagrams could end up with fewer than `N` pts as the pts drawn below the diagonal will be discarded. See normalDiagram() for more information.
+# @param numDgms
+#   The number of diagrams for the collection given as an integer.  
+# @param muCenter
+#   The means used for the normal distribution in normalDiagram() are drawn from the normal distribution with mean `muCenter`.
+# @param sd
+#   The standard deviation for the normal distribution used for normalDiagram(), as well as for the standard deviation passed to normalDiagram().
+# @param permute
+#   If ```permute=True```, the data frame returned has its rows randomly permuted.  If `False`, the rows will be be sorted by the location of the means.
+# @param seed
+#   Used to fix the seed if passed an integer; otherwise should be `None`.
+#
+# @return 
+#   A pandas dataframe with columns ```['Dgm', 'mean', 'sd', 'trainingLabel']```.  In this case, `trainingLabel` is the distance from the mean used for that persistence diagram to `muCenter`. 
+def testSetRegressionBall(N = 20,
+                    numDgms = 40,
+                    muCenter = (1,3),
+                    sd = 1, 
+                    permute = True,
+                    seed = None):
+
+    columns = ['Dgm', 'mean', 'sd', 'trainingLabel']
+    index = range(numDgms)
+    DgmsDF = pd.DataFrame(columns = columns, index = index)
+
+    centers =  np.random.normal(loc=muCenter, scale = sd, size = (numDgms,2))
+
+    for i in index:
+        if not seed == None:
+            seed += 1
+        mu = centers[i,:]
+        dgm = normalDiagram(N=N, mu=mu, sd=sd, seed = seed)
+        distToStart = euclidean(muCenter,mu)
+        DgmsDF.loc[i] = [dgm, mu, sd, distToStart]
+
+
+
+    # Permute the data
+    if permute:
+        DgmsDF = DgmsDF.reindex(np.random.permutation(DgmsDF.index))
+
+
+    return DgmsDF
+
+
+
+#------------------------------------------------------------#
+
+
+## Generates a collection of diagrams from different underlying topological spaces.  This set is useful for testing classification tasks.
+#
+# The types of underlying spaces with their entry in the `trainingLabel` column is as follows. Each function uses the default values (except for the number of points) unless otherwise noted.
+# - **Torus**: A torus embedded in \f$\mathbb{R}^3\f$ using the function Torus().
+# - **Annulus**: An annulus generated with default inputs of Annulus().
+# - **Cube**: Points drawn uniformly from the cube \f$[0,1]^3 \subset \mathbb{R}^3\f$ using the function Cube().
+# - **3Cluster**: Points are drawn using Clusters() with centers `[0,0], [0,1.5], [1.5,0]` with `sd = 0.05`.
+# - **3Clusters of 3Clusters**: Points are drawn with 9 different centers, which can be loosely grouped into three groups of three; again uses Clusters() with `sd = 0.05`. The centers are `[0,0], [0,1.5], [1.5,0]`; this set rotated 45 degrees and shifted up by 4; and the first set shifted right 3 and up 4.
+# - **Sphere**: Points drawn from a sphere using Sphere() with `noise = .05`.
+#
+#
+# @param numDgms
+#   The number of diagrams generated of each type. The resulting dataset will have `6*numDgms` diagrams.
+# @param numPts
+#   The number of points in each point cloud.
+# @param permute
+#   If ```permute=True```, the data frame returned has its rows randomly permuted.  If `False`, the rows will be red type followed by blue type.
+# @param seed
+#   Used to fix the seed if passed an integer; otherwise should be `None`.
+#
+# @return
+#   A pandas DataFrame with columns ```['Dgm0', 'Dgm1', 'trainingLabel']```.  The `trainingLabel` row has entries with labels given as the boldface above.
+#
+def testSetManifolds(numDgms = 50, 
+                        numPts = 300, 
+                        permute = True,
+                        seed = None
+                        ):
+
+
+
+    columns = ['Dgm0', 'Dgm1', 'trainingLabel']
+    index = range(6*numDgms)
+    DgmsDF = pd.DataFrame(columns = columns, index = index)
+
+    counter = 0
+
+    if type(seed) == int:
+        fixSeed = True
+    else:
+        fixSeed = False
+
+    #-
+    print('Generating torus clouds...')
+    for i in range(numDgms):
+        if fixSeed:
+            seed += 1
+        dgmOut = pP.VR_Ripser(Torus(N=numPts,seed = seed))
+        DgmsDF.loc[counter] = [dgmOut[0],dgmOut[1], 'Torus']
+        counter +=1
+
+    #-
+    print('Generating annuli clouds...')
+    for i in range(numDgms):
+        if fixSeed:
+            seed += 1
+        dgmOut = pP.VR_Ripser(Annulus(N=numPts,seed = seed))
+        DgmsDF.loc[counter] = [dgmOut[0],dgmOut[1], 'Annulus']
+        counter +=1
+
+    #-
+    print('Generating cube clouds...')
+    for i in range(numDgms):
+        if fixSeed:
+            seed += 1
+        dgmOut = pP.VR_Ripser(Cube(N=numPts,seed = seed))
+        # Dgms.append([dgmOut[0],dgmOut[1]])
+        DgmsDF.loc[counter] = [dgmOut[0],dgmOut[1], 'Cube']
+        counter +=1
+
+    #-
+    print('Generating three cluster clouds...')
+    # Centered at (0,0), (0,5), and (5,0) with sd =1
+    # Then scaled by .3 to make birth/death times closer to the other examples
+    centers = np.array( [ [0,0], [0,2], [2,0]  ])
+    # centers = np.array( [ [0,0], [0,2], [2,0]  ])
+    for i in range(numDgms):
+        if fixSeed:
+            seed += 1
+        dgmOut = pP.VR_Ripser(*Clusters(centers=centers, N = numPts, seed = seed))
+        DgmsDF.loc[counter] = [dgmOut[0],dgmOut[1], '3Cluster']
+        counter +=1
+
+
+
+    #-
+    print('Generating three clusters of three clusters clouds...')
+
+    centers = np.array( [ [0,0], [0,1.5], [1.5,0]  ])
+    theta = np.pi/4
+    centersUp = np.dot(centers,np.array([(np.sin(theta),np.cos(theta)),(np.cos(theta),-np.sin(theta))])) + [0,4]
+    centersUpRight = centers + [3,4]
+    centers = np.concatenate( (centers,  centersUp, centersUpRight))
+    for i in range(numDgms):
+        if fixSeed:
+            seed += 1
+        dgmOut = pP.VR_Ripser(Clusters(centers=centers, 
+                                        N = numPts, 
+                                        sd = .05,
+                                        seed = seed))
+        # Dgms.append([dgmOut[0],dgmOut[1]])
+        DgmsDF.loc[counter] = [dgmOut[0],dgmOut[1], '3Clusters of 3Clusters']
+        counter +=1
+
+
+
+    #-
+    print('Generating sphere clouds...')
+
+    for i in range(numDgms):
+        if fixSeed:
+            seed += 1
+        dgmOut = pP.VR_Ripser(Sphere(N = numPts, noise = .05,seed = seed))
+        DgmsDF.loc[counter] = [dgmOut[0],dgmOut[1], 'Sphere']
+        counter +=1
+
+    print('Finished generating clouds and computing persistence.\n')
+
+    # Permute the diagrams if necessary.
+    if permute:
+        DgmsDF = DgmsDF.reindex(np.random.permutation(DgmsDF.index))
+
+
+    return DgmsDF
