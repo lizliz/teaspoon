@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['normaldiagram',['normalDiagram',['../namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c',1,'teaspoon::MakeData::PointCloud']]]
+  ['getpercentscore',['getPercentScore',['../namespaceteaspoon_1_1_m_l_1_1tents.html#a90cc7e8be9f3e13ef4528d1239fda660',1,'teaspoon::ML::tents']]]
 ];

@@ -35,7 +35,26 @@ def {\bfseries write\+Matrix\+File\+For\+Perseus} (M, filesavename)\hypertarget{
 
 \item 
 def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_aa583aa9a694aeaa3983e77319ac68e84}{Cubical\+\_\+\+Perseus} (M, num\+Digits=2, suppress\+Output=True)
-\begin{DoxyCompactList}\small\item\em Computes persistence for a matrix of function values using Vidit Nanda\textquotesingle{}s \href{http://people.maths.ox.ac.uk/nanda/perseus/index.html}{\tt perseus}. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em Computes persistence for a matrix of function values using Vidit Nanda\textquotesingle{}s \href{http://people.maths.ox.ac.uk/nanda/perseus/index.html}{\tt perseus}. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_aadc062063e1ed3050361dba5c7d47a0f}{min\+Pers} (Dgm)
+\begin{DoxyCompactList}\small\item\em Gets minimum persistence for a given diagram. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_aff5b752e3141736e91e1386d28b3dfd5}{max\+Pers} (Dgm)
+\begin{DoxyCompactList}\small\item\em Gets maximum persistence for a given diagram. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_aa91a12cbd748fc2f13944fbc653739d1}{max\+Birth} (Dgm)
+\begin{DoxyCompactList}\small\item\em Gets maximum birth for a given diagram. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a4cb4a0b96d87e48f0d1170fd0252a9ae}{min\+Birth} (Dgm)
+\begin{DoxyCompactList}\small\item\em Gets minimum birth for a given diagram. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a5ce3d1bee444c695661556eb59f70d90}{min\+Persistence\+Series} (Dgms\+Series)
+\begin{DoxyCompactList}\small\item\em Gets minimum persistence for a pandas.\+Series with diagrams as entries. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a6413fcc8a65a5422547f264331eb5c7d}{max\+Persistence\+Series} (Dgms\+Series)
+\begin{DoxyCompactList}\small\item\em Gets maximum persistence for a pandas.\+Series with diagrams as entries. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a1db04f6a997b34a930bc3e28d2cb709e}{min\+Birth\+Series} (Dgms\+Series)
+\begin{DoxyCompactList}\small\item\em Gets minimum persistence for a pandas.\+Series with diagrams as entries. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a866a47a538d7042da1de685bed83d00e}{max\+Birth\+Series} (Dgms\+Series)
+\begin{DoxyCompactList}\small\item\em Gets maximum persistence for a pandas.\+Series with diagrams as entries. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_t_d_a_1_1_persistence_abdeeb8bb1d1c2c82b26d2e55b0fd42a3}{remove\+Infinite\+Classes} (Dgm)\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_abdeeb8bb1d1c2c82b26d2e55b0fd42a3}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_abdeeb8bb1d1c2c82b26d2e55b0fd42a3}
+
+\begin{DoxyCompactList}\small\item\em Simply deletes classes that have infinite lifetimes. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \subsection*{Variables}
 \begin{DoxyCompactItemize}
 \item 
@@ -142,6 +161,174 @@ Ripser needs to be installed on machine in advance. This code doesn\textquotesin
 \end{DoxyParams}
 \begin{DoxyReturn}{Returns}
 A dictionary Dgms where Dgms\mbox{[}k\mbox{]} is a lx2 matrix giving points in the k-\/dimensional pers diagram 
+\end{DoxyReturn}
+\index{teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}!max\+Birth@{max\+Birth}}
+\index{max\+Birth@{max\+Birth}!teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}}
+\subsubsection[{\texorpdfstring{max\+Birth(\+Dgm)}{maxBirth(Dgm)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Persistence.\+max\+Birth (
+\begin{DoxyParamCaption}
+\item[{}]{Dgm}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_aa91a12cbd748fc2f13944fbc653739d1}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_aa91a12cbd748fc2f13944fbc653739d1}
+
+
+Gets maximum birth for a given diagram. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Dgm} & a 2D numpy array\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+float 
+\end{DoxyReturn}
+\index{teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}!max\+Birth\+Series@{max\+Birth\+Series}}
+\index{max\+Birth\+Series@{max\+Birth\+Series}!teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}}
+\subsubsection[{\texorpdfstring{max\+Birth\+Series(\+Dgms\+Series)}{maxBirthSeries(DgmsSeries)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Persistence.\+max\+Birth\+Series (
+\begin{DoxyParamCaption}
+\item[{}]{Dgms\+Series}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a866a47a538d7042da1de685bed83d00e}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a866a47a538d7042da1de685bed83d00e}
+
+
+Gets maximum persistence for a pandas.\+Series with diagrams as entries. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Dgm\+Series} & a pandas.\+Series with entries Kx2 numpy arrays representing persistence diagrams.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+float \begin{DoxyVerb}Takes data frame DgmsDF
+Finds maximum persistence over all diagrams in
+column with label dgm_col
+\end{DoxyVerb}
+ 
+\end{DoxyReturn}
+\index{teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}!max\+Pers@{max\+Pers}}
+\index{max\+Pers@{max\+Pers}!teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}}
+\subsubsection[{\texorpdfstring{max\+Pers(\+Dgm)}{maxPers(Dgm)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Persistence.\+max\+Pers (
+\begin{DoxyParamCaption}
+\item[{}]{Dgm}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_aff5b752e3141736e91e1386d28b3dfd5}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_aff5b752e3141736e91e1386d28b3dfd5}
+
+
+Gets maximum persistence for a given diagram. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Dgm} & a 2D numpy array\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+float 
+\end{DoxyReturn}
+\index{teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}!max\+Persistence\+Series@{max\+Persistence\+Series}}
+\index{max\+Persistence\+Series@{max\+Persistence\+Series}!teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}}
+\subsubsection[{\texorpdfstring{max\+Persistence\+Series(\+Dgms\+Series)}{maxPersistenceSeries(DgmsSeries)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Persistence.\+max\+Persistence\+Series (
+\begin{DoxyParamCaption}
+\item[{}]{Dgms\+Series}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a6413fcc8a65a5422547f264331eb5c7d}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a6413fcc8a65a5422547f264331eb5c7d}
+
+
+Gets maximum persistence for a pandas.\+Series with diagrams as entries. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Dgm\+Series} & a pandas.\+Series with entries Kx2 numpy arrays representing persistence diagrams.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+float \begin{DoxyVerb}Takes data frame DgmsDF
+Finds maximum persistence over all diagrams in
+column with label dgm_col
+\end{DoxyVerb}
+ 
+\end{DoxyReturn}
+\index{teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}!min\+Birth@{min\+Birth}}
+\index{min\+Birth@{min\+Birth}!teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}}
+\subsubsection[{\texorpdfstring{min\+Birth(\+Dgm)}{minBirth(Dgm)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Persistence.\+min\+Birth (
+\begin{DoxyParamCaption}
+\item[{}]{Dgm}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a4cb4a0b96d87e48f0d1170fd0252a9ae}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a4cb4a0b96d87e48f0d1170fd0252a9ae}
+
+
+Gets minimum birth for a given diagram. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Dgm} & a 2D numpy array\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+float 
+\end{DoxyReturn}
+\index{teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}!min\+Birth\+Series@{min\+Birth\+Series}}
+\index{min\+Birth\+Series@{min\+Birth\+Series}!teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}}
+\subsubsection[{\texorpdfstring{min\+Birth\+Series(\+Dgms\+Series)}{minBirthSeries(DgmsSeries)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Persistence.\+min\+Birth\+Series (
+\begin{DoxyParamCaption}
+\item[{}]{Dgms\+Series}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a1db04f6a997b34a930bc3e28d2cb709e}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a1db04f6a997b34a930bc3e28d2cb709e}
+
+
+Gets minimum persistence for a pandas.\+Series with diagrams as entries. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Dgm\+Series} & a pandas.\+Series with entries Kx2 numpy arrays representing persistence diagrams.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+float \begin{DoxyVerb}Takes data frame DgmsDF
+Finds minimum persistence over all diagrams in
+column with label dgm_col
+\end{DoxyVerb}
+ 
+\end{DoxyReturn}
+\index{teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}!min\+Pers@{min\+Pers}}
+\index{min\+Pers@{min\+Pers}!teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}}
+\subsubsection[{\texorpdfstring{min\+Pers(\+Dgm)}{minPers(Dgm)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Persistence.\+min\+Pers (
+\begin{DoxyParamCaption}
+\item[{}]{Dgm}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_aadc062063e1ed3050361dba5c7d47a0f}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_aadc062063e1ed3050361dba5c7d47a0f}
+
+
+Gets minimum persistence for a given diagram. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Dgm} & a 2D numpy array\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+float 
+\end{DoxyReturn}
+\index{teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}!min\+Persistence\+Series@{min\+Persistence\+Series}}
+\index{min\+Persistence\+Series@{min\+Persistence\+Series}!teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}}
+\subsubsection[{\texorpdfstring{min\+Persistence\+Series(\+Dgms\+Series)}{minPersistenceSeries(DgmsSeries)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Persistence.\+min\+Persistence\+Series (
+\begin{DoxyParamCaption}
+\item[{}]{Dgms\+Series}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a5ce3d1bee444c695661556eb59f70d90}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_persistence_a5ce3d1bee444c695661556eb59f70d90}
+
+
+Gets minimum persistence for a pandas.\+Series with diagrams as entries. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Dgm\+Series} & a pandas.\+Series with entries Kx2 numpy arrays representing persistence diagrams.\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+float \begin{DoxyVerb}Takes data frame DgmsDF
+Finds minimum persistence over all diagrams in
+column with label dgm_col
+\end{DoxyVerb}
+ 
 \end{DoxyReturn}
 \index{teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}!V\+R\+\_\+\+Perseus@{V\+R\+\_\+\+Perseus}}
 \index{V\+R\+\_\+\+Perseus@{V\+R\+\_\+\+Perseus}!teaspoon\+::\+T\+D\+A\+::\+Persistence@{teaspoon\+::\+T\+D\+A\+::\+Persistence}}

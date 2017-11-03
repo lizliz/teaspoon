@@ -126,6 +126,11 @@ Public Member Functions</h2></td></tr>
 def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html#a39e9d1148208dce4a8dec9354afb789d">__str__</a> (self)</td></tr>
 <tr class="memdesc:a39e9d1148208dce4a8dec9354afb789d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nicely prints all currently set values in the <a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html" title="A class for storing all of the chosen parameters for a data frame and computation of ML...">ParameterBucket</a>. <br /></td></tr>
 <tr class="separator:a39e9d1148208dce4a8dec9354afb789d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbc1ce46c67e2a86a72d93cdcba558ea"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html#afbc1ce46c67e2a86a72d93cdcba558ea">encloseDgms</a> (self, DgmSeries)</td></tr>
+<tr class="memdesc:afbc1ce46c67e2a86a72d93cdcba558ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests to see if the parameters enclose the persistence diagrams in the DgmSeries.  <a href="#afbc1ce46c67e2a86a72d93cdcba558ea">More...</a><br /></td></tr>
+<tr class="separator:afbc1ce46c67e2a86a72d93cdcba558ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dd95135123384b08f2e8fccd11e7d27"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html#a4dd95135123384b08f2e8fccd11e7d27">chooseDeltaEpsWithPadding</a> (self, DgmsSeries, pad=0)</td></tr>
+<tr class="separator:a4dd95135123384b08f2e8fccd11e7d27"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -237,6 +242,72 @@ Public Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a class="anchor" id="a4dd95135123384b08f2e8fccd11e7d27"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def teaspoon.ML.tents.ParameterBucket.chooseDeltaEpsWithPadding </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>DgmsSeries</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>pad</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">DgmsSeries is pd.series
+d is number of grid elements in either direction
+pad is the additional padding outside of the points in the diagrams
+
+Sets the needed delta and epsilon </pre> 
+</div>
+</div>
+<a class="anchor" id="afbc1ce46c67e2a86a72d93cdcba558ea"></a>
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def teaspoon.ML.tents.ParameterBucket.encloseDgms </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>DgmSeries</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Tests to see if the parameters enclose the persistence diagrams in the DgmSeries. </p>
+<dl class="section return"><dt>Returns</dt><dd>boolean </dd></dl>
 
 </div>
 </div>

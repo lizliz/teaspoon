@@ -9,6 +9,7 @@
 
 
 from teaspoon.Misc import printPrettyTime
+import teaspoon.TDA.Persistence as pP
 
 import time
 import numpy as np
@@ -18,7 +19,8 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression, Ridge, RidgeCV, RidgeClassifierCV, LassoCV
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn import metrics
-
+from scipy.special import comb
+import itertools
 
 
 
@@ -86,6 +88,69 @@ class ParameterBucket(object):
 			output += str(attrs[key])+ '\n'
 		output += '---\n'
 		return output
+
+	def encloseDgms(self, DgmSeries):
+		'''!
+		@brief Tests to see if the parameters enclose the persistence diagrams in the DgmSeries
+
+		@returns boolean
+		'''
+
+		# Height of parallelogram; equivalently maximum lifetime enclosed
+		height = self.d * self.delta + self.epsilon
+		width = self.d * self.delta
+
+		minBirth = pP.minBirthSeries(DgmSeries)
+		if minBirth <0:
+			print("This code assumes positive birth times.")
+			return False
+
+		maxBirth = pP.maxBirthSeries(DgmSeries)
+		if maxBirth > width:
+			print('There are birth times outside the bounding box.')
+			return False
+
+		minPers = pP.minPersistenceSeries(DgmSeries)
+		if minPers < self.epsilon:
+			print('There are points below the epsilon shift.')
+			return False
+
+		maxPers = pP.maxPersistenceSeries(DgmSeries)
+		if maxPers > height:
+			print('There are points above the box.')
+			return False
+
+		return True
+
+	def chooseDeltaEpsWithPadding(self, DgmsSeries, pad = 0):
+		'''
+		
+		DgmsSeries is pd.series
+		d is number of grid elements in either direction
+		pad is the additional padding outside of the points in the diagrams
+
+		Sets the needed delta and epsilon 
+
+
+		'''
+
+		topPers = pP.maxPersistenceSeries(DgmsSeries)
+		bottomPers = pP.minPersistenceSeries(DgmsSeries)
+		topBirth = max(DgmsSeries.apply(pP.maxBirth))
+
+		height = max(topPers,topBirth)
+
+		bottomBirth = min(DgmsSeries.apply(pP.minBirth))
+		if bottomBirth < 0:
+			print('This code assumes that birth time is always positive\nbut you have negative birth times....')
+			print('Your minimum birth time was', bottomBirth)
+
+		epsilon = bottomPers/2
+
+		delta = (height + pad - epsilon) / self.d
+
+		self.delta = delta
+		self.epsilon = epsilon
 
 
 
@@ -263,8 +328,9 @@ def build_G(Dgms,
 
 	G = np.zeros((M,d**2+d))
 	for m, Dgm in enumerate(Dgms):
+		print('\tCreating row ' + str(m) + ' out of ' + str(M) + '...', end ='\r' )
 		G[m,:] = build_Gm(Dgm,d,delta,epsilon,featureFunc = featureFunc)
-
+	print('')
 	if maxPower > 1:
 		numCols = np.shape(G)[1] #num of cols in G
 
@@ -350,21 +416,8 @@ def TentML(DgmsDF,
 		return
 
 	clf = params.clfClass()
-	# if params.classificationType == 'Ridge Classifier':
-	# 	clf = RidgeClassifierCV() #(store_cv_values=True)
-	# elif params.classificationType == 'Ridge Regression':
-	# 	clf = RidgeCV()
-	# elif params.classificationType == 'Lasso Classifier':
-	# 	clf = LassoCV()
-	# else:
-	# 	print("You didn't specify a valid classification type.")
-	# 	print("Currently, you have params.classificationType =", params.classificationType)
-	# 	print("Exiting...")
-	# 	return
-
 
 	print('Training estimator.') # ' Type is ' + params.clfClass + '...')
-	print('Max power is', params.maxPower,'...')
 	# print('The column used for labels is: ' + labels_col + '...')
 	startTime = time.time()
 
@@ -372,6 +425,7 @@ def TentML(DgmsDF,
 	if type(dgm_col) == str:
 		dgm_col = [dgm_col,]
 
+	print('Making G...')
 
 	listOfG = []
 	for dgmColLabel in dgm_col:
@@ -382,19 +436,6 @@ def TentML(DgmsDF,
 
 	numFeatures = np.shape(G)[1]
 	print('Number of features used is', numFeatures,'...')
-
-
-	# Remove columns (features) that are entirely zero
-	# if params.remove0cols:
-	# 	numCols = np.shape(G)[1]
-	# 	zeroCols = np.where(G.sum(0) == 0)[0]
-	# 	nonzeroCols = list(  set(range(numCols)) - set(list(zeroCols)) )
-
-	# 	G = G[:,nonzeroCols]
-	# 	print('Removed features who evaluate entirely to 0...')
-	# 	print('\tWent from', numCols, 'down to', np.shape(nonzeroCols)[0], 'features...')
-	# else:
-	# 	print('\tUsing', np.shape(G)[1], 'features...')
 
 	clf.fit(G,list(DgmsDF[labels_col]))
 
@@ -410,8 +451,6 @@ def TentML(DgmsDF,
 	clf.epsilon = params.epsilon
 	clf.trainingScore = score
 	clf.d = params.d
-	# if params.remove0cols:
-	# 	clf.remainingCols = nonzeroCols
 
 	return clf
 

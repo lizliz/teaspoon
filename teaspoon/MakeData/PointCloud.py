@@ -325,12 +325,19 @@ def normalDiagram(N=20, mu=(2,4), sd=1, seed = None):
 
 
     np.random.seed(seed)
-    dgm = np.zeros((20,2))
+    dgm = np.zeros((N,2))
     dgm[:,0] = np.random.normal(mu[0],sd,20).T
     dgm[:,1] = np.random.normal(mu[1],sd,20).T
 
-    good = np.where(dgm[:,1]-dgm[:,0] > 0)
+    # Get rid of points below the diagonal
+    good = np.where(dgm[:,1]-dgm[:,0] > 0)[0]
+
     dgm = dgm[good,:]
+
+    # Get rid of points with negative birth times
+    good = np.where(dgm[:,0] >0)
+    dgm = dgm[good,:]
+
     dgm = dgm[0,:,:]
 
 
@@ -585,7 +592,7 @@ def testSetManifolds(numDgms = 50,
     for i in range(numDgms):
         if fixSeed:
             seed += 1
-        dgmOut = pP.VR_Ripser(*Clusters(centers=centers, N = numPts, seed = seed))
+        dgmOut = pP.VR_Ripser(Clusters(centers=centers, N = numPts, seed = seed, sd = .05))
         DgmsDF.loc[counter] = [dgmOut[0],dgmOut[1], '3Cluster']
         counter +=1
 
@@ -596,8 +603,8 @@ def testSetManifolds(numDgms = 50,
 
     centers = np.array( [ [0,0], [0,1.5], [1.5,0]  ])
     theta = np.pi/4
-    centersUp = np.dot(centers,np.array([(np.sin(theta),np.cos(theta)),(np.cos(theta),-np.sin(theta))])) + [0,4]
-    centersUpRight = centers + [3,4]
+    centersUp = np.dot(centers,np.array([(np.sin(theta),np.cos(theta)),(np.cos(theta),-np.sin(theta))])) + [0,5]
+    centersUpRight = centers + [3,5]
     centers = np.concatenate( (centers,  centersUp, centersUpRight))
     for i in range(numDgms):
         if fixSeed:

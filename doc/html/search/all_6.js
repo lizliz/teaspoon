@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['getpercentscore',['getPercentScore',['../namespaceteaspoon_1_1_m_l_1_1tents.html#a90cc7e8be9f3e13ef4528d1239fda660',1,'teaspoon::ML::tents']]]
+  ['folders',['folders',['../namespaceteaspoon_1_1_t_d_a_1_1_persistence.html#a5d89c08933153d3fea60fd71e9e16800',1,'teaspoon::TDA::Persistence']]]
 ];
