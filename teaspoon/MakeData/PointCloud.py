@@ -326,8 +326,8 @@ def normalDiagram(N=20, mu=(2,4), sd=1, seed = None):
 
     np.random.seed(seed)
     dgm = np.zeros((N,2))
-    dgm[:,0] = np.random.normal(mu[0],sd,20).T
-    dgm[:,1] = np.random.normal(mu[1],sd,20).T
+    dgm[:,0] = np.random.normal(mu[0],sd,N).T
+    dgm[:,1] = np.random.normal(mu[1],sd,N).T
 
     # Get rid of points below the diagonal
     good = np.where(dgm[:,1]-dgm[:,0] > 0)[0]
