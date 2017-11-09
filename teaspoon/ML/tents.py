@@ -358,7 +358,71 @@ def build_G(Dgms,
 	return G
 
 
+## Vectorized (much faster!) version of the tents function
+# @warning Returns features in different order than older versions of the code. The coefficients can be returned into square form using 
+# ```row.reshape((d,d+1)).T ```
+# @param Dgm
+# 	A persistence diagram, given as a $K \times 2$ numpy array
+# @param params
+# 	An tents.ParameterBucket object.  Really, we need d, delta, epsilon, and maxPower from that.
+# @param type
+#	This code accepts diagrams either 
+#	* in (birth, death) coordinates, in which case `type = 'BirthDeath'`, or 
+#	* in (birth, lifetime) = (birth, death-birth) coordinates, in which case `type = 'BirthLifetime'`
+# @return \f$\sum_{x,y \in \text{Dgm}}g_{i,j}(x,y)\f$ where
+# \f[g_{i,j}(x,y) = 
+# \bigg| 1- \max\left\{ \left|\frac{x}{\delta} - i\right|, \left|\frac{y-x}{\delta} - j\right|\right\} \bigg|_+\f]
+# where
+# \f$| * |_+\f$ is positive part; equivalently, min of \f$*\f$ and 0.
+def tentVectorized(Dgm, params, type = 'BirthDeath'):
+	d = params.d
+	delta = params.delta 
+	epsilon = params.epsilon
+	# print(Dgm[:3])
+	# Move to birth,lifetime plane
+	if type == 'BirthDeath':
+		T = np.array(((1,-1),(0,1)))
+		A = np.dot( Dgm, T)
+	elif type == 'BirthLifetime':
+		A = Dgm
+	else:
+		print('Your choices for type are "BirthDeath" or "BirthLifetime".')
+		print('Exiting...')
+		return
 
+	I,J = np.meshgrid(range(d+1), range(1,d+1))
+
+	Iflat = delta*I.reshape(np.prod(I.shape))
+	Jflat = delta*J.reshape(np.prod(I.shape)) + epsilon
+
+	Irepeated = I.repeat(Dgm.shape[0])
+	Jrepeated = J.repeat(Dgm.shape[0])
+
+	DgmRepeated = np.tile(A,(len(Iflat),1))
+
+	BigIJ = np.array((Irepeated,Jrepeated)).T
+
+	B = DgmRepeated - BigIJ
+	B = np.abs(B)
+	B = np.max(B, axis = 1)
+	B = delta-B
+	B = np.where(B >=0, B, 0)
+	B = B.reshape((Iflat.shape[0],Dgm.shape[0]))
+	out = np.sum(B,axis = 1)
+
+	out = out.reshape((d,d+1)).T.flatten()
+
+	if params.maxPower >1:
+		BigOuts = [out]
+		for i in range(params.maxPower):
+			BigOuts.append(np.outer(out,BigOuts[-1]).flatten())
+		out = np.concatenate(BigOuts)
+	return out 
+
+def build_G_Vectorized(DgmSeries, params):
+	applyTents = lambda x: tentVectorized(x,params = params)
+	G = np.array(list(DgmSeries.apply(applyTents )))
+	return G
 
 #----------------------------------------------------#
 #----------------------------------------------------#
@@ -424,12 +488,16 @@ def TentML(DgmsDF,
 	#check to see if only one column label was passed. If so, turn it into a list.
 	if type(dgm_col) == str:
 		dgm_col = [dgm_col,]
+	
+	for col in dgm_col:	
+		print('Check that parameters enclose diagrams in', col,'col:', params.encloseDgms(DgmsDF[col])	)
 
 	print('Making G...')
 
 	listOfG = []
 	for dgmColLabel in dgm_col:
-		G = build_G(DgmsDF[dgmColLabel],params.d,params.delta,params.epsilon,params.maxPower)
+		# G = build_G(DgmsDF[dgmColLabel],params.d,params.delta,params.epsilon,params.maxPower)
+		G = build_G_Vectorized(DgmsDF[dgmColLabel],params)
 		listOfG.append(G)
 
 	G = np.concatenate(listOfG,axis = 1)
@@ -529,7 +597,7 @@ def getPercentScore(DgmsDF,
 	print('Using ' + str(len(L_test)) + '/' + str(len(DgmsDF)) + ' to test...')
 	listOfG = []
 	for dgmColLabel in dgm_col:
-		G = build_G(D_test[dgmColLabel],params.d,params.delta,params.epsilon,params.maxPower)
+		G = build_G_Vectorized(D_test[dgmColLabel],params)
 		listOfG.append(G)
 
 	G = np.concatenate(listOfG,axis = 1)
