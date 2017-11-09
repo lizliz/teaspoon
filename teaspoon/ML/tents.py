@@ -216,7 +216,7 @@ def tent(Dgm, params, type = 'BirthDeath'):
 
 	if params.maxPower >1:
 		BigOuts = [out]
-		for i in range(params.maxPower):
+		for i in range(params.maxPower-1):
 			BigOuts.append(np.outer(out,BigOuts[-1]).flatten())
 		out = np.concatenate(BigOuts)
 	return out 
