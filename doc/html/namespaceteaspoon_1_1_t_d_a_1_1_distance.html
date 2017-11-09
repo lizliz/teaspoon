@@ -156,7 +156,7 @@ Has code for computing pairwise distance for diagrams.
 </div><div class="memdoc">
 
 <p>Computes the distance using the geom_bottleneck and geom_matching code from <a href="https://bitbucket.org/grey_narn/hera">Hera</a>. </p>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>This documentation needs cleaning and updating.</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000001">Todo:</a></b></dt><dd>This documentation needs cleaning and updating.</dd></dl>
 <p>Need to build the C++ code, then add bottleneck_dist folder and wasserstein_dist to path On Liz's machine, this involves adding the following lines to the ~/.bashrc export PATH="/home/liz/Dropbox/Math/Code/hera/geom_matching/wasserstein/build:$PATH" export PATH="/home/liz/Dropbox/Math/Code/hera/geom_bottleneck/build/example:$PATH"</p>
 <p>Default values for wasserstein_dist from Hera:</p>
 <p>internal_p must be in \([1.0, \infty]\) (to explicitly set internal_p to \(\infty\), supply inf).By default wasserstein degree is 1.0, relative error is 0.01, internal norm is l_infinity.</p>
@@ -188,14 +188,14 @@ Has code for computing pairwise distance for diagrams.
   </table>
   </dd>
 </dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000004">Todo:</a></b></dt><dd>: Does this mean strictly positive? What is the behavior when passing 0? </dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000002">Todo:</a></b></dt><dd>: Does this mean strictly positive? What is the behavior when passing 0? </dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">internal_p</td><td>This is only controllable for Wasserstein distance computation. Matched points are measured by \(L_p\) distance. Default is internal_p = infinity. </td></tr>
   </table>
   </dd>
 </dl>
-<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000005">Todo:</a></b></dt><dd>: Check that bottleneck_dist uses infinity even though it doesn't explicitly say so in the documentation.</dd></dl>
+<dl class="todo"><dt><b><a class="el" href="todo.html#_todo000003">Todo:</a></b></dt><dd>: Check that bottleneck_dist uses infinity even though it doesn't explicitly say so in the documentation.</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>A float for the distance between the diagrams </dd></dl>
 
 </div>

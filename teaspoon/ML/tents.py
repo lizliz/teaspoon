@@ -161,206 +161,7 @@ class ParameterBucket(object):
 # -------------------------------------------- #
 
 
-## @brief Evaluates the (i,j)th tent function on the point (x,y) in (birth, death) plane.
-#
-# Tent (i,j) evaluates to 1 at \f$x=i,y = j + i + \epsilon\f$ and diameter of support is controlled by \f$\delta\f$.
-#
-#
-#
-# 
-# We are shifting the entire grid up by a predetermined value epsilon.
-# This is to keep the tent functions from being non-zero 
-# in every nbhd of the diagonal.
-#
-# @param x,y
-# 	Point in persistence diagram given as (birth, death). 
-# 	This code assumes all points above diagonal,
-# 	so y>x
-# @param i,j
-# 	Integers giving coordinate of the tent function.
-#
-# @return \f$g_{i,j}(x,y)\f$ where
-# \f[g_{i,j}(x,y) = 
-# \bigg| 1- \max\left\{ \left|\frac{x}{\delta} - i\right|, \left|\frac{y-x}{\delta} - j\right|\right\} \bigg|_+\f]
-# where
-# \f$| * |_+\f$ is positive part; equivalently, min of \f$*\f$ and 0.
-#
-def tent(x, y, i,j, delta = 1, epsilon = 0):
-
-
-	#Send point (x,y) to the skewed plane
-	def f(x,y):
-		T = np.array(((1,0),(-1,1)))
-		vec =  np.array(((x,),(y-epsilon,)))
-		ans = 1/delta * np.dot(T,vec)
-		return ans
-
-	# Compute tent function there
-	def tentSkew(a,b):
-		val_a = abs(a-i)[0]
-		val_b = abs(b-j)[0]
-		ans = 1 - max(val_a,val_b)
-		ans = max(ans,0)
-		return ans
-
-	A = f(x,y) #Point mapped to skewed (square) plane
-	out = tentSkew(A[0],A[1])
-	return out
-
-
-
-
-
-
-## Generates row of features for the given diagram
-#
-# 
-# 	@param Dgm
-# 		A list or pd.Series. Length = M.
-# 		Each entry is an N x 2 numpy array with off diagonal 
-# 		points from the persistence diagram
-# 	@param d 
-# 		An integer, the number of elements for griding up the x and y
-# 		axis of the diagram.  Will result in dx(d+1) tent functions 
-# 	@param delta
-# 		Width of mesh elements for x and y axis of the diagram.
-#
-# 	@param epsilon
-# 		The amount to shift the grid up.
-#	@param returnSquare
-#		Stops the code from doing the final flattening.  
-#	@param featureFunc
-#		If we want to use a different feature function than the tent
-#		function, it can be set here.  This function needs to accept
-#		inputs in the same format as the `tent` function.
-#
-# 	The resulting parallelogram in the diagram has vertices
-# 	(0,0 + epsilon)
-# 	(0,d*delta  + epsilon)
-# 	(d*delta, d*delta  + epsilon)
-# 	(d*delta,2*d*delta  + epsilon)
-#
-# @return 
-# 	A numpy ndarray with 
-#	- shape:
-# 		`( d*(d+1),  )` if returnSquare = False
-# 	- entries:
-# 		\f$ \displaystyle{\sum_{x \in Dgm}} g_{i,j}(x) \f$
-# 		for tent functions \f$g_{i,j}\f$
-# @todo Check for shape output if returnSquare = True.
-def build_Gm(Dgm,
-			d = 10,
-			delta = 1,
-			epsilon = 0, 
-			featureFunc = tent,
-			returnSquare = False):
-
-	# N is number of points in the diagram
-	N = np.shape(Dgm)[0]
-
-	# Add birth times of zero
-	if len(np.shape(Dgm)) <2:
-		Z = np.zeros(N)
-		Dgm = np.concatenate([[Z],[Dgm]]).T
-
-
-	H = np.zeros((d+1, d, N))
-
-	for i in range(d+1):
-		for j in range(1,d+1):
-			for  dgmRow in range(N):
-				entry = featureFunc(Dgm[dgmRow,0],Dgm[dgmRow,1], i,j,delta, epsilon)
-				H[i,j-1,dgmRow ] = entry
-
-	Gm = np.sum(H,axis = 2)
-	# print('Shape of square Gm is', np.shape(Gm))
-	if returnSquare:
-		return(Gm)
-	# print(Gm)
-	Gm = np.ndarray.flatten(Gm)
-	return Gm 
-
-
-## Builds matrix of features, where each row corresponds to an input persistence diagram.
-# 
-#
-#
-#
-# 	@param Dgms
-# 		A list or pd.Series with length M.
-# 		Each entry is an N x 2 numpy array with off diagonal 
-# 		points from the persistence diagram.
-# 	@param d 
-# 		An integer, the number of elements for griding up the x and y
-# 		axis of the diagram.  Will result in \f$d\times(d+1)\f$ tent functions.
-# 	@param delta
-# 		Width of mesh elements for x and y axis of the diagram.
-#
-# 	@param epsilon
-# 		The amount to shift the grid up.  
-# 	@param maxPower
-# 		We want to output a matrix with monomials in the
-# 		given base features up to power maxPower.
-#	@param featureFunc
-#		If we want to use a different feature function than the tent
-#		function, it can be set here.  This function needs to accept
-#		inputs in the same format as the `tent` function.
-#
-# 	Specifically, the support in the (birth, death) plane is a parallelogram with  vertices
-# 	(0,0 + epsilon)
-# 	(0,d*delta  + epsilon)
-# 	(d*delta, d*delta  + epsilon)
-# 	(d*delta,2*d*delta  + epsilon)
-#
-#
-# @return G a numpy ndarray
-# 	shape = d*(d+1)*choose( d*(d+1), maxPower)
-#
-# @todo Add figure for parallelogram.
-def build_G(Dgms, 
-			d = 10, 
-			delta=1, 
-			epsilon = 0,
-			maxPower = 1,
-			featureFunc = tent):
-
-	M = len(Dgms)
-
-	G = np.zeros((M,d**2+d))
-	for m, Dgm in enumerate(Dgms):
-		print('\tCreating row ' + str(m) + ' out of ' + str(M) + '...', end ='\r' )
-		G[m,:] = build_Gm(Dgm,d,delta,epsilon,featureFunc = featureFunc)
-	print('')
-	if maxPower > 1:
-		numCols = np.shape(G)[1] #num of cols in G
-
-		numColsInBigG = int(sum([comb(numCols, k, repetition = True) for k in range(1, maxPower +1)]))
-		# print("M:", type(M), M)
-		# print("numColsInBigG:", type(numColsInBigG), numColsInBigG)
-		BigG = np.zeros((M,numColsInBigG))
-		BigG[:,:numCols] = G
-
-        
-		count = numCols
-		for L in range(2, maxPower + 1):
-		    for subset in itertools.combinations_with_replacement(range(numCols),L):
-				# #print('subset is', subset)
-				# #print('cols are\n', testG[:,subset])
-				# #print('product is\n', np.prod(testG[:,subset],axis = 1))
-		        BigG[:, count] = np.prod(G[:,subset],axis = 1)
-		        count = count + 1
-
-		G = BigG
-	# print('Max power is ', maxPower)
-	# print('Shape of G is ', np.shape(G))
-
-
-	return G
-
-
-## Vectorized (much faster!) version of the tents function
-# @warning Returns features in different order than older versions of the code. The coefficients can be returned into square form using 
-# ```row.reshape((d,d+1)).T ```
+## Applies the tent function to a diagram.
 # @param Dgm
 # 	A persistence diagram, given as a $K \times 2$ numpy array
 # @param params
@@ -374,7 +175,7 @@ def build_G(Dgms,
 # \bigg| 1- \max\left\{ \left|\frac{x}{\delta} - i\right|, \left|\frac{y-x}{\delta} - j\right|\right\} \bigg|_+\f]
 # where
 # \f$| * |_+\f$ is positive part; equivalently, min of \f$*\f$ and 0.
-def tentVectorized(Dgm, params, type = 'BirthDeath'):
+def tent(Dgm, params, type = 'BirthDeath'):
 	d = params.d
 	delta = params.delta 
 	epsilon = params.epsilon
@@ -420,8 +221,16 @@ def tentVectorized(Dgm, params, type = 'BirthDeath'):
 		out = np.concatenate(BigOuts)
 	return out 
 
-def build_G_Vectorized(DgmSeries, params):
-	applyTents = lambda x: tentVectorized(x,params = params)
+
+
+## Applies the tent function to all diagrams in the series and outputs the feature matrix
+# \f$G_{a,b}\f$ is the \f$b^{th}\f$ tent function (after flattening the order) evaluated on the \f$a^{th}\f$ diagram in the series.
+# @param DgmSeries : pd.Series
+#	The structure holding the persistence diagrams.
+# @param params : tents.ParameterBucket
+# 	A parameter bucket used for calculations.
+def build_G(DgmSeries, params):
+	applyTents = lambda x: tent(x,params = params)
 	G = np.array(list(DgmSeries.apply(applyTents )))
 	return G
 
@@ -463,7 +272,8 @@ def build_G_Vectorized(DgmSeries, params):
 def TentML(DgmsDF,
 			labels_col = 'trainingLabel',  
 			dgm_col = 'Dgm1',
-			params = None
+			params = None,
+			verbose = True
 			):
 	#Choosing epsilon
 
@@ -482,68 +292,44 @@ def TentML(DgmsDF,
 
 	clf = params.clfClass()
 
-	print('Training estimator.') # ' Type is ' + params.clfClass + '...')
-	# print('The column used for labels is: ' + labels_col + '...')
+	print('Training estimator.') 
+
 	startTime = time.time()
 
 	#check to see if only one column label was passed. If so, turn it into a list.
 	if type(dgm_col) == str:
 		dgm_col = [dgm_col,]
 
-	print('Making G...')
+	if verbose: 
+		print('Making G...')
 
 	listOfG = []
 	for dgmColLabel in dgm_col:
-		G = build_G(DgmsDF[dgmColLabel],params.d,params.delta,params.epsilon,params.maxPower)
-		print(G[:10])
+		G = build_G(DgmsDF[dgmColLabel],params)
 		listOfG.append(G)
 
 	G = np.concatenate(listOfG,axis = 1)
 
 
 	numFeatures = np.shape(G)[1]
-	print('Number of features used is', numFeatures,'...')
+	if verbose:
+		print('Number of features used is', numFeatures,'...')
 
 	clf.fit(G,list(DgmsDF[labels_col]))
 
-	print('Checking score on training set...')
+	if verbose:
+		print('Checking score on training set...')
+
 	score = clf.score(G,list(DgmsDF[labels_col]))
 	print('Score on training set: ' + str(score) + '.\n')
 
 
+	clf.delta = params.delta
+	clf.epsilon = params.epsilon
+	clf.trainingScore = score
+	clf.d = params.d
 
-	print('Making second G')
-	listOfG = []
-	for dgmColLabel in dgm_col:
-		G2 = build_G_Vectorized(DgmsDF[dgmColLabel],params)
-		print(G2[:10])
-		listOfG.append(G2)
-
-	G2 = np.concatenate(listOfG,axis = 1)
-
-	Error = G-G2
-	print('The max diff is', Error.max())
-
-	numFeatures = np.shape(G2)[1]
-	print('Number of features used is', numFeatures,'...')
-	clf2 = params.clfClass()
-	clf2.fit(G2,list(DgmsDF[labels_col]))
-
-
-	endTime = time.time()
-	print('Trained estimator. Time taken is ' + printPrettyTime(endTime-startTime) + '.\n')
-	# Get score on training set
-
-	print('Checking score on training set...')
-	score2 = clf2.score(G2,list(DgmsDF[labels_col]))
-	print('Score on 2 training set: ' + str(score2) + '.\n')
-
-	clf2.delta = params.delta
-	clf2.epsilon = params.epsilon
-	clf2.trainingScore = score2
-	clf2.d = params.d
-
-	return clf2
+	return clf
 
 
 
@@ -592,6 +378,7 @@ def getPercentScore(DgmsDF,
 					labels_col = 'trainingLabel',  
 					dgm_col = 'Dgm1',
 					params = ParameterBucket(),
+					verbose = True
 					):
 
 	print('---')
@@ -614,32 +401,25 @@ def getPercentScore(DgmsDF,
 	clf = TentML(D_train,
 					labels_col = labels_col,
 					dgm_col = dgm_col,
-					params = params)
+					params = params,
+					verbose = verbose)
 
 	#--------Testing-------------#
 	print('Using ' + str(len(L_test)) + '/' + str(len(DgmsDF)) + ' to test...')
 	listOfG = []
 	for dgmColLabel in dgm_col:
-		G = build_G(D_test[dgmColLabel],params.d,params.delta,params.epsilon,params.maxPower)
+		G = build_G(D_test[dgmColLabel],params)
 		listOfG.append(G)
 
 	G = np.concatenate(listOfG,axis = 1)
 
-	listOfG = []
-	for dgmColLabel in dgm_col:
-		G2 = build_G_Vectorized(D_test[dgmColLabel],params)
-		listOfG.append(G2)
-
-	G2 = np.concatenate(listOfG,axis = 1)
-
-	Error = G-G2
-	print('Error is', Error.max())
+	
 	# Compute predictions and add to DgmsDF data frame
 	L_predict = pd.Series(clf.predict(G),index = L_test.index)
 	DgmsDF['Prediction'] = L_predict
 
 	# Compute score
-	score = clf.score(G2,list(L_test))
+	score = clf.score(G,list(L_test))
 
 	print('Score on testing set: ' + str(score) +"...\n")
 
