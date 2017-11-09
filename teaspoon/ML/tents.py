@@ -395,8 +395,8 @@ def tentVectorized(Dgm, params, type = 'BirthDeath'):
 	Iflat = delta*I.reshape(np.prod(I.shape))
 	Jflat = delta*J.reshape(np.prod(I.shape)) + epsilon
 
-	Irepeated = I.repeat(Dgm.shape[0])
-	Jrepeated = J.repeat(Dgm.shape[0])
+	Irepeated = Iflat.repeat(Dgm.shape[0])
+	Jrepeated = Jflat.repeat(Dgm.shape[0])
 
 	DgmRepeated = np.tile(A,(len(Iflat),1))
 
@@ -411,6 +411,7 @@ def tentVectorized(Dgm, params, type = 'BirthDeath'):
 	out = np.sum(B,axis = 1)
 
 	out = out.reshape((d,d+1)).T.flatten()
+	out = out/delta
 
 	if params.maxPower >1:
 		BigOuts = [out]
@@ -488,39 +489,61 @@ def TentML(DgmsDF,
 	#check to see if only one column label was passed. If so, turn it into a list.
 	if type(dgm_col) == str:
 		dgm_col = [dgm_col,]
-	
-	for col in dgm_col:	
-		print('Check that parameters enclose diagrams in', col,'col:', params.encloseDgms(DgmsDF[col])	)
 
 	print('Making G...')
 
 	listOfG = []
 	for dgmColLabel in dgm_col:
-		# G = build_G(DgmsDF[dgmColLabel],params.d,params.delta,params.epsilon,params.maxPower)
-		G = build_G_Vectorized(DgmsDF[dgmColLabel],params)
+		G = build_G(DgmsDF[dgmColLabel],params.d,params.delta,params.epsilon,params.maxPower)
+		print(G[:10])
 		listOfG.append(G)
 
 	G = np.concatenate(listOfG,axis = 1)
+
 
 	numFeatures = np.shape(G)[1]
 	print('Number of features used is', numFeatures,'...')
 
 	clf.fit(G,list(DgmsDF[labels_col]))
 
+	print('Checking score on training set...')
+	score = clf.score(G,list(DgmsDF[labels_col]))
+	print('Score on training set: ' + str(score) + '.\n')
+
+
+
+	print('Making second G')
+	listOfG = []
+	for dgmColLabel in dgm_col:
+		G2 = build_G_Vectorized(DgmsDF[dgmColLabel],params)
+		print(G2[:10])
+		listOfG.append(G2)
+
+	G2 = np.concatenate(listOfG,axis = 1)
+
+	Error = G-G2
+	print('The max diff is', Error.max())
+
+	numFeatures = np.shape(G2)[1]
+	print('Number of features used is', numFeatures,'...')
+	clf2 = params.clfClass()
+	clf2.fit(G2,list(DgmsDF[labels_col]))
+
+
 	endTime = time.time()
 	print('Trained estimator. Time taken is ' + printPrettyTime(endTime-startTime) + '.\n')
 	# Get score on training set
 
 	print('Checking score on training set...')
-	score = clf.score(G,list(DgmsDF[labels_col]))
-	print('Score on training set: ' + str(score) + '.\n')
+	score2 = clf2.score(G2,list(DgmsDF[labels_col]))
+	print('Score on 2 training set: ' + str(score2) + '.\n')
 
-	clf.delta = params.delta
-	clf.epsilon = params.epsilon
-	clf.trainingScore = score
-	clf.d = params.d
+	clf2.delta = params.delta
+	clf2.epsilon = params.epsilon
+	clf2.trainingScore = score2
+	clf2.d = params.d
 
-	return clf
+	return clf2
 
 
 
@@ -597,18 +620,26 @@ def getPercentScore(DgmsDF,
 	print('Using ' + str(len(L_test)) + '/' + str(len(DgmsDF)) + ' to test...')
 	listOfG = []
 	for dgmColLabel in dgm_col:
-		G = build_G_Vectorized(D_test[dgmColLabel],params)
+		G = build_G(D_test[dgmColLabel],params.d,params.delta,params.epsilon,params.maxPower)
 		listOfG.append(G)
 
 	G = np.concatenate(listOfG,axis = 1)
 
+	listOfG = []
+	for dgmColLabel in dgm_col:
+		G2 = build_G_Vectorized(D_test[dgmColLabel],params)
+		listOfG.append(G2)
 
+	G2 = np.concatenate(listOfG,axis = 1)
+
+	Error = G-G2
+	print('Error is', Error.max())
 	# Compute predictions and add to DgmsDF data frame
 	L_predict = pd.Series(clf.predict(G),index = L_test.index)
 	DgmsDF['Prediction'] = L_predict
 
 	# Compute score
-	score = clf.score(G,list(L_test))
+	score = clf.score(G2,list(L_test))
 
 	print('Score on testing set: ' + str(score) +"...\n")
 
@@ -620,6 +651,8 @@ def getPercentScore(DgmsDF,
 	output['clf'] = clf
 
 	return output
+
+
 
 
 
