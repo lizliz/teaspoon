@@ -492,3 +492,130 @@ def Cubical_Perseus(M, numDigits = 2, suppressOutput = True):
             Dgms[key] = Dgm * (10**(-numDigits))
 
     return Dgms
+
+
+#----------------------------------------------
+#----------------------------------------------
+#---Simple operations on pers dgms-------------
+#----------------------------------------------
+#----------------------------------------------
+
+
+
+## \brief Gets minimum persistence for a given diagram
+#
+# @param Dgm
+#     a 2D numpy array
+#
+# @return float
+def minPers(Dgm):
+    try:
+        lifetimes = Dgm[:,1] - Dgm[:,0]
+        return min(lifetimes)
+    except:
+        return 0
+
+
+## \brief Gets maximum persistence for a given diagram
+#
+# @param Dgm
+#     a 2D numpy array
+#
+# @return float
+def maxPers(Dgm):
+    try:
+        lifetimes = Dgm[:,1] - Dgm[:,0]
+        return max(lifetimes)
+    except:
+        return 0
+
+## \brief Gets maximum birth  for a given diagram
+#
+# @param Dgm
+#     a 2D numpy array
+#
+# @return float
+def maxBirth(Dgm):
+    try:
+        m = max(Dgm[:,0])
+        return m 
+    except:
+        return 0
+
+## \brief Gets minimum birth  for a given diagram
+#
+# @param Dgm
+#     a 2D numpy array
+#
+# @return float
+def minBirth(Dgm):
+    try:
+        m = min(Dgm[:,0])
+        return m 
+    except:
+        return 0
+
+## \brief Gets minimum persistence for a pandas.Series with diagrams as entries
+#
+# @param DgmSeries
+#     a pandas.Series with entries Kx2 numpy arrays representing persistence diagrams.
+#
+# @return float
+def minPersistenceSeries(DgmsSeries):
+    '''
+    Takes data frame DgmsDF
+    Finds minimum persistence over all diagrams in
+    column with label dgm_col
+    '''
+    return min ( DgmsSeries.apply(minPers))
+
+## \brief Gets maximum persistence for a pandas.Series with diagrams as entries
+#
+# @param DgmSeries
+#     a pandas.Series with entries Kx2 numpy arrays representing persistence diagrams.
+#
+# @return float
+def maxPersistenceSeries(DgmsSeries):
+    '''
+    Takes data frame DgmsDF
+    Finds maximum persistence over all diagrams in
+    column with label dgm_col
+    '''
+    return max ( DgmsSeries.apply(maxPers))
+
+
+## \brief Gets minimum persistence for a pandas.Series with diagrams as entries
+#
+# @param DgmSeries
+#     a pandas.Series with entries Kx2 numpy arrays representing persistence diagrams.
+#
+# @return float
+def minBirthSeries(DgmsSeries):
+    '''
+    Takes data frame DgmsDF
+    Finds minimum persistence over all diagrams in
+    column with label dgm_col
+    '''
+    return min ( DgmsSeries.apply(minBirth))
+
+## \brief Gets maximum persistence for a pandas.Series with diagrams as entries
+#
+# @param DgmSeries
+#     a pandas.Series with entries Kx2 numpy arrays representing persistence diagrams.
+#
+# @return float
+def maxBirthSeries(DgmsSeries):
+    '''
+    Takes data frame DgmsDF
+    Finds maximum persistence over all diagrams in
+    column with label dgm_col
+    '''
+    return max ( DgmsSeries.apply(maxBirth))
+
+
+def removeInfiniteClasses(Dgm):
+    '''!@brief Simply deletes classes that have infinite lifetimes.
+
+    '''
+    keepRows = np.isfinite(Dgm[:,1])
+    return Dgm[keepRows,:]

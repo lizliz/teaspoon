@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['writematrixfileforperseus',['writeMatrixFileForPerseus',['../namespaceteaspoon_1_1_t_d_a_1_1_persistence.html#a7ee47776929d1ade75b059415918a328',1,'teaspoon::TDA::Persistence']]]
+  ['getpercentscore',['getPercentScore',['../namespaceteaspoon_1_1_m_l_1_1tents.html#a227e874560c3fe1181643b41f65dc92c',1,'teaspoon::ML::tents']]]
 ];

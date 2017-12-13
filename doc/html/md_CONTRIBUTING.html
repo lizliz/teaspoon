@@ -48,6 +48,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li class="current"><a href="pages.html"><span>Related&#160;Pages</span></a></li>
       <li><a href="namespaces.html"><span>Packages</span></a></li>
+      <li><a href="annotated.html"><span>Classes</span></a></li>
       <li>
         <div id="MSearchBox" class="MSearchBoxInactive">
         <span class="left">
@@ -99,7 +100,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </ul>
 <h1>Basic workflow</h1>
 <p>When you're going to start messing with something, create a branch for it. This will likely just be done on your local machine. When you think it's ready to be merged into the master branch, go to the merge request page on gilab and submit your merge request.</p>
-<p>Disscussions, comments, and updates can be done on the gitlab merge request page.</p>
+<p>Discussions, comments, and updates can be done on the gitlab merge request page.</p>
 <h1>Documentation</h1>
 <p>Automatic documentation is being done with <a href="www.doxygen.org">doxygen</a>. Info to get you started is available in their <a href="http://www.stack.nl/~dimitri/doxygen/manual/index.html">manual</a>. The config file here is <code>Doxyfile</code> in the top level of the folder. So, compiling the documentation should be as easy as running </p><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;doxygen /path/to/Doxyfile</div></div><!-- fragment --><p> Compiled documentation goes into the <code>doc</code> folder. Point your browser to <code>doc/html/index.html</code> to see the result. Don't forget to refresh your brower after you compile the documentation since most browsers won't automatically update the page for you.</p>
 <h1>Before you push</h1>

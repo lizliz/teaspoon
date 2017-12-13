@@ -13,7 +13,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
       name='teaspoon',
-      version='0.2.3',
+      version='0.3.15',
       description='Python wrappers for various applied topology related code.',
       long_description=long_description,
 
@@ -65,7 +65,9 @@ setup(
           # 'sys',
           'scipy',
           # 'subprocess',
-          # 'time'
+          # 'time',
+          'sklearn',
+          'pandas'
       ],
 
       include_package_data=True,

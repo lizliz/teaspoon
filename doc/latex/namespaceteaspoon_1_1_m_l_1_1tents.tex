@@ -1,0 +1,164 @@
+\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents}{}\section{teaspoon.\+M\+L.\+tents Namespace Reference}
+\label{namespaceteaspoon_1_1_m_l_1_1tents}\index{teaspoon.\+M\+L.\+tents@{teaspoon.\+M\+L.\+tents}}
+
+
+Machine learning featurization method.  
+
+
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+class \hyperlink{classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket}{Parameter\+Bucket}
+\begin{DoxyCompactList}\small\item\em A class for storing all of the chosen parameters for a data frame and computation of ML. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+def \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_a6a7e3aad0e7229895aa9f204df7e6304}{tent} (Dgm, params, type=\textquotesingle{}Birth\+Death\textquotesingle{})
+\begin{DoxyCompactList}\small\item\em Applies the tent function to a diagram. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_a2a752f63d55c359140dc7dbbf8fc9b45}{build\+\_\+G} (Dgm\+Series, params)
+\begin{DoxyCompactList}\small\item\em Applies the tent function to all diagrams in the series and outputs the feature matrix $G_{a,b}$ is the $b^{th}$ tent function (after flattening the order) evaluated on the $a^{th}$ diagram in the series. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_a44f03361919ae7223766344ad9f620df}{Tent\+ML} (Dgms\+DF, labels\+\_\+col=\textquotesingle{}training\+Label\textquotesingle{}, dgm\+\_\+col=\textquotesingle{}Dgm1\textquotesingle{}, params=None, normalize=False, verbose=True)
+\begin{DoxyCompactList}\small\item\em Main function to run ML with tents on persistence diagrams. \end{DoxyCompactList}\item 
+def \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_a227e874560c3fe1181643b41f65dc92c}{get\+Percent\+Score} (Dgms\+DF, labels\+\_\+col=\textquotesingle{}training\+Label\textquotesingle{}, dgm\+\_\+col=\textquotesingle{}Dgm1\textquotesingle{}, params=\hyperlink{classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket}{Parameter\+Bucket}(), normalize=False, verbose=True)
+\begin{DoxyCompactList}\small\item\em Main testing function for classification or regression methods. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Machine learning featurization method. 
+
+If you make use of this code, please cite the following paper\+:~\newline
+ J.\+A. Perea, E. Munch, and F. Khasawneh. \char`\"{}\+Approximating Continuous Functions On Persistence Diagrams.\char`\"{} Preprint, 2017. 
+
+\subsection{Function Documentation}
+\index{teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}!build\+\_\+G@{build\+\_\+G}}
+\index{build\+\_\+G@{build\+\_\+G}!teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}}
+\subsubsection[{\texorpdfstring{build\+\_\+\+G(\+Dgm\+Series, params)}{build_G(DgmSeries, params)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+M\+L.\+tents.\+build\+\_\+G (
+\begin{DoxyParamCaption}
+\item[{}]{Dgm\+Series, }
+\item[{}]{params}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a2a752f63d55c359140dc7dbbf8fc9b45}{}\label{namespaceteaspoon_1_1_m_l_1_1tents_a2a752f63d55c359140dc7dbbf8fc9b45}
+
+
+Applies the tent function to all diagrams in the series and outputs the feature matrix $G_{a,b}$ is the $b^{th}$ tent function (after flattening the order) evaluated on the $a^{th}$ diagram in the series. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Dgm\+Series} & \+: pd.\+Series The structure holding the persistence diagrams. \\
+\hline
+{\em params} & \+: \hyperlink{classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket}{tents.\+Parameter\+Bucket} A parameter bucket used for calculations. \\
+\hline
+\end{DoxyParams}
+\index{teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}!get\+Percent\+Score@{get\+Percent\+Score}}
+\index{get\+Percent\+Score@{get\+Percent\+Score}!teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}}
+\subsubsection[{\texorpdfstring{get\+Percent\+Score(\+Dgms\+D\+F, labels\+\_\+col=\textquotesingle{}training\+Label\textquotesingle{}, dgm\+\_\+col=\textquotesingle{}\+Dgm1\textquotesingle{}, params=\+Parameter\+Bucket(), normalize=\+False, verbose=\+True)}{getPercentScore(DgmsDF, labels_col='trainingLabel', dgm_col='Dgm1', params=ParameterBucket(), normalize=False, verbose=True)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+M\+L.\+tents.\+get\+Percent\+Score (
+\begin{DoxyParamCaption}
+\item[{}]{Dgms\+DF, }
+\item[{}]{labels\+\_\+col = {\ttfamily \textquotesingle{}trainingLabel\textquotesingle{}}, }
+\item[{}]{dgm\+\_\+col = {\ttfamily \textquotesingle{}Dgm1\textquotesingle{}}, }
+\item[{}]{params = {\ttfamily {\bf Parameter\+Bucket}()}, }
+\item[{}]{normalize = {\ttfamily False}, }
+\item[{}]{verbose = {\ttfamily True}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a227e874560c3fe1181643b41f65dc92c}{}\label{namespaceteaspoon_1_1_m_l_1_1tents_a227e874560c3fe1181643b41f65dc92c}
+
+
+Main testing function for classification or regression methods. 
+
+Does train/test split, creates classifier, and returns score on test.
+
+
+\begin{DoxyParams}{Parameters}
+{\em Dgms\+DF} & A pandas data frame containing, at least, a column of diagrams and a column of labels \\
+\hline
+{\em labels\+\_\+col} & A string. The label for the column in Dgms\+DF containing the training labels. \\
+\hline
+{\em dgm\+\_\+col} & A string or list of strings giving the label for the column containing the diagrams. \\
+\hline
+{\em params} & A class of type \hyperlink{classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket}{Parameter\+Bucket} Should store\+:
+\begin{DoxyItemize}
+\item {\bfseries d}\+: An integer, the number of elements for griding up the x and y axis of the diagram. Will result in d$\ast$(d+1) tent functions
+\item {\bfseries delta}, {\bfseries epsilon}\+: Controls location and width of mesh elements for x and y axis of the diagram.
+\item {\bfseries clf\+Class}\+: The class which will be used for classification. Currently tested using {\ttfamily sklearn.\+Ridge\+Classifier\+CV} and {\ttfamily sklearn.\+Ridge\+CV}.
+\item {\bfseries seed}\+: None if we don\textquotesingle{}t want to mess with the seed for the train\+\_\+test\+\_\+split function. Else, pass integer.
+\item {\bfseries test\+\_\+split}\+: The percentage of the data to be reserved for the test part of the train/test split.
+\end{DoxyItemize}\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Returned as a dictionary of entries\+:
+\begin{DoxyItemize}
+\item {\bfseries score} The percent correct when predicting on the test set.
+\item {\bfseries Dgms\+DF} The original data frame passed back with a column labeled \textquotesingle{}Prediction\textquotesingle{} added with the predictions gotten for the test set. Data points in the training set will have an entry of NaN
+\item {\bfseries clf} The classifier object. 
+\end{DoxyItemize}
+\end{DoxyReturn}
+\index{teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}!tent@{tent}}
+\index{tent@{tent}!teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}}
+\subsubsection[{\texorpdfstring{tent(\+Dgm, params, type=\textquotesingle{}\+Birth\+Death\textquotesingle{})}{tent(Dgm, params, type='BirthDeath')}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+M\+L.\+tents.\+tent (
+\begin{DoxyParamCaption}
+\item[{}]{Dgm, }
+\item[{}]{params, }
+\item[{}]{type = {\ttfamily \textquotesingle{}BirthDeath\textquotesingle{}}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a6a7e3aad0e7229895aa9f204df7e6304}{}\label{namespaceteaspoon_1_1_m_l_1_1tents_a6a7e3aad0e7229895aa9f204df7e6304}
+
+
+Applies the tent function to a diagram. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em Dgm} & A persistence diagram, given as a \$K  2\$ numpy array \\
+\hline
+{\em params} & An \hyperlink{classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket}{tents.\+Parameter\+Bucket} object. Really, we need d, delta, and epsilon from that. \\
+\hline
+{\em type} & This code accepts diagrams either
+\begin{DoxyItemize}
+\item in (birth, death) coordinates, in which case {\ttfamily type = \textquotesingle{}Birth\+Death\textquotesingle{}}, or
+\item in (birth, lifetime) = (birth, death-\/birth) coordinates, in which case {\ttfamily type = \textquotesingle{}Birth\+Lifetime\textquotesingle{}} 
+\end{DoxyItemize}\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+$\sum_{x,y \in \text{Dgm}}g_{i,j}(x,y)$ where \[g_{i,j}(x,y) = \bigg| 1- \max\left\{ \left|\frac{x}{\delta} - i\right|, \left|\frac{y-x}{\delta} - j\right|\right\} \bigg|_+\] where $| * |_+$ is positive part; equivalently, min of $*$ and 0. 
+\end{DoxyReturn}
+\begin{DoxyNote}{Note}
+This code does not take care of the max\+Power polynomial stuff. The \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_a2a752f63d55c359140dc7dbbf8fc9b45}{build\+\_\+\+G()} function does it after all the rows have been calculated. 
+\end{DoxyNote}
+\index{teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}!Tent\+ML@{Tent\+ML}}
+\index{Tent\+ML@{Tent\+ML}!teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}}
+\subsubsection[{\texorpdfstring{Tent\+M\+L(\+Dgms\+D\+F, labels\+\_\+col=\textquotesingle{}training\+Label\textquotesingle{}, dgm\+\_\+col=\textquotesingle{}\+Dgm1\textquotesingle{}, params=\+None, normalize=\+False, verbose=\+True)}{TentML(DgmsDF, labels_col='trainingLabel', dgm_col='Dgm1', params=None, normalize=False, verbose=True)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+M\+L.\+tents.\+Tent\+ML (
+\begin{DoxyParamCaption}
+\item[{}]{Dgms\+DF, }
+\item[{}]{labels\+\_\+col = {\ttfamily \textquotesingle{}trainingLabel\textquotesingle{}}, }
+\item[{}]{dgm\+\_\+col = {\ttfamily \textquotesingle{}Dgm1\textquotesingle{}}, }
+\item[{}]{params = {\ttfamily None}, }
+\item[{}]{normalize = {\ttfamily False}, }
+\item[{}]{verbose = {\ttfamily True}}
+\end{DoxyParamCaption}
+)}\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a44f03361919ae7223766344ad9f620df}{}\label{namespaceteaspoon_1_1_m_l_1_1tents_a44f03361919ae7223766344ad9f620df}
+
+
+Main function to run ML with tents on persistence diagrams. 
+
+Takes data frame Dgms\+DF and specified persistence diagram column labels, computes the G matrix using build\+\_\+G. Does classification using labels from labels\+\_\+col in the data frame. Returns instance of estimator
+
+
+\begin{DoxyParams}{Parameters}
+{\em Dgms\+DF} & A pandas data frame containing, at least, a column of diagrams and a column of labels \\
+\hline
+{\em labels\+\_\+col} & A string. The label for the column in Dgms\+DF containing the training labels. \\
+\hline
+{\em dgm\+\_\+col} & The label(s) for the column containing the diagrams given as a string or list of strings. \\
+\hline
+{\em params} & A class of type \hyperlink{classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket}{Parameter\+Bucket} Should store\+:
+\begin{DoxyItemize}
+\item {\bfseries d}\+: An integer, the number of elements for griding up the x and y axis of the diagram. Will result in d$\ast$(d+1) tent functions
+\item {\bfseries delta}, {\bfseries epsilon}\+: Controls location and width of mesh elements for x and y axis of the diagram.
+\item {\bfseries clf\+Class}\+: The class which will be used for classification. Currently tested using {\ttfamily sklearn.\+Ridge\+Classifier\+CV} and {\ttfamily sklearn.\+Ridge\+CV}. 
+\end{DoxyItemize}\\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The classifier object. Coefficients can be found from clf.\+coef\+\_\+ 
+\end{DoxyReturn}
