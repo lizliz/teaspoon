@@ -19,6 +19,7 @@ import pandas as pd
 from sklearn.linear_model import LogisticRegression, Ridge, RidgeCV, RidgeClassifierCV, LassoCV
 from sklearn.model_selection import train_test_split, cross_val_score
 from sklearn import metrics
+from sklearn.preprocessing import scale, PolynomialFeatures
 from scipy.special import comb
 import itertools
 
@@ -149,6 +150,7 @@ class ParameterBucket(object):
 
 		delta = (height + pad - epsilon) / self.d
 
+
 		self.delta = delta
 		self.epsilon = epsilon
 
@@ -165,7 +167,7 @@ class ParameterBucket(object):
 # @param Dgm
 # 	A persistence diagram, given as a $K \times 2$ numpy array
 # @param params
-# 	An tents.ParameterBucket object.  Really, we need d, delta, epsilon, and maxPower from that.
+# 	An tents.ParameterBucket object.  Really, we need d, delta, and epsilon from that.
 # @param type
 #	This code accepts diagrams either 
 #	* in (birth, death) coordinates, in which case `type = 'BirthDeath'`, or 
@@ -175,6 +177,7 @@ class ParameterBucket(object):
 # \bigg| 1- \max\left\{ \left|\frac{x}{\delta} - i\right|, \left|\frac{y-x}{\delta} - j\right|\right\} \bigg|_+\f]
 # where
 # \f$| * |_+\f$ is positive part; equivalently, min of \f$*\f$ and 0.
+# @note This code does not take care of the maxPower polynomial stuff.  The build_G() function does it after all the rows have been calculated.
 def tent(Dgm, params, type = 'BirthDeath'):
 	d = params.d
 	delta = params.delta 
@@ -214,11 +217,27 @@ def tent(Dgm, params, type = 'BirthDeath'):
 	out = out.reshape((d,d+1)).T.flatten()
 	out = out/delta
 
-	if params.maxPower >1:
-		BigOuts = [out]
-		for i in range(params.maxPower-1):
-			BigOuts.append(np.outer(out,BigOuts[-1]).flatten())
-		out = np.concatenate(BigOuts)
+	# TO BE REMOVED.... THIS HAS BEEN MOVED TO build_G()
+	# if params.maxPower >1:
+
+
+	# 	BigOuts = [out]
+	# 	# Make 2 using np.triu_indices
+	# 	indices = np.array(np.triu_indices(len(out)))
+	# 	C = out[indices.T]
+	# 	C = np.prod(C,1)
+	# 	BigOuts.append(C)
+	# 	# Make 3 or above using itertools
+	# 	# NOTE: This is incredibly slow and should be improved.
+	# 	for i in range(3,params.maxPower + 1):
+	# 		C = [a for a in itertools.combinations_with_replacement(out,i)]
+	# 		C = np.array(C)
+	# 		C = np.prod(C,1)
+	# 		BigOuts.append(C)
+	# 	# turn all of them into one long vector
+	# 	out = np.concatenate(BigOuts)
+
+
 	return out 
 
 
@@ -232,6 +251,11 @@ def tent(Dgm, params, type = 'BirthDeath'):
 def build_G(DgmSeries, params):
 	applyTents = lambda x: tent(x,params = params)
 	G = np.array(list(DgmSeries.apply(applyTents )))
+
+	# Include powers if necessary
+	if params.maxPower>1:
+		poly = PolynomialFeatures(params.maxPower)
+		G = poly.fit_transform(G)
 	return G
 
 #----------------------------------------------------#
@@ -273,6 +297,7 @@ def TentML(DgmsDF,
 			labels_col = 'trainingLabel',  
 			dgm_col = 'Dgm1',
 			params = None,
+			normalize = False,
 			verbose = True
 			):
 	#Choosing epsilon
@@ -292,7 +317,8 @@ def TentML(DgmsDF,
 
 	clf = params.clfClass()
 
-	print('Training estimator.') 
+	if verbose:
+		print('Training estimator.') 
 
 	startTime = time.time()
 
@@ -309,7 +335,10 @@ def TentML(DgmsDF,
 		listOfG.append(G)
 
 	G = np.concatenate(listOfG,axis = 1)
-
+	
+	# Normalize G 
+	if normalize:
+		G = scale(G)
 
 	numFeatures = np.shape(G)[1]
 	if verbose:
@@ -321,7 +350,8 @@ def TentML(DgmsDF,
 		print('Checking score on training set...')
 
 	score = clf.score(G,list(DgmsDF[labels_col]))
-	print('Score on training set: ' + str(score) + '.\n')
+	if verbose:
+		print('Score on training set: ' + str(score) + '.\n')
 
 
 	clf.delta = params.delta
@@ -378,12 +408,14 @@ def getPercentScore(DgmsDF,
 					labels_col = 'trainingLabel',  
 					dgm_col = 'Dgm1',
 					params = ParameterBucket(),
+					normalize = False, 
 					verbose = True
 					):
 
 	print('---')
 	print('Beginning experiment.')
-	print(params)
+	if verbose:
+		print(params)
 
 	#check to see if only one column label was passed. If so, turn it into a list.
 	if type(dgm_col) == str:
@@ -397,21 +429,28 @@ def getPercentScore(DgmsDF,
 													)
 
 	#--------Training------------#
-	print('Using ' + str(len(L_train)) + '/' + str(len(DgmsDF)) + ' to train...')
+	if verbose:
+		print('Using ' + str(len(L_train)) + '/' + str(len(DgmsDF)) + ' to train...')
 	clf = TentML(D_train,
 					labels_col = labels_col,
 					dgm_col = dgm_col,
 					params = params,
+					normalize = normalize,
 					verbose = verbose)
 
 	#--------Testing-------------#
-	print('Using ' + str(len(L_test)) + '/' + str(len(DgmsDF)) + ' to test...')
+	if verbose:
+		print('Using ' + str(len(L_test)) + '/' + str(len(DgmsDF)) + ' to test...')
 	listOfG = []
 	for dgmColLabel in dgm_col:
 		G = build_G(D_test[dgmColLabel],params)
 		listOfG.append(G)
 
 	G = np.concatenate(listOfG,axis = 1)
+
+	# Normalize G 
+	if normalize:
+		G = scale(G)
 
 	
 	# Compute predictions and add to DgmsDF data frame
@@ -420,8 +459,8 @@ def getPercentScore(DgmsDF,
 
 	# Compute score
 	score = clf.score(G,list(L_test))
-
-	print('Score on testing set: ' + str(score) +"...\n")
+	if verbose:
+		print('Score on testing set: ' + str(score) +"...\n")
 
 	print('Finished with train/test experiment.')
 

@@ -5,7 +5,7 @@ var searchData=
   ['persistence',['Persistence',['../namespaceteaspoon_1_1_t_d_a_1_1_persistence.html',1,'teaspoon::TDA']]],
   ['pointcloud',['PointCloud',['../namespaceteaspoon_1_1_make_data_1_1_point_cloud.html',1,'teaspoon::MakeData']]],
   ['tent',['tent',['../namespaceteaspoon_1_1_m_l_1_1tents.html#a6a7e3aad0e7229895aa9f204df7e6304',1,'teaspoon::ML::tents']]],
-  ['tentml',['TentML',['../namespaceteaspoon_1_1_m_l_1_1tents.html#aaa857d30483517bcf50adde0116e0995',1,'teaspoon::ML::tents']]],
+  ['tentml',['TentML',['../namespaceteaspoon_1_1_m_l_1_1tents.html#a44f03361919ae7223766344ad9f620df',1,'teaspoon::ML::tents']]],
   ['tents',['tents',['../namespaceteaspoon_1_1_m_l_1_1tents.html',1,'teaspoon::ML']]],
   ['testsetclassification',['testSetClassification',['../namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#ad06993de8a3ffe4db7b73ca30c85da4e',1,'teaspoon::MakeData::PointCloud']]],
   ['testsetmanifolds',['testSetManifolds',['../namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#a5d9c892f9f0a63f64437cbbde9048aeb',1,'teaspoon::MakeData::PointCloud']]],

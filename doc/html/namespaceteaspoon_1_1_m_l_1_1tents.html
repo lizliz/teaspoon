@@ -118,12 +118,12 @@ Functions</h2></td></tr>
 <tr class="memitem:a2a752f63d55c359140dc7dbbf8fc9b45"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#a2a752f63d55c359140dc7dbbf8fc9b45">build_G</a> (DgmSeries, params)</td></tr>
 <tr class="memdesc:a2a752f63d55c359140dc7dbbf8fc9b45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Applies the tent function to all diagrams in the series and outputs the feature matrix \(G_{a,b}\) is the \(b^{th}\) tent function (after flattening the order) evaluated on the \(a^{th}\) diagram in the series.  <a href="#a2a752f63d55c359140dc7dbbf8fc9b45">More...</a><br /></td></tr>
 <tr class="separator:a2a752f63d55c359140dc7dbbf8fc9b45"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa857d30483517bcf50adde0116e0995"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#aaa857d30483517bcf50adde0116e0995">TentML</a> (DgmsDF, labels_col='trainingLabel', dgm_col='Dgm1', params=None, verbose=True)</td></tr>
-<tr class="memdesc:aaa857d30483517bcf50adde0116e0995"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main function to run ML with tents on persistence diagrams.  <a href="#aaa857d30483517bcf50adde0116e0995">More...</a><br /></td></tr>
-<tr class="separator:aaa857d30483517bcf50adde0116e0995"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a29e1cc2063fa47537bdbf4373fe6cb7e"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#a29e1cc2063fa47537bdbf4373fe6cb7e">getPercentScore</a> (DgmsDF, labels_col='trainingLabel', dgm_col='Dgm1', params=<a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html">ParameterBucket</a>(), verbose=True)</td></tr>
-<tr class="memdesc:a29e1cc2063fa47537bdbf4373fe6cb7e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main testing function for classification or regression methods.  <a href="#a29e1cc2063fa47537bdbf4373fe6cb7e">More...</a><br /></td></tr>
-<tr class="separator:a29e1cc2063fa47537bdbf4373fe6cb7e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44f03361919ae7223766344ad9f620df"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#a44f03361919ae7223766344ad9f620df">TentML</a> (DgmsDF, labels_col='trainingLabel', dgm_col='Dgm1', params=None, normalize=False, verbose=True)</td></tr>
+<tr class="memdesc:a44f03361919ae7223766344ad9f620df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main function to run ML with tents on persistence diagrams.  <a href="#a44f03361919ae7223766344ad9f620df">More...</a><br /></td></tr>
+<tr class="separator:a44f03361919ae7223766344ad9f620df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a227e874560c3fe1181643b41f65dc92c"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#a227e874560c3fe1181643b41f65dc92c">getPercentScore</a> (DgmsDF, labels_col='trainingLabel', dgm_col='Dgm1', params=<a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html">ParameterBucket</a>(), normalize=False, verbose=True)</td></tr>
+<tr class="memdesc:a227e874560c3fe1181643b41f65dc92c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Main testing function for classification or regression methods.  <a href="#a227e874560c3fe1181643b41f65dc92c">More...</a><br /></td></tr>
+<tr class="separator:a227e874560c3fe1181643b41f65dc92c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Machine learning featurization method. </p>
@@ -165,7 +165,7 @@ Functions</h2></td></tr>
 
 </div>
 </div>
-<a class="anchor" id="a29e1cc2063fa47537bdbf4373fe6cb7e"></a>
+<a class="anchor" id="a227e874560c3fe1181643b41f65dc92c"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -192,6 +192,12 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>params</em> = <code><a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html">ParameterBucket</a>()</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>normalize</em> = <code>False</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -268,7 +274,7 @@ Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">Dgm</td><td>A persistence diagram, given as a $K  2$ numpy array </td></tr>
-    <tr><td class="paramname">params</td><td>An <a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html" title="A class for storing all of the chosen parameters for a data frame and computation of ML...">tents.ParameterBucket</a> object. Really, we need d, delta, epsilon, and maxPower from that. </td></tr>
+    <tr><td class="paramname">params</td><td>An <a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html" title="A class for storing all of the chosen parameters for a data frame and computation of ML...">tents.ParameterBucket</a> object. Really, we need d, delta, and epsilon from that. </td></tr>
     <tr><td class="paramname">type</td><td>This code accepts diagrams either<ul>
 <li>in (birth, death) coordinates, in which case <code>type = 'BirthDeath'</code>, or</li>
 <li>in (birth, lifetime) = (birth, death-birth) coordinates, in which case <code>type = 'BirthLifetime'</code> </li>
@@ -281,10 +287,11 @@ Functions</h2></td></tr>
 \[g_{i,j}(x,y) = \bigg| 1- \max\left\{ \left|\frac{x}{\delta} - i\right|, \left|\frac{y-x}{\delta} - j\right|\right\} \bigg|_+\]
 </p>
  where \(| * |_+\) is positive part; equivalently, min of \(*\) and 0. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This code does not take care of the maxPower polynomial stuff. The <a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#a2a752f63d55c359140dc7dbbf8fc9b45" title="Applies the tent function to all diagrams in the series and outputs the feature matrix  is the  tent ...">build_G()</a> function does it after all the rows have been calculated. </dd></dl>
 
 </div>
 </div>
-<a class="anchor" id="aaa857d30483517bcf50adde0116e0995"></a>
+<a class="anchor" id="a44f03361919ae7223766344ad9f620df"></a>
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -311,6 +318,12 @@ Functions</h2></td></tr>
           <td></td>
           <td class="paramtype">&#160;</td>
           <td class="paramname"><em>params</em> = <code>None</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>normalize</em> = <code>False</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

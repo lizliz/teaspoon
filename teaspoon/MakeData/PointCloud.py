@@ -412,7 +412,7 @@ def testSetClassification(N = 20,
 
 ## Generate a collection of diagrams with means distributed along a line using the normalDiagram() function for regression tests.
 # @param N
-#   The number of initial diagrams pulled to create each diagram.  Diagrams could end up with fewer than `N` pts as the pts drawn below the diagonal will be discarded. See normalDiagram() for more information.
+#   The number of initial points pulled to create each diagram.  Diagrams could end up with fewer than `N` pts as the pts drawn below the diagonal will be discarded. See normalDiagram() for more information.
 # @param numDgms
 #   The number of diagrams for the collection given as an integer.  
 # @param muStart, muEnd
