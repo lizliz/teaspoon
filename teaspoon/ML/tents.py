@@ -10,6 +10,7 @@
 
 from teaspoon.Misc import printPrettyTime
 import teaspoon.TDA.Persistence as pP
+import teaspoon.ML.feature_functions as fF
 
 import time
 import numpy as np
@@ -36,7 +37,8 @@ class ParameterBucket(object):
 					maxPower = 1,
 					clfClass = RidgeClassifierCV,
 					seed = None,
-					test_size = .33):
+					test_size = .33,
+                 feature_function=None):
 		"""!@brief Creates a new ParameterBucket object.
 
 	    This object is being used to keep track of all the parameters needed
@@ -47,7 +49,7 @@ class ParameterBucket(object):
 	    @param description A description, has no effect on code. This can be set on initialization.
 	    @param d, delta, epsilon
 	    	The bounding box for the persistence diagram in the (birth, lifetime) coordinates is [0,d * delta] x [epsilon, d* delta + epsilon].  In the usual coordinates, this creates a parallelogram.
-	    @param maxPower 
+	    @param maxPower
 	    	The maximum degree used for the monomial combinations of the tent functions.  Testing suggests we usually want this to be 1.  Increasing causes large increase in number of features. 
 	    @param clfClass
 	    	The choice of tool used for classification or regression, passed as the function.  This code has been tested using `sklearn` functions `RidgeClassiferCV` for classification and `RidgeCV` for regression.
@@ -55,6 +57,8 @@ class ParameterBucket(object):
 	    	The seed for the pseudo-random number generator.  Pass None if you don't want it fixed; otherwise, pass an integer.
 	    @param test_size
 	    	A number in \f$[0,1]\f$.  Gives the percentage of data points to be reserved for the testing set if this is being used for a train/test split experiment.  Otherwise, ignored. 
+        @param feature_function
+	    	The basis function you want to use for interpolation. Default is tent()
 
 	    """
 		self.description = description
@@ -75,7 +79,9 @@ class ParameterBucket(object):
 		# self.minPers = None
 		# self.maxPers = None
 		# self.remove0cols = False
-
+		if feature_function == None:
+			feature_function = fF.tent
+            
 	def __str__(self):
 		"""!
 		@brief Nicely prints all currently set values in the ParameterBucket.
@@ -249,7 +255,7 @@ def tent(Dgm, params, type = 'BirthDeath'):
 # @param params : tents.ParameterBucket
 # 	A parameter bucket used for calculations.
 def build_G(DgmSeries, params):
-	applyTents = lambda x: tent(x,params = params)
+	applyTents = lambda x: params.feature_function(x,params = params)
 	G = np.array(list(DgmSeries.apply(applyTents )))
 
 	# Include powers if necessary
