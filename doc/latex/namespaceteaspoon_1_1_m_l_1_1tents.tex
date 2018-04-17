@@ -27,7 +27,16 @@ def \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_a227e874560c3fe1181643b41f65dc
 Machine learning featurization method. 
 
 If you make use of this code, please cite the following paper\+:~\newline
- J.\+A. Perea, E. Munch, and F. Khasawneh. \char`\"{}\+Approximating Continuous Functions On Persistence Diagrams.\char`\"{} Preprint, 2017. 
+ J.\+A. Perea, E. Munch, and F. Khasawneh. \char`\"{}\+Approximating Continuous Functions On Persistence Diagrams.\char`\"{} Preprint, 2017.
+
+An example workflow to ensure that classification is working\+: 
+\begin{DoxyCode}
+1 \textcolor{keyword}{import} \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud}{teaspoon.MakeData.PointCloud} \textcolor{keyword}{as} gPC
+2 \textcolor{keyword}{import} \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents}{teaspoon.ML.tents} \textcolor{keyword}{as} tents 
+3 df = gPC.testSetClassification()
+4 tents.getPercentScore(df,dgm\_col = \textcolor{stringliteral}{'Dgm'}) 
+\end{DoxyCode}
+
 
 \subsection{Function Documentation}
 \index{teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}!build\+\_\+G@{build\+\_\+G}}
