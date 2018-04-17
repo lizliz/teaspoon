@@ -128,8 +128,8 @@ Functions</h2></td></tr>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Machine learning featurization method. </p>
 <p>If you make use of this code, please cite the following paper:<br />
- J.A. Perea, E. Munch, and F. Khasawneh. "Approximating Continuous Functions On Persistence Diagrams." Preprint, 2017. </p>
-</div><h2 class="groupheader">Function Documentation</h2>
+ J.A. Perea, E. Munch, and F. Khasawneh. "Approximating Continuous Functions On Persistence Diagrams." Preprint, 2017.</p>
+<p>An example workflow to ensure that classification is working: </p><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;import <a class="code" href="namespaceteaspoon_1_1_make_data_1_1_point_cloud.html">teaspoon.MakeData.PointCloud</a> <span class="keyword">as</span> gPC</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;<span class="keyword">import</span> <a class="code" href="namespaceteaspoon_1_1_m_l_1_1tents.html">teaspoon.ML.tents</a> <span class="keyword">as</span> tents </div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;df = gPC.testSetClassification()</div><div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;tents.getPercentScore(df,dgm_col = <span class="stringliteral">&#39;Dgm&#39;</span>) </div></div><!-- fragment --></div><h2 class="groupheader">Function Documentation</h2>
 <a class="anchor" id="a2a752f63d55c359140dc7dbbf8fc9b45"></a>
 <div class="memitem">
 <div class="memproto">

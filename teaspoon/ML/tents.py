@@ -4,8 +4,15 @@
 # If you make use of this code, please cite the following paper:<br/>
 # J.A. Perea, E. Munch, and F. Khasawneh.  "Approximating Continuous Functions On Persistence Diagrams." Preprint, 2017.
 #
-# 
-#
+# An example workflow to ensure that classification is working:
+# \code{.py}
+# import teaspoon.MakeData.PointCloud as gPC
+# import teaspoon.ML.tents as tents 
+# df = gPC.testSetClassification()
+# tents.getPercentScore(df,dgm_col = 'Dgm')
+
+
+
 
 
 from teaspoon.Misc import printPrettyTime
