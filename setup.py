@@ -13,7 +13,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
       name='teaspoon',
-      version='0.3.15',
+      version='0.4.01a',
       description='Python wrappers for various applied topology related code.',
       long_description=long_description,
 

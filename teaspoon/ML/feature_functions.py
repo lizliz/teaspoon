@@ -1,31 +1,11 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Tue Apr 17 10:15:11 2018
-
-@author: khasawn3
-"""
-from teaspoon.Misc import printPrettyTime
-import teaspoon.TDA.Persistence as pP
-
-import time
-import numpy as np
-import pandas as pd 
-
-
-from sklearn.linear_model import LogisticRegression, Ridge, RidgeCV, RidgeClassifierCV, LassoCV
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn import metrics
-from sklearn.preprocessing import scale, PolynomialFeatures
-from scipy.special import comb
-import itertools
-##
-
+## @package teaspoon.ML.feature_functions
+# Machine learning featurization method
+# 
+# If you make use of this code, please cite the following paper:<br/>
+# J.A. Perea, E. Munch, and F. Khasawneh.  "Approximating Continuous Functions On Persistence Diagrams." Preprint, 2017.
+#
 
 import numpy as np
-from mpl_toolkits import mplot3d
-import matplotlib as mpl
-from mpl_toolkits.mplot3d import Axes3D
-import matplotlib.pyplot as plt
 
 # -------------------------------------------- #
 # -------------------------------------------- #
@@ -266,97 +246,60 @@ def bary_diff_matrix(xnew, xbase, w=None):
 
     return DM, M
 
-# this is the function that will get the interpolation weights
-# test interpolation in 2D
-nx = 100  # number of interpolation points in x
-ny = 50  # number of interpolation points in y
 
-## create the and y vectors
-#x = np.linspace(0, 1, nx)
-#y = np.linspace(0, 1, ny)
-#
-## define the mesh
-#[xmesh, ymesh] = np.meshgrid(x, y)
-#
-## these lines show a sample 3D plot
-#fig2 = plt.figure(num=2)
-#ax = plt.axes(projection='3d')
-#
-#ax.scatter(xmesh, ymesh, np.sin(xmesh+ymesh))
-## ax.legend()
-#
-#plt.show()
+## Extracts the weights on the interpolation mesh using barycentric Lagrange interpolation.
+# @param nx
+# 	number of mesh points in the x-direction
+# @param ny
+# 	number of mesh points in the y-direction
+# @param xq
+# 	the query points along the x-axis (birth times for persistence dgms)
+# @param yq
+# 	the query points along the y-axis (death times for persistence dgms)
+# @param jacobi_fun 
+#	the Jacobi function family to use for the interpolation. (default is Legendre)
 
-# These lines show the algorithm for finding a score for each mesh point in the
-# persistence diagram. The example used is for 2D interpolation of a function
-
-# 0) create test data
-# create the data:
-# define a function of two variables which translates and scales Gaussiand.
-# This is equivalent to Matlab's peaks function. 
-z =  lambda x, y : 3 * (1-x) ** 2 * np.exp(-(x ** 2) - (y+1) ** 2) \
-   - 10 * (x / 5 - x ** 3 - y ** 5) * np.exp(-x ** 2-y ** 2) \
-   - 1/3 * np.exp(-(x + 1) ** 2 - y ** 2) 
-   
-# define the query points. These ar the points where we want to interpolate.
-# get the 1D query points along x
-num_query_pts = 100
-xq = np.linspace(start=-1, stop=1, num=num_query_pts)
-
-# get the 1D query points along y
-yq = np.linspace(start=-1, stop=1, num=num_query_pts)
-
-# get the query mesh
-#xquery, yquery = np.meshgrid(xq, yq, sparse=False, indexing='ij')
-#xquery_flat = np.concatenate(xquery)
-#yquery_flat = np.concatenate(yquery)
-
-# evaluate the function at the (xq, yq) mesh tuples
-zq = z(xq, yq)
-
-# define a base mesh on legendre-gauss-lobatto points
-# specify the order of the interpolating polynomials (num_pts+1 nodes)
-#num_pts = 100
-
-# 1) Get the base nodes:
-# get the 1D base nodes in x and y
-xmesh, w = quad_pts_and_weights['legendre'](nx)
-ymesh, w = quad_pts_and_weights['legendre'](ny)
-xmesh = np.sort(xmesh)
-ymesh = np.sort(ymesh)
-
-# define a mesh on the base points
-x_base, y_base = np.meshgrid(xmesh, ymesh, sparse=False, indexing='ij')
-
-# flatten the vectors for later plotting
-xbase_flat =  np.concatenate(x_base)
-ybase_flat = np.concatenate(y_base)
-
-# get the values of the function at the base mesh points
-z_base = z(np.concatenate(x_base), np.concatenate(y_base))
-
-# get the x and y interpolation matrices
-# get the 1D interpolation matrix for x
-x_meshdiff_mat, x_interp_mat = bary_diff_matrix(xnew=xq, xbase=xmesh)
-x_interp_mat = x_interp_mat.T  # transpose the x-interplation matrix
-
-# get the 1D interpolation matrix for y
-y_meshdiff_mat, y_interp_mat = bary_diff_matrix(xnew=yq, xbase=ymesh)
-
-# replicate each column in the x-interpolation matrix n times
-Gamma = np.repeat(x_interp_mat, ny+1, axis=1)
-# unravel, then replicate each row in the y-interpolation matrix m times
-y_interp_mat.shape = (1, y_interp_mat.size)
-Phi = np.repeat(y_interp_mat, nx+1, axis=0)
-
-# element-wise multiply Gamma and Phi
-Psi = Gamma * Phi
-
-# split column-wise, then concatenate row-wise
-Psi = np.concatenate(np.split(Psi, num_query_pts, axis=1), axis=0)
-
-# now reshape Psi so that each row corresponds to the weights of one query pt
-Psi = np.reshape(Psi, (num_query_pts, -1))
-
-# get the weights for each interpolation function/base-point
-interp_weights = np.sum((Psi), axis=0)
+# @param params
+# 	An tents.ParameterBucket object.  Really, we need d, delta, and epsilon from that.
+def interp_polynomial(nx, ny, xq, yq, jacobi_func='legendre'):
+	
+	# get the number of query points
+	num_query_pts = xq.shape[0]
+	
+	# 1) Get the base nodes:
+	# get the 1D base nodes in x and y
+	xmesh, w = quad_pts_and_weights['legendre'](nx)
+	ymesh, w = quad_pts_and_weights['legendre'](ny)
+	xmesh = np.sort(xmesh)
+	ymesh = np.sort(ymesh)
+	
+	# define a mesh on the base points
+	x_base, y_base = np.meshgrid(xmesh, ymesh, sparse=False, indexing='ij')
+	
+	# get the x and y interpolation matrices
+	# get the 1D interpolation matrix for x
+	x_meshdiff_mat, x_interp_mat = bary_diff_matrix(xnew=xq, xbase=xmesh)
+	x_interp_mat = x_interp_mat.T  # transpose the x-interplation matrix
+	
+	# get the 1D interpolation matrix for y
+	y_meshdiff_mat, y_interp_mat = bary_diff_matrix(xnew=yq, xbase=ymesh)
+	
+	# replicate each column in the x-interpolation matrix n times
+	Gamma = np.repeat(x_interp_mat, ny+1, axis=1)
+	# unravel, then replicate each row in the y-interpolation matrix m times
+	y_interp_mat.shape = (1, y_interp_mat.size)
+	Phi = np.repeat(y_interp_mat, nx+1, axis=0)
+	
+	# element-wise multiply Gamma and Phi
+	Psi = Gamma * Phi
+	
+	# split column-wise, then concatenate row-wise
+	Psi = np.concatenate(np.split(Psi, num_query_pts, axis=1), axis=0)
+	
+	# now reshape Psi so that each row corresponds to the weights of one query pt
+	Psi = np.reshape(Psi, (num_query_pts, -1))
+	
+	# get the weights for each interpolation function/base-point
+	interp_weights = np.sum((Psi), axis=0)
+	
+	return interp_weights

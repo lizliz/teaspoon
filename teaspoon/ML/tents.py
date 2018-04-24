@@ -87,7 +87,10 @@ class ParameterBucket(object):
 		# self.maxPers = None
 		# self.remove0cols = False
 		if feature_function == None:
-			feature_function = fF.tent
+			self.feature_function = fF.tent
+		else:
+			self.feature_function = feature_function
+				
             
 	def __str__(self):
 		"""!
