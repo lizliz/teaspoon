@@ -248,26 +248,43 @@ def bary_diff_matrix(xnew, xbase, w=None):
 
 
 ## Extracts the weights on the interpolation mesh using barycentric Lagrange interpolation.
-# @param nx
-# 	number of mesh points in the x-direction
-# @param ny
-# 	number of mesh points in the y-direction
+# @param nbase
+#	the tuple (nx, ny) where nx and ny are the number of base points in the x and y directions, respectively.
 # @param xq
 # 	the query points along the x-axis (birth times for persistence dgms)
 # @param yq
 # 	the query points along the y-axis (death times for persistence dgms)
 # @param jacobi_fun 
 #	the Jacobi function family to use for the interpolation. (default is Legendre)
-
-# @param params
-# 	An tents.ParameterBucket object.  Really, we need d, delta, and epsilon from that.
-def interp_polynomial(nx, ny, xq, yq, jacobi_func='legendre'):
+# @param type
+#	This code accepts diagrams either 
+#	* in (birth, death) coordinates, in which case `type = 'BirthDeath'`, or 
+#	* in (birth, lifetime) = (birth, death-birth) coordinates, in which case `type = 'BirthLifetime'`
+# @return interp_weight, which is a matrix with each entry representiting the weight of an interpolation
+#	function on the base mesh. This matrix assumes that on a 2D mesh the functions are ordered row-wise.
+def interp_polynomial(nbase=(10, 10), Dgm, type='BirthDeath', jacobi_func='legendre'):
 	
 	# get the number of query points
-	num_query_pts = xq.shape[0]
+	num_query_pts = Dgm.shape[0]
+	
+	# Move to birth,lifetime plane
+	if type == 'BirthDeath':
+		T = np.array(((1,-1),(0,1)))
+		A = np.dot( Dgm, T)
+	elif type == 'BirthLifetime':
+		A = Dgm
+	else:
+		print('Your choices for type are "BirthDeath" or "BirthLifetime".')
+		print('Exiting...')
+	return
+
+	# get the query points. xq are the brith times, yq are the death times.
+	xq, yq = A[:, 0], A[:, 1]
+	
 	
 	# 1) Get the base nodes:
 	# get the 1D base nodes in x and y
+	nx, ny = nbase[0], nbase[1] 
 	xmesh, w = quad_pts_and_weights['legendre'](nx)
 	ymesh, w = quad_pts_and_weights['legendre'](ny)
 	xmesh = np.sort(xmesh)
