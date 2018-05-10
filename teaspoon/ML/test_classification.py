@@ -25,6 +25,11 @@ df = gpc.testSetClassification()
 # get a diagram
 Dgm = df['Dgm'][0]
 
+# Find bounding box
+params.findBoundingBox(df['Dgm'], pad = .05)
+
+print(params.boundingBox)
+
 # define the number of base points
 params.d = 5
 params.feature_function = fF.interp_polynomial
