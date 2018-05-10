@@ -11,6 +11,8 @@ import numpy as np
 import teaspoon.MakeData.PointCloud as gpc
 from tents import ParameterBucket, getPercentScore
 import feature_functions as fF
+from scipy import stats
+import matplotlib.pyplot as plt
 
 # to reload a module
 from imp import reload
@@ -34,8 +36,8 @@ params.jacobi_poly = 'cheb1'  # choose the interpolating polynomial
 
 # define the number of base points
 params.d = 100
-params.feature_function = fF.interp_polynomial
-#params.feature_function = fF.tent
+#params.feature_function = fF.interp_polynomial
+params.feature_function = fF.tent
 
 num_runs = 100
 yy = np.zeros((num_runs))
@@ -49,5 +51,10 @@ for i in np.arange(num_runs):
 					)
 	yy[i] = xx['score']
 
-print('\navg success rate = {}'.format(np.mean(yy)))
+print('\navg success rate = {}\nStdev = {}'.format(np.mean(yy), np.std(yy)))
 
+kernel = stats.gaussian_kde(yy)
+values = np.linspace(yy.min(), yy.max(), 1000)
+# plotting
+plt.plot(values, kernel(values), '.')
+plt.show()

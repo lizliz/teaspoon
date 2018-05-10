@@ -340,6 +340,6 @@ def interp_polynomial(Dgm, params, type='BirthDeath'):
 	Psi = np.reshape(Psi, (num_query_pts, -1))
 	
 	# get the weights for each interpolation function/base-point
-	interp_weights = np.sum((Psi), axis=0)
+	interp_weights = np.sum(np.abs(Psi), axis=0)
 	
-	return np.abs(interp_weights)**2
+	return np.abs(interp_weights)
