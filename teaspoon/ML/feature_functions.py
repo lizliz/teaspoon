@@ -294,14 +294,15 @@ def interp_polynomial(Dgm, params, type='BirthDeath'):
 	
 	# 1) Get the base nodes:
 	# get the 1D base nodes in x and y
-	xmesh, w = quad_pts_and_weights['legendre'](nx)
-	ymesh, w = quad_pts_and_weights['legendre'](ny)
+	
+	xmesh, w = quad_pts_and_weights[params.jacobi_poly](nx)
+	ymesh, w = quad_pts_and_weights[params.jacobi_poly](ny)
 	xmesh = np.sort(xmesh)
 	ymesh = np.sort(ymesh)
 	
 	# shift the base mesh points to the interval of interpolation [ax, bx], and
 	# [ay, by]
-	ax,bx = params.boundingBox['birthAxis']
+	ax, bx = params.boundingBox['birthAxis']
 	# ax = 5
 	# bx = 6
 	xmesh = (bx - ax) / 2 * xmesh + (bx + ax) / 2
@@ -316,22 +317,22 @@ def interp_polynomial(Dgm, params, type='BirthDeath'):
 	
 	# get the x and y interpolation matrices
 	# get the 1D interpolation matrix for x
-	x_interp_mat = bary_diff_matrix(xnew=xq, xbase=xmesh)[0]
+	x_interp_mat = bary_diff_matrix(xnew=xq, xbase=xmesh)
 	x_interp_mat = x_interp_mat.T  # transpose the x-interplation matrix
 	
 	# get the 1D interpolation matrix for y
-	y_interp_mat = bary_diff_matrix(xnew=yq, xbase=ymesh)[0]
+	y_interp_mat = bary_diff_matrix(xnew=yq, xbase=ymesh)
 	
 	# replicate each column in the x-interpolation matrix n times
-	Gamma = np.repeat(x_interp_mat.reshape((-1,1)), ny+1, axis=1)
-
+	Gamma = np.repeat(x_interp_mat, ny+1, axis=1)
+	
 	# unravel, then replicate each row in the y-interpolation matrix m times
 	y_interp_mat.shape = (1, y_interp_mat.size)
 	Phi = np.repeat(y_interp_mat, nx+1, axis=0)
 	
 	# element-wise multiply Gamma and Phi
 	Psi = Gamma * Phi
-	
+		
 	# split column-wise, then concatenate row-wise
 	Psi = np.concatenate(np.split(Psi, num_query_pts, axis=1), axis=0)
 	
@@ -341,4 +342,4 @@ def interp_polynomial(Dgm, params, type='BirthDeath'):
 	# get the weights for each interpolation function/base-point
 	interp_weights = np.sum((Psi), axis=0)
 	
-	return interp_weights
+	return np.abs(interp_weights)**2
