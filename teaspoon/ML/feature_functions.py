@@ -195,79 +195,62 @@ def bary_weights(x):
 
 
 def bary_diff_matrix(xnew, xbase, w=None):
-	print('xnew:',xnew)
-	print('xbase:',xbase)
-	print('xnew shape is: {}\t xbase shape is{}'.format(xnew.shape, xbase.shape))
 	# Calculate both the derivative and plain Lagrange interpolation matrix
 	# using Barycentric formulae from Berrut and Trefethen, SIAM Review, 2004.
 	# xnew     Interpolation points
-
+	
 	# xbase    Base points for interpolation
 	# w        Weights calculated for base points (optional)
-
+	
 	# if w is not set, set it
 	if w is None:
 		w = bary_weights(xbase)
-
+		
 	# get the length of the base points
 	n = xbase.size
-
+	
 	# get the length of the requested points
 	nn = xnew.size
-
+	
 	# replicate the weights vector into a matrix
 	wex = np.tile(w, (nn, 1))
-
+	
 	# Barycentric Lagrange interpolation (from Berrut and Trefethen, SIAM Review, 2004)
 	xdiff = np.tile(xnew[np.newaxis].T, (1, n)) - np.tile(xbase, (nn, 1))
 
-	return xdiff
-	
 	M = wex / xdiff
+	
 
 	divisor = np.tile(np.sum(M, axis=1)[np.newaxis].T, (1, n))
 	divisor[np.isinf(divisor)] = float("inf")
-
+	
 	M[np.isinf(M)] = float("inf")
+	
 	M = M / divisor
-
-	M[np.isnan(M)] = 0
+	
+#	M[np.isnan(M)] = 0
+	
 	M[xdiff == 0] = 1
-
-	# Construct the derivative (Section 9.3 of Berrut and Trefethen)
-	xdiff2 = xdiff ** 2
-
-	frac1 = wex / xdiff
-	frac1[np.isinf(frac1)] = float("inf")
-	frac2 = wex / xdiff2
-	DM = (M * np.tile(np.sum(frac2, axis=1)[np.newaxis].T, (1, n)) - frac2) / \
-		 np.tile(np.sum(frac1, axis=1)[np.newaxis].T, (1, n))
-	print(xdiff.min())
-	plt.hist(xdiff.flatten())
-	plt.show()
-	# plt.imshow(xdiff)
-	# plt.colorbar()
-	# plt.show()
-	row, col = np.where(xdiff == 0)
-
-	if np.all(row == 0):  # or, row.size == 0:
-		# print('Shapes: ')
-		# TestA = wex[row, ]  
-		# TestB = np.tile(w[col].T, (1, n)).T
-		# TestC = xdiff[row, ]
-		# print('TestA:', np.shape(TestA))
-		# print('TestB:', np.shape(TestB))
-		# print('TestC:', np.shape(TestC))
-		DM[row, ] = (wex[row, ] / np.tile(w[col].T, (1, n)).T) / xdiff[row, ]
-		idx = sub2ind(DM.shape, row, col)
-		DM[idx] = 0
-		# print('DM:',DM)
-		# print('row:',row)
-		# print('col:',col)
-		# print('DM[row,]:',DM[row,])
-		DM[idx] = -np.sum(DM[row, ], axis=1)
-
-	return DM, M
+	
+#	# Construct the derivative (Section 9.3 of Berrut and Trefethen)
+#	xdiff2 = xdiff ** 2
+#	
+#	frac1 = wex / xdiff
+#	frac1[np.isinf(frac1)] = float("inf")
+#	
+#	frac2 = wex / xdiff2
+#	
+#	DM = (M * np.tile(np.sum(frac2, axis=1)[np.newaxis].T, (1, n)) - frac2) / np.tile(np.sum(frac1, axis=1)[np.newaxis].T, (1, n))
+#	row, col = np.where(xdiff == 0)
+#	
+#	
+#	if np.all(row == 0):  # or, row.size == 0:
+#		DM[row, ] = (wex[row, ] / np.tile(w[col].T, (1, n))) / xdiff[row, ]
+#		idx = sub2ind(DM.shape, row, col)
+#		DM[idx] = 0
+#		DM[idx] = -np.sum(DM[row, ], axis=1)
+		
+	return M
 
 
 ## Extracts the weights on the interpolation mesh using barycentric Lagrange interpolation.
@@ -307,8 +290,7 @@ def interp_polynomial(Dgm, params, type='BirthDeath'):
 		return
 
 	# get the query points. xq are the brith times, yq are the death times.
-	xq, yq = A[:, 0], A[:, 1]
-	
+	xq, yq = np.sort(A[:, 0]), np.sort(A[:, 1])
 	
 	# 1) Get the base nodes:
 	# get the 1D base nodes in x and y
@@ -317,16 +299,25 @@ def interp_polynomial(Dgm, params, type='BirthDeath'):
 	xmesh = np.sort(xmesh)
 	ymesh = np.sort(ymesh)
 	
+	# shift the base mesh points to the interval of interpolation [ax, bx], and
+	# [ay, by]
+	ax = 5
+	bx = 6
+	xmesh = (bx - ax) / 2 * xmesh + (bx + ax) / 2
+	ay = 5
+	by = 6
+	ymesh = (by - ay) / 2 * ymesh + (by + ay) / 2
+	
 	# define a mesh on the base points
 	x_base, y_base = np.meshgrid(xmesh, ymesh, sparse=False, indexing='ij')
 	
 	# get the x and y interpolation matrices
 	# get the 1D interpolation matrix for x
-	x_meshdiff_mat, x_interp_mat = bary_diff_matrix(xnew=xq, xbase=xmesh)
+	x_interp_mat = bary_diff_matrix(xnew=xq, xbase=xmesh)[0]
 	x_interp_mat = x_interp_mat.T  # transpose the x-interplation matrix
 	
 	# get the 1D interpolation matrix for y
-	y_meshdiff_mat, y_interp_mat = bary_diff_matrix(xnew=yq, xbase=ymesh)
+	y_interp_mat = bary_diff_matrix(xnew=yq, xbase=ymesh)[0]
 	
 	# replicate each column in the x-interpolation matrix n times
 	Gamma = np.repeat(x_interp_mat, ny+1, axis=1)
