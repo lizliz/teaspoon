@@ -320,7 +320,8 @@ def interp_polynomial(Dgm, params, type='BirthDeath'):
 	y_interp_mat = bary_diff_matrix(xnew=yq, xbase=ymesh)[0]
 	
 	# replicate each column in the x-interpolation matrix n times
-	Gamma = np.repeat(x_interp_mat, ny+1, axis=1)
+	Gamma = np.repeat(x_interp_mat.reshape((-1,1)), ny+1, axis=1)
+	
 	# unravel, then replicate each row in the y-interpolation matrix m times
 	y_interp_mat.shape = (1, y_interp_mat.size)
 	Phi = np.repeat(y_interp_mat, nx+1, axis=0)

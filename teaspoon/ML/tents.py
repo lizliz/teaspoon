@@ -45,7 +45,8 @@ class ParameterBucket(object):
 					clfClass = RidgeClassifierCV,
 					seed = None,
 					test_size = .33,
-                 feature_function=None):
+                 	feature_function=None,
+                 	boundingBoxMatrix = None):
 		"""!@brief Creates a new ParameterBucket object.
 
 	    This object is being used to keep track of all the parameters needed
@@ -66,6 +67,9 @@ class ParameterBucket(object):
 	    	A number in \f$[0,1]\f$.  Gives the percentage of data points to be reserved for the testing set if this is being used for a train/test split experiment.  Otherwise, ignored. 
         @param feature_function
 	    	The basis function you want to use for interpolation. Default is tent()
+	    @param boundingBoxMatrix
+	    	Not yet implemented.  See self.findBoundingBox()
+
 
 	    """
 		self.description = description
@@ -169,6 +173,32 @@ class ParameterBucket(object):
 
 		self.delta = delta
 		self.epsilon = epsilon
+
+	def findBoundingBox(self,DgmsSeries,pad = 0):
+		'''
+		DgmsSeries is of type pd.series
+		pad is the additional padding outside of the points in the diagrams
+
+		
+		Sets a bounding box in the birth-lifetime plane
+		to use for creating support of function collection.
+
+		Result is `self.boundingBox` is a dictionary with 
+		two keys, 'birthAxis' and 'lifetimeAxis', each outputing 
+		a tuple of length 2.
+
+
+		'''
+		topPers = pP.maxPersistenceSeries(DgmsSeries)
+		bottomPers = pP.minPersistenceSeries(DgmsSeries)
+		topBirth = max(DgmsSeries.apply(pP.maxBirth))
+		bottomBirth = min(DgmsSeries.apply(pP.minBirth))
+
+
+		self.boundingBox = {}
+		self.boundingBox['birthAxis'] = (bottomBirth - pad, topBirth + pad)
+		self.boundingBox['lifetimeAxis'] = (bottomPers/2, topPers + pad)
+
 
 
 
