@@ -1,13 +1,13 @@
 ## @package teaspoon.ML.tents
 # Machine learning featurization method
-# 
+#
 # If you make use of this code, please cite the following paper:<br/>
 # J.A. Perea, E. Munch, and F. Khasawneh.  "Approximating Continuous Functions On Persistence Diagrams." Preprint, 2017.
 #
 # An example workflow to ensure that classification is working:
 # \code{.py}
 # import teaspoon.MakeData.PointCloud as gPC
-# import teaspoon.ML.tents as tents 
+# import teaspoon.ML.tents as tents
 # df = gPC.testSetClassification()
 # tents.getPercentScore(df,dgm_col = 'Dgm')
 
@@ -21,7 +21,7 @@ import teaspoon.ML.feature_functions as fF
 
 import time
 import numpy as np
-import pandas as pd 
+import pandas as pd
 
 
 from sklearn.linear_model import LogisticRegression, Ridge, RidgeCV, RidgeClassifierCV, LassoCV
@@ -58,13 +58,13 @@ class ParameterBucket(object):
 	    @param d, delta, epsilon
 	    	The bounding box for the persistence diagram in the (birth, lifetime) coordinates is [0,d * delta] x [epsilon, d* delta + epsilon].  In the usual coordinates, this creates a parallelogram.
 	    @param maxPower
-	    	The maximum degree used for the monomial combinations of the tent functions.  Testing suggests we usually want this to be 1.  Increasing causes large increase in number of features. 
+	    	The maximum degree used for the monomial combinations of the tent functions.  Testing suggests we usually want this to be 1.  Increasing causes large increase in number of features.
 	    @param clfClass
 	    	The choice of tool used for classification or regression, passed as the function.  This code has been tested using `sklearn` functions `RidgeClassiferCV` for classification and `RidgeCV` for regression.
 	    @param seed
 	    	The seed for the pseudo-random number generator.  Pass None if you don't want it fixed; otherwise, pass an integer.
 	    @param test_size
-	    	A number in \f$[0,1]\f$.  Gives the percentage of data points to be reserved for the testing set if this is being used for a train/test split experiment.  Otherwise, ignored. 
+	    	A number in \f$[0,1]\f$.  Gives the percentage of data points to be reserved for the testing set if this is being used for a train/test split experiment.  Otherwise, ignored.
         @param feature_function
 	    	The basis function you want to use for interpolation. Default is tent()
 	    @param boundingBoxMatrix
@@ -94,8 +94,8 @@ class ParameterBucket(object):
 			self.feature_function = fF.tent
 		else:
 			self.feature_function = feature_function
-				
-            
+
+
 	def __str__(self):
 		"""!
 		@brief Nicely prints all currently set values in the ParameterBucket.
@@ -145,12 +145,12 @@ class ParameterBucket(object):
 
 	def chooseDeltaEpsWithPadding(self, DgmsSeries, pad = 0):
 		'''
-		
+
 		DgmsSeries is pd.series
 		d is number of grid elements in either direction
 		pad is the additional padding outside of the points in the diagrams
 
-		Sets the needed delta and epsilon 
+		Sets the needed delta and epsilon
 
 
 		'''
@@ -179,12 +179,12 @@ class ParameterBucket(object):
 		DgmsSeries is of type pd.series
 		pad is the additional padding outside of the points in the diagrams
 
-		
+
 		Sets a bounding box in the birth-lifetime plane
 		to use for creating support of function collection.
 
-		Result is `self.boundingBox` is a dictionary with 
-		two keys, 'birthAxis' and 'lifetimeAxis', each outputing 
+		Result is `self.boundingBox` is a dictionary with
+		two keys, 'birthAxis' and 'lifetimeAxis', each outputing
 		a tuple of length 2.
 
 
@@ -215,18 +215,18 @@ class ParameterBucket(object):
 # @param params
 # 	An tents.ParameterBucket object.  Really, we need d, delta, and epsilon from that.
 # @param type
-#	This code accepts diagrams either 
-#	* in (birth, death) coordinates, in which case `type = 'BirthDeath'`, or 
+#	This code accepts diagrams either
+#	* in (birth, death) coordinates, in which case `type = 'BirthDeath'`, or
 #	* in (birth, lifetime) = (birth, death-birth) coordinates, in which case `type = 'BirthLifetime'`
 # @return \f$\sum_{x,y \in \text{Dgm}}g_{i,j}(x,y)\f$ where
-# \f[g_{i,j}(x,y) = 
+# \f[g_{i,j}(x,y) =
 # \bigg| 1- \max\left\{ \left|\frac{x}{\delta} - i\right|, \left|\frac{y-x}{\delta} - j\right|\right\} \bigg|_+\f]
 # where
 # \f$| * |_+\f$ is positive part; equivalently, min of \f$*\f$ and 0.
 # @note This code does not take care of the maxPower polynomial stuff.  The build_G() function does it after all the rows have been calculated.
 def tent(Dgm, params, type = 'BirthDeath'):
 	d = params.d
-	delta = params.delta 
+	delta = params.delta
 	epsilon = params.epsilon
 	# print(Dgm[:3])
 	# Move to birth,lifetime plane
@@ -284,7 +284,7 @@ def tent(Dgm, params, type = 'BirthDeath'):
 	# 	out = np.concatenate(BigOuts)
 
 
-	return out 
+	return out
 
 
 
@@ -311,36 +311,36 @@ def build_G(DgmSeries, params):
 #----------------------------------------------------#
 
 ## Main function to run ML with tents on persistence diagrams.
-# Takes data frame DgmsDF and specified persistence diagram column labels, 
+# Takes data frame DgmsDF and specified persistence diagram column labels,
 # computes the G matrix using build_G.
 # Does classification using labels from labels_col in the data frame.
 # Returns instance of estimator
 #
 # 	@param DgmsDF
-# 		A pandas data frame containing, at least, a column of 
+# 		A pandas data frame containing, at least, a column of
 # 		diagrams and a column of labels
 # 	@param labels_col
 # 		A string.  The label for the column in DgmsDF containing
 # 		the training labels.
-# 	@param dgm_col 
-# 		The label(s) for the column containing the diagrams given as a string or list of strings.  
+# 	@param dgm_col
+# 		The label(s) for the column containing the diagrams given as a string or list of strings.
 # 	@param params
 # 		A class of type ParameterBucket
 # 		Should store:
 # 			- **d**:
-# 				An integer, the number of elements for griding up 
-# 				the x and y axis of the diagram.  Will result in 
-# 				d*(d+1) tent functions 
+# 				An integer, the number of elements for griding up
+# 				the x and y axis of the diagram.  Will result in
+# 				d*(d+1) tent functions
 # 			- **delta**, **epsilon**:
-# 				Controls location and width of mesh elements for x and y axis of the 
-# 				diagram. 
+# 				Controls location and width of mesh elements for x and y axis of the
+# 				diagram.
 # 			- **clfClass**:
 # 				The class which will be used for classification.  Currently tested
 #				using `sklearn.RidgeClassifierCV` and `sklearn.RidgeCV`.
-# @return 
+# @return
 # 	The classifier object. Coefficients can be found from clf.coef_
 def TentML(DgmsDF,
-			labels_col = 'trainingLabel',  
+			labels_col = 'trainingLabel',
 			dgm_col = 'Dgm1',
 			params = None,
 			normalize = False,
@@ -350,7 +350,7 @@ def TentML(DgmsDF,
 
 	if params == None:
 		print('You need to pass in a ParameterBucket. Exiting....')
-		return 
+		return
 	if params.d == None or params.delta == None or params.epsilon == None or params.maxPower == None:
 		print('You need to finish filling the parameter bucket. ')
 		print(params)
@@ -364,7 +364,7 @@ def TentML(DgmsDF,
 	clf = params.clfClass()
 
 	if verbose:
-		print('Training estimator.') 
+		print('Training estimator.')
 
 	startTime = time.time()
 
@@ -372,7 +372,7 @@ def TentML(DgmsDF,
 	if type(dgm_col) == str:
 		dgm_col = [dgm_col,]
 
-	if verbose: 
+	if verbose:
 		print('Making G...')
 
 	listOfG = []
@@ -381,8 +381,8 @@ def TentML(DgmsDF,
 		listOfG.append(G)
 
 	G = np.concatenate(listOfG,axis = 1)
-	
-	# Normalize G 
+
+	# Normalize G
 	if normalize:
 		G = scale(G)
 
@@ -410,32 +410,32 @@ def TentML(DgmsDF,
 
 
 
-## Main testing function for classification or regression methods.  
+## Main testing function for classification or regression methods.
 # Does train/test split, creates classifier, and returns score on test.
 #
 # 	@param DgmsDF
-# 		A pandas data frame containing, at least, a column of 
+# 		A pandas data frame containing, at least, a column of
 # 		diagrams and a column of labels
 # 	@param labels_col
 # 		A string.  The label for the column in DgmsDF containing the training labels.
-# 	@param dgm_col 
+# 	@param dgm_col
 # 		A string or list of strings giving the label for the column containing the diagrams.
 # 	@param params
 # 		A class of type ParameterBucket
 # 		Should store:
 # 			- **d**:
-# 				An integer, the number of elements for griding up 
-# 				the x and y axis of the diagram.  Will result in 
-# 				d*(d+1) tent functions 
+# 				An integer, the number of elements for griding up
+# 				the x and y axis of the diagram.  Will result in
+# 				d*(d+1) tent functions
 # 			- **delta**, **epsilon**:
-# 				Controls location and width of mesh elements for x and y axis of the 
-# 				diagram. 
+# 				Controls location and width of mesh elements for x and y axis of the
+# 				diagram.
 # 			- **clfClass**:
 # 				The class which will be used for classification.  Currently tested
 #				using `sklearn.RidgeClassifierCV` and `sklearn.RidgeCV`.
 #			- **seed**:
 #				None if we don't want to mess with the seed for the train_test_split function. Else, pass integer.
-#			- **test_split**: 
+#			- **test_split**:
 #				The percentage of the data to be reserved for the test part of the train/test split.
 #
 # 	@return
@@ -445,16 +445,16 @@ def TentML(DgmsDF,
 # 		- **DgmsDF**
 # 			The original data frame passed back with a column labeled
 # 			'Prediction' added with the predictions gotten for the
-# 			test set. Data points in the training set will have an 
+# 			test set. Data points in the training set will have an
 # 			entry of NaN
 # 		- **clf**
-# 			The classifier object.  
+# 			The classifier object.
 #
-def getPercentScore(DgmsDF, 
-					labels_col = 'trainingLabel',  
+def getPercentScore(DgmsDF,
+					labels_col = 'trainingLabel',
 					dgm_col = 'Dgm1',
 					params = ParameterBucket(),
-					normalize = False, 
+					normalize = False,
 					verbose = True
 					):
 
@@ -494,11 +494,11 @@ def getPercentScore(DgmsDF,
 
 	G = np.concatenate(listOfG,axis = 1)
 
-	# Normalize G 
+	# Normalize G
 	if normalize:
 		G = scale(G)
 
-	
+
 	# Compute predictions and add to DgmsDF data frame
 	L_predict = pd.Series(clf.predict(G),index = L_test.index)
 	DgmsDF['Prediction'] = L_predict
@@ -516,9 +516,3 @@ def getPercentScore(DgmsDF,
 	output['clf'] = clf
 
 	return output
-
-
-
-
-
-
