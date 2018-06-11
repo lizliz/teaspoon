@@ -38,16 +38,12 @@ Generates data sets related to persistence diagrams and point clouds.
 All point clouds are returned as a numpy array, larger collection data is returned as a pandas Data\+Frame. 
 
 \subsection{Function Documentation}
+\mbox{\Hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a3720c7f39eecd56c7e4375cc0feef4ed}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a3720c7f39eecd56c7e4375cc0feef4ed}} 
 \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Annulus@{Annulus}}
 \index{Annulus@{Annulus}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
-\subsubsection[{\texorpdfstring{Annulus(\+N=200, r=1, R=2, seed=\+None)}{Annulus(N=200, r=1, R=2, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Annulus (
-\begin{DoxyParamCaption}
-\item[{}]{N = {\ttfamily 200}, }
-\item[{}]{r = {\ttfamily 1}, }
-\item[{}]{R = {\ttfamily 2}, }
-\item[{}]{seed = {\ttfamily None}}
-\end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a3720c7f39eecd56c7e4375cc0feef4ed}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a3720c7f39eecd56c7e4375cc0feef4ed}
+\subsubsection{\texorpdfstring{Annulus()}{Annulus()}}
+{\footnotesize\ttfamily def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Annulus (\begin{DoxyParamCaption}\item[{}]{N = {\ttfamily 200},  }\item[{}]{r = {\ttfamily 1},  }\item[{}]{R = {\ttfamily 2},  }\item[{}]{seed = {\ttfamily None} }\end{DoxyParamCaption})}
+
 \begin{DoxyVerb}Returns point cloud sampled from uniform distribution on  
 annulus in R^2 of inner radius r and outer radius R
 
@@ -67,15 +63,12 @@ Returns
 -------
 P -  
     A Nx2 numpy array with the points drawn as the rows.\end{DoxyVerb}
- \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Circle@{Circle}}
+ \mbox{\Hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a89af9aed6706a0a5ee9a2cbeec801db2}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a89af9aed6706a0a5ee9a2cbeec801db2}} 
+\index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Circle@{Circle}}
 \index{Circle@{Circle}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
-\subsubsection[{\texorpdfstring{Circle(\+N=100, r=1, seed=\+None)}{Circle(N=100, r=1, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Circle (
-\begin{DoxyParamCaption}
-\item[{}]{N = {\ttfamily 100}, }
-\item[{}]{r = {\ttfamily 1}, }
-\item[{}]{seed = {\ttfamily None}}
-\end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a89af9aed6706a0a5ee9a2cbeec801db2}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a89af9aed6706a0a5ee9a2cbeec801db2}
+\subsubsection{\texorpdfstring{Circle()}{Circle()}}
+{\footnotesize\ttfamily def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Circle (\begin{DoxyParamCaption}\item[{}]{N = {\ttfamily 100},  }\item[{}]{r = {\ttfamily 1},  }\item[{}]{seed = {\ttfamily None} }\end{DoxyParamCaption})}
+
 \begin{DoxyVerb}Generate N points in R^2 from the circle centered
 at the origin with radius r.
 
@@ -93,16 +86,12 @@ Returns
 -------
 P -  
     A Nx2 numpy array with the points drawn as the rows.\end{DoxyVerb}
- \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Clusters@{Clusters}}
+ \mbox{\Hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a130af3abbe5cb02a99c3f64d3f3dd979}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a130af3abbe5cb02a99c3f64d3f3dd979}} 
+\index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Clusters@{Clusters}}
 \index{Clusters@{Clusters}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
-\subsubsection[{\texorpdfstring{Clusters(\+N=100, centers=np.\+array(((0, 0),(3, 3))), sd=1, seed=\+None)}{Clusters(N=100, centers=np.array(((0, 0),(3, 3))), sd=1, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Clusters (
-\begin{DoxyParamCaption}
-\item[{}]{N = {\ttfamily 100}, }
-\item[{}]{centers = {\ttfamily np.array(((0,0),(3,3)))}, }
-\item[{}]{sd = {\ttfamily 1}, }
-\item[{}]{seed = {\ttfamily None}}
-\end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a130af3abbe5cb02a99c3f64d3f3dd979}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a130af3abbe5cb02a99c3f64d3f3dd979}
+\subsubsection{\texorpdfstring{Clusters()}{Clusters()}}
+{\footnotesize\ttfamily def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Clusters (\begin{DoxyParamCaption}\item[{}]{N = {\ttfamily 100},  }\item[{}]{centers = {\ttfamily np.array(((0,0),(3,3)))},  }\item[{}]{sd = {\ttfamily 1},  }\item[{}]{seed = {\ttfamily None} }\end{DoxyParamCaption})}
+
 \begin{DoxyVerb}Generate k clusters of points, N points in total (evenly divided?)
 centers is a k x d numpy array, where centers[i,:] is the center of 
 the ith cluster in R^d.
@@ -127,16 +116,12 @@ Returns
 -------
 P -  
     A Nxd numpy array with the points drawn as the rows.\end{DoxyVerb}
- \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Cube@{Cube}}
+ \mbox{\Hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_ad2738d11d9b3018aab5d163587239518}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_ad2738d11d9b3018aab5d163587239518}} 
+\index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Cube@{Cube}}
 \index{Cube@{Cube}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
-\subsubsection[{\texorpdfstring{Cube(\+N=100, diam=1, dim=2, seed=\+None)}{Cube(N=100, diam=1, dim=2, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Cube (
-\begin{DoxyParamCaption}
-\item[{}]{N = {\ttfamily 100}, }
-\item[{}]{diam = {\ttfamily 1}, }
-\item[{}]{dim = {\ttfamily 2}, }
-\item[{}]{seed = {\ttfamily None}}
-\end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_ad2738d11d9b3018aab5d163587239518}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_ad2738d11d9b3018aab5d163587239518}
+\subsubsection{\texorpdfstring{Cube()}{Cube()}}
+{\footnotesize\ttfamily def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Cube (\begin{DoxyParamCaption}\item[{}]{N = {\ttfamily 100},  }\item[{}]{diam = {\ttfamily 1},  }\item[{}]{dim = {\ttfamily 2},  }\item[{}]{seed = {\ttfamily None} }\end{DoxyParamCaption})}
+
 \begin{DoxyVerb}Generate N points in R^dim from the box
 [0,diam]x[0,diam]x...x[0,diam]
 
@@ -154,16 +139,12 @@ Returns
 -------
 P -  
     A Nxdim numpy array with the points drawn as the rows.\end{DoxyVerb}
- \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!normal\+Diagram@{normal\+Diagram}}
+ \mbox{\Hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}} 
+\index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!normal\+Diagram@{normal\+Diagram}}
 \index{normal\+Diagram@{normal\+Diagram}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
-\subsubsection[{\texorpdfstring{normal\+Diagram(\+N=20, mu=(2, 4), sd=1, seed=\+None)}{normalDiagram(N=20, mu=(2, 4), sd=1, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+normal\+Diagram (
-\begin{DoxyParamCaption}
-\item[{}]{N = {\ttfamily 20}, }
-\item[{}]{mu = {\ttfamily (2,4)}, }
-\item[{}]{sd = {\ttfamily 1}, }
-\item[{}]{seed = {\ttfamily None}}
-\end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}
+\subsubsection{\texorpdfstring{normal\+Diagram()}{normalDiagram()}}
+{\footnotesize\ttfamily def teaspoon.\+Make\+Data.\+Point\+Cloud.\+normal\+Diagram (\begin{DoxyParamCaption}\item[{}]{N = {\ttfamily 20},  }\item[{}]{mu = {\ttfamily (2,4)},  }\item[{}]{sd = {\ttfamily 1},  }\item[{}]{seed = {\ttfamily None} }\end{DoxyParamCaption})}
+
 
 
 Generates a diagram with points drawn from a normal distribution in the persistence diagram plane. 
@@ -182,16 +163,12 @@ Pulls {\ttfamily N} points from a normal distribution with mean {\ttfamily mu} a
 \begin{DoxyReturn}{Returns}
 A persistence diagram given as a numpy array of size {\ttfamily Kx2}. 
 \end{DoxyReturn}
+\mbox{\Hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_af130e51668240f775bca4ff195be2bea}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_af130e51668240f775bca4ff195be2bea}} 
 \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Sphere@{Sphere}}
 \index{Sphere@{Sphere}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
-\subsubsection[{\texorpdfstring{Sphere(\+N=100, r=1, noise=0, seed=\+None)}{Sphere(N=100, r=1, noise=0, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Sphere (
-\begin{DoxyParamCaption}
-\item[{}]{N = {\ttfamily 100}, }
-\item[{}]{r = {\ttfamily 1}, }
-\item[{}]{noise = {\ttfamily 0}, }
-\item[{}]{seed = {\ttfamily None}}
-\end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_af130e51668240f775bca4ff195be2bea}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_af130e51668240f775bca4ff195be2bea}
+\subsubsection{\texorpdfstring{Sphere()}{Sphere()}}
+{\footnotesize\ttfamily def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Sphere (\begin{DoxyParamCaption}\item[{}]{N = {\ttfamily 100},  }\item[{}]{r = {\ttfamily 1},  }\item[{}]{noise = {\ttfamily 0},  }\item[{}]{seed = {\ttfamily None} }\end{DoxyParamCaption})}
+
 \begin{DoxyVerb}Generate N points in R^3 from the sphere centered
 at the origin with radius r.
 If noise is set to a positive number, the points 
@@ -211,19 +188,12 @@ Returns
 -------
 P -  
     A Nx3 numpy array with the points drawn as the rows.\end{DoxyVerb}
- \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!test\+Set\+Classification@{test\+Set\+Classification}}
+ \mbox{\Hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_ad06993de8a3ffe4db7b73ca30c85da4e}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_ad06993de8a3ffe4db7b73ca30c85da4e}} 
+\index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!test\+Set\+Classification@{test\+Set\+Classification}}
 \index{test\+Set\+Classification@{test\+Set\+Classification}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
-\subsubsection[{\texorpdfstring{test\+Set\+Classification(\+N=20, num\+Dgms=(10, 10), mu\+Red=(1, 3), mu\+Blue=(2, 5), sd=1, permute=\+True, seed=\+None)}{testSetClassification(N=20, numDgms=(10, 10), muRed=(1, 3), muBlue=(2, 5), sd=1, permute=True, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+test\+Set\+Classification (
-\begin{DoxyParamCaption}
-\item[{}]{N = {\ttfamily 20}, }
-\item[{}]{num\+Dgms = {\ttfamily (10,10)}, }
-\item[{}]{mu\+Red = {\ttfamily (1,3)}, }
-\item[{}]{mu\+Blue = {\ttfamily (2,5)}, }
-\item[{}]{sd = {\ttfamily 1}, }
-\item[{}]{permute = {\ttfamily True}, }
-\item[{}]{seed = {\ttfamily None}}
-\end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_ad06993de8a3ffe4db7b73ca30c85da4e}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_ad06993de8a3ffe4db7b73ca30c85da4e}
+\subsubsection{\texorpdfstring{test\+Set\+Classification()}{testSetClassification()}}
+{\footnotesize\ttfamily def teaspoon.\+Make\+Data.\+Point\+Cloud.\+test\+Set\+Classification (\begin{DoxyParamCaption}\item[{}]{N = {\ttfamily 20},  }\item[{}]{num\+Dgms = {\ttfamily (10,10)},  }\item[{}]{mu\+Red = {\ttfamily (1,3)},  }\item[{}]{mu\+Blue = {\ttfamily (2,5)},  }\item[{}]{sd = {\ttfamily 1},  }\item[{}]{permute = {\ttfamily True},  }\item[{}]{seed = {\ttfamily None} }\end{DoxyParamCaption})}
+
 
 
 Generate a collection of diagrams using the \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()} function for classification tests. 
@@ -246,16 +216,12 @@ Generate a collection of diagrams using the \hyperlink{namespaceteaspoon_1_1_mak
 \begin{DoxyReturn}{Returns}
 A pandas dataframe with columns {\ttfamily \mbox{[}\textquotesingle{}Dgm\textquotesingle{}, \textquotesingle{}mean\textquotesingle{}, \textquotesingle{}sd\textquotesingle{}, \textquotesingle{}training\+Label\textquotesingle{}\mbox{]}}. In this case, the entry in {\ttfamily training\+Label} is -\/1 if the diagram was drawn from the red type, and 1 if drawn from the blue type. 
 \end{DoxyReturn}
+\mbox{\Hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a5d9c892f9f0a63f64437cbbde9048aeb}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a5d9c892f9f0a63f64437cbbde9048aeb}} 
 \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!test\+Set\+Manifolds@{test\+Set\+Manifolds}}
 \index{test\+Set\+Manifolds@{test\+Set\+Manifolds}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
-\subsubsection[{\texorpdfstring{test\+Set\+Manifolds(num\+Dgms=50, num\+Pts=300, permute=\+True, seed=\+None)}{testSetManifolds(numDgms=50, numPts=300, permute=True, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+test\+Set\+Manifolds (
-\begin{DoxyParamCaption}
-\item[{}]{num\+Dgms = {\ttfamily 50}, }
-\item[{}]{num\+Pts = {\ttfamily 300}, }
-\item[{}]{permute = {\ttfamily True}, }
-\item[{}]{seed = {\ttfamily None}}
-\end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a5d9c892f9f0a63f64437cbbde9048aeb}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a5d9c892f9f0a63f64437cbbde9048aeb}
+\subsubsection{\texorpdfstring{test\+Set\+Manifolds()}{testSetManifolds()}}
+{\footnotesize\ttfamily def teaspoon.\+Make\+Data.\+Point\+Cloud.\+test\+Set\+Manifolds (\begin{DoxyParamCaption}\item[{}]{num\+Dgms = {\ttfamily 50},  }\item[{}]{num\+Pts = {\ttfamily 300},  }\item[{}]{permute = {\ttfamily True},  }\item[{}]{seed = {\ttfamily None} }\end{DoxyParamCaption})}
+
 
 
 Generates a collection of diagrams from different underlying topological spaces. 
@@ -286,18 +252,12 @@ The types of underlying spaces with their entry in the {\ttfamily training\+Labe
 \begin{DoxyReturn}{Returns}
 A pandas Data\+Frame with columns {\ttfamily \mbox{[}\textquotesingle{}Dgm0\textquotesingle{}, \textquotesingle{}Dgm1\textquotesingle{}, \textquotesingle{}training\+Label\textquotesingle{}\mbox{]}}. The {\ttfamily training\+Label} row has entries with labels given as the boldface above. 
 \end{DoxyReturn}
+\mbox{\Hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a5d59e8a0b850c8d65c3f421d72486d35}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a5d59e8a0b850c8d65c3f421d72486d35}} 
 \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!test\+Set\+Regression\+Ball@{test\+Set\+Regression\+Ball}}
 \index{test\+Set\+Regression\+Ball@{test\+Set\+Regression\+Ball}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
-\subsubsection[{\texorpdfstring{test\+Set\+Regression\+Ball(\+N=20, num\+Dgms=40, mu\+Center=(1, 3), sd=1, permute=\+True, seed=\+None)}{testSetRegressionBall(N=20, numDgms=40, muCenter=(1, 3), sd=1, permute=True, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+test\+Set\+Regression\+Ball (
-\begin{DoxyParamCaption}
-\item[{}]{N = {\ttfamily 20}, }
-\item[{}]{num\+Dgms = {\ttfamily 40}, }
-\item[{}]{mu\+Center = {\ttfamily (1,3)}, }
-\item[{}]{sd = {\ttfamily 1}, }
-\item[{}]{permute = {\ttfamily True}, }
-\item[{}]{seed = {\ttfamily None}}
-\end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a5d59e8a0b850c8d65c3f421d72486d35}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a5d59e8a0b850c8d65c3f421d72486d35}
+\subsubsection{\texorpdfstring{test\+Set\+Regression\+Ball()}{testSetRegressionBall()}}
+{\footnotesize\ttfamily def teaspoon.\+Make\+Data.\+Point\+Cloud.\+test\+Set\+Regression\+Ball (\begin{DoxyParamCaption}\item[{}]{N = {\ttfamily 20},  }\item[{}]{num\+Dgms = {\ttfamily 40},  }\item[{}]{mu\+Center = {\ttfamily (1,3)},  }\item[{}]{sd = {\ttfamily 1},  }\item[{}]{permute = {\ttfamily True},  }\item[{}]{seed = {\ttfamily None} }\end{DoxyParamCaption})}
+
 
 
 Generate a collection of diagrams with means distributed normally using the \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()} function; used for regression tests. 
@@ -320,19 +280,12 @@ Generate a collection of diagrams with means distributed normally using the \hyp
 \begin{DoxyReturn}{Returns}
 A pandas dataframe with columns {\ttfamily \mbox{[}\textquotesingle{}Dgm\textquotesingle{}, \textquotesingle{}mean\textquotesingle{}, \textquotesingle{}sd\textquotesingle{}, \textquotesingle{}training\+Label\textquotesingle{}\mbox{]}}. In this case, {\ttfamily training\+Label} is the distance from the mean used for that persistence diagram to {\ttfamily mu\+Center}. 
 \end{DoxyReturn}
+\mbox{\Hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a438eee01f88fa160eac50510250b536d}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a438eee01f88fa160eac50510250b536d}} 
 \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!test\+Set\+Regression\+Line@{test\+Set\+Regression\+Line}}
 \index{test\+Set\+Regression\+Line@{test\+Set\+Regression\+Line}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
-\subsubsection[{\texorpdfstring{test\+Set\+Regression\+Line(\+N=20, num\+Dgms=40, mu\+Start=(1, 3), mu\+End=(2, 5), sd=1, permute=\+True, seed=\+None)}{testSetRegressionLine(N=20, numDgms=40, muStart=(1, 3), muEnd=(2, 5), sd=1, permute=True, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+test\+Set\+Regression\+Line (
-\begin{DoxyParamCaption}
-\item[{}]{N = {\ttfamily 20}, }
-\item[{}]{num\+Dgms = {\ttfamily 40}, }
-\item[{}]{mu\+Start = {\ttfamily (1,3)}, }
-\item[{}]{mu\+End = {\ttfamily (2,5)}, }
-\item[{}]{sd = {\ttfamily 1}, }
-\item[{}]{permute = {\ttfamily True}, }
-\item[{}]{seed = {\ttfamily None}}
-\end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a438eee01f88fa160eac50510250b536d}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a438eee01f88fa160eac50510250b536d}
+\subsubsection{\texorpdfstring{test\+Set\+Regression\+Line()}{testSetRegressionLine()}}
+{\footnotesize\ttfamily def teaspoon.\+Make\+Data.\+Point\+Cloud.\+test\+Set\+Regression\+Line (\begin{DoxyParamCaption}\item[{}]{N = {\ttfamily 20},  }\item[{}]{num\+Dgms = {\ttfamily 40},  }\item[{}]{mu\+Start = {\ttfamily (1,3)},  }\item[{}]{mu\+End = {\ttfamily (2,5)},  }\item[{}]{sd = {\ttfamily 1},  }\item[{}]{permute = {\ttfamily True},  }\item[{}]{seed = {\ttfamily None} }\end{DoxyParamCaption})}
+
 
 
 Generate a collection of diagrams with means distributed along a line using the \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud_afb6f087ced9440d9c2834a2a35e4344c}{normal\+Diagram()} function for regression tests. 
@@ -355,16 +308,12 @@ Generate a collection of diagrams with means distributed along a line using the 
 \begin{DoxyReturn}{Returns}
 A pandas dataframe with columns {\ttfamily \mbox{[}\textquotesingle{}Dgm\textquotesingle{}, \textquotesingle{}mean\textquotesingle{}, \textquotesingle{}sd\textquotesingle{}, \textquotesingle{}training\+Label\textquotesingle{}\mbox{]}}. In this case, {\ttfamily training\+Label} is the distance from the mean used for that persistence diagram to {\ttfamily mu\+Start}. 
 \end{DoxyReturn}
+\mbox{\Hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a85b2e43a1f8feda494c13d9c8537c0a2}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a85b2e43a1f8feda494c13d9c8537c0a2}} 
 \index{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}!Torus@{Torus}}
 \index{Torus@{Torus}!teaspoon\+::\+Make\+Data\+::\+Point\+Cloud@{teaspoon\+::\+Make\+Data\+::\+Point\+Cloud}}
-\subsubsection[{\texorpdfstring{Torus(\+N=100, r=1, R=2, seed=\+None)}{Torus(N=100, r=1, R=2, seed=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Torus (
-\begin{DoxyParamCaption}
-\item[{}]{N = {\ttfamily 100}, }
-\item[{}]{r = {\ttfamily 1}, }
-\item[{}]{R = {\ttfamily 2}, }
-\item[{}]{seed = {\ttfamily None}}
-\end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a85b2e43a1f8feda494c13d9c8537c0a2}{}\label{namespaceteaspoon_1_1_make_data_1_1_point_cloud_a85b2e43a1f8feda494c13d9c8537c0a2}
+\subsubsection{\texorpdfstring{Torus()}{Torus()}}
+{\footnotesize\ttfamily def teaspoon.\+Make\+Data.\+Point\+Cloud.\+Torus (\begin{DoxyParamCaption}\item[{}]{N = {\ttfamily 100},  }\item[{}]{r = {\ttfamily 1},  }\item[{}]{R = {\ttfamily 2},  }\item[{}]{seed = {\ttfamily None} }\end{DoxyParamCaption})}
+
 \begin{DoxyVerb}Sampling method taken from Sampling from a Manifold by Diaconis, 
 Holmes and Shahshahani, arXiv:1206.6913
 
