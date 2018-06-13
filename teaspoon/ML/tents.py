@@ -16,8 +16,10 @@
 
 
 from teaspoon.Misc import printPrettyTime
-import teaspoon.TDA.Persistence as pP
-import teaspoon.ML.feature_functions as fF
+#import teaspoon.TDA.Persistence as pP
+from teaspoon.TDA import Persistence as pP
+#import teaspoon.ML.feature_functions as fF
+from teaspoon.ML import feature_functions as fF
 
 import time
 import numpy as np

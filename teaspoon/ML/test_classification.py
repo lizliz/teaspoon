@@ -8,7 +8,8 @@ Created on Tue Apr 24 10:43:11 2018
 # this file tests the classification code
 # cd to the teaspoon folder, load the package and import the needed modules
 import numpy as np
-import teaspoon.MakeData.PointCloud as gpc
+#import teaspoon.MakeData.PointCloud as gpc
+from teaspoon.MakeData import PointCloud as gpc
 from tents import ParameterBucket, getPercentScore
 import feature_functions as fF
 from scipy import stats
@@ -61,7 +62,7 @@ params.jacobi_poly = 'cheb1'  # choose the interpolating polynomial
 #----------------------------------
 # define the number of base points
 #----------------------------------
-params.d = 100
+params.d = 1
 
 
 #----------------------------------

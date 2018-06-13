@@ -7,7 +7,8 @@ import random
 import os
 import numpy as np
 import pandas as pd
-import teaspoon.TDA.Persistence as pP
+#import teaspoon.TDA.Persistence as pP
+from teaspoon.TDA import Persistence as pP
 from scipy.spatial.distance import euclidean
 
 
