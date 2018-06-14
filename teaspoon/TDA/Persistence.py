@@ -18,7 +18,6 @@
 #
 
 
-import matplotlib.pyplot as plt
 import numpy as np
 import os
 import subprocess
@@ -27,7 +26,6 @@ from scipy.spatial.distance import pdist, squareform
 import glob
 import warnings
 import re
-import tempfile
 
 
 
@@ -47,14 +45,6 @@ def prepareFolders():
     for location in folders:
         if not os.path.exists(location):
             os.makedirs(location)
-
-	# clean the files that were possibly created from a previous run
-    for path in ['.teaspoonData'+os.path.sep + 'input'+os.path.sep + '*',
-				  '.teaspoonData'+os.path.sep + 'output'+os.path.sep + '*']:
-        files = glob.glob(path)
-        for f in files:
-#             print(f)
-            os.remove(f)
 
 
 def readPerseusOutput(outputFileName):
@@ -352,16 +342,17 @@ def VR_Perseus(P,dim = 1,
 def distMat_Ripser(distMat, maxDim = 1):
 	# Check/setup the folder structure
 	# Note: empties the folders in preparation
-	prepareFolders()
-	
-	base_dir = r'.teaspoonData'
-	filename = r'input{0}pointCloud.txt'.format(os.path.sep)
+    prepareFolders()
+    
+    current_path = os.getcwd()
+    base_dir = r'.teaspoonData'
+    filename = r'input{0}pointCloud.txt'.format(os.path.sep)
 	
 #	inputFileName = tempfile.TemporaryFile(dir=base_dir).name
 	
 
 	
-	inputFileName = os.path.join(base_dir, filename)
+    inputFileName = os.path.join(current_path, base_dir, filename)
 	
 	#     = '.teaspoonData/input/pointCloud.txt'
 	# outputFileName = '.teaspoonData/output/perseusMatrix'
@@ -374,25 +365,24 @@ def distMat_Ripser(distMat, maxDim = 1):
 	# X = squareform(pdist(P))
 	
 	# Open file to write the point cloud info
-	with open(inputFileName,'w') as F:
+    with open(inputFileName,'w') as F:
 		# Write lower triang matrix to file
-		for i in range(np.shape(distMat)[0]):
+        for i in range(np.shape(distMat)[0]):
 			#Get part of row before diagonal
-			L = str(list(distMat[i,:i]))[1:-1] #[1:-1] cuts off brackets
-			F.write(L + '\n')
-			
-	
-	cmd = 'ripser --dim ' + str(maxDim) + ' ' + inputFileName
-	
-	# Run ripser and pull the output from the terminal.
-	proc = subprocess.Popen(cmd,stdout=subprocess.PIPE,shell = True)
-	(out,err) = proc.communicate()
-	out = out.decode().split('\n')
-	
-	# Parse the output
-	Dgms = readRipserOutput(out)
-	
-	return Dgms
+            L = str(list(distMat[i,:i]))[1:-1] #[1:-1] cuts off brackets
+            F.write(L + '\n')
+            
+    cmd = 'ripser --dim ' + str(maxDim) + ' ' + inputFileName
+    
+    # Run ripser and pull the output from the terminal.
+    proc = subprocess.Popen(cmd,stdout=subprocess.PIPE,shell = True)
+    (out,err) = proc.communicate()
+    out = out.decode().split('\n')
+    
+    # Parse the output
+    Dgms = readRipserOutput(out)
+        
+    return Dgms
 
 #---------------Perseus-------------------------------#
 
