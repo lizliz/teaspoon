@@ -269,8 +269,7 @@ def bary_diff_matrix(xnew, xbase, w=None):
 # @return interp_weight, which is a matrix with each entry representiting the weight of an interpolation
 #	function on the base mesh. This matrix assumes that on a 2D mesh the functions are ordered row-wise.
 def interp_polynomial(Dgm, params, type='BirthDeath'):
-    print(Dgm)
-#	jacobi_func = params.jacobi_func
+    #	jacobi_func = params.jacobi_func
 	# check if we asked for a squre mesh or not
     if isinstance(params.d,int):
         nx = params.d
