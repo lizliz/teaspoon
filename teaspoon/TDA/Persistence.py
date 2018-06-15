@@ -28,7 +28,6 @@ import warnings
 import re
 
 
-
 #-----------------------------------------------------#
 #-----------------------------------------------------#
 #------------------Helper code------------------------#
@@ -80,63 +79,66 @@ def readPerseusOutput(outputFileName):
 
 
 def readRipserString(s):
-	birth_death_str = re.findall(r"(\d*[.]?\d*)", s)
-#	print(birth_death_str)
-	
-	# squeeze out the 'None' enries in the match
-	str_list = list(filter(None, birth_death_str))
-#	print(str_list)
-	
-	# now convert the resulting string list to floats	
-	birth_death_num = [float(x) for x in str_list]
 
-#    if s == ' ':
-#        return np.inf
-#    else:
-	return birth_death_num
+    birth_death_str = re.findall(r"(\d*[.]?\d*)", s)
+    
+    stuff = list(filter(None, birth_death_str))
+    
+    if not stuff:
+#        print("empty stuff: {}". format(stuff))
+        return np.nan
+    else:
+#        print("full stuff: {}".format(stuff))
+        return float(stuff[0])
+    
 
-
-def readRipserOutput(out):
-
+def readRipserOutput(out, drop_inf_class=True):
     # split into persistence diagrams
-	Dgms = {}
+    Dgms = {}
 	
-	# Find locations where the text splits the output
-	breaks = [i for i, s in enumerate(out) if 'persistence' in s]
+    # Find locations where the text splits the output
+    breaks = [i for i, s in enumerate(out) if 'persistence' in s]
 	
-	for j in range(len(breaks)):
-		# Get the dimension
-		#		dim = out[breaks[j]].strip().split(' ')[-1][:-1]		
-		#		dim = int(dim)
-				
-		# Get the dimension using regex
-		dim = int(re.search('\d+', out[breaks[j]]).group(0))
-#		print("dimension={}".format(dim))
-		# Extract the portions of the output between
-		# the places that say persistence.
-		# Note the len(out)-1 for the endIndex is because
-		# the last entry of out is a blank space ' '
-		#		startIndex = breaks[j]
-		if j+1 == len(breaks):
-			endIndex = len(out)-1
-		else:
-			endIndex = breaks[j+1]
-						
-		Dgm = out[breaks[j]+1 : endIndex]
-		Dgm = [X.strip()[2:-1].split(',') for X in Dgm]
-		
-		# using regular expressions
-		# use regular expressions to extract the birth/death times
-		
+    for j in range(len(breaks)):
+        # Get the dimension using regex
+        dim = int(re.search('\d+', out[breaks[j]]).group(0))
 
-		
-		Dgm = [ [readRipserString(X) for X in row]   for row in Dgm ]
-		Dgm = np.squeeze(np.array(Dgm))
-		
-#		print(Dgm.shape)
-		
-		Dgms[dim] = Dgm
-	return Dgms
+        # Extract the portions of the output between
+        # the places that say persistence.
+        # Note the len(out)-1 for the endIndex is because
+        # the last entry of out is a blank space ' '
+        #		startIndex = breaks[j]
+        if j+1 == len(breaks):
+            endIndex = len(out)-1
+        else:
+            endIndex = breaks[j+1]
+            
+        Dgm = out[breaks[j]+1 : endIndex]
+        Dgm = [X.strip()[2:-1].split(',') for X in Dgm]
+        
+        # use regular expressions to extract the birth/death times
+        Dgm = [[readRipserString(X) for X in row]   for row in Dgm]
+        
+        # get rid of spurious dimensions, and reshape into D x 2
+        Dgm = np.squeeze(Dgm).reshape((-1, 2))
+    
+        # check that the diagram is not empty
+        if Dgm.size > 0: 
+            # for 0-dim persistence, set birth time to zero
+            if dim is 0:
+                Dgm[:,0] = 0
+
+            # if the last entry is nan it signals an infinite class,set to inf
+            if np.isnan(Dgm[-1, 1]):
+                Dgm[-1, 1] = np.inf
+                
+            # remove the row with infinite classes, if requested 
+            if drop_inf_class and np.isinf(Dgm[-1, 1]):
+                Dgm = np.delete(Dgm, -1, 0) 
+        
+        # add the diagram to the dictionary
+        Dgms[dim] = Dgm
+    return Dgms
 
 #-----------------------------------------------------#
 #-----------------------------------------------------#
@@ -173,7 +175,7 @@ def VR_Ripser(P, maxDim = 1):
     X = squareform(pdist(P))
 
     Dgms = distMat_Ripser(X,maxDim = maxDim)
-
+    
     return Dgms
 
 

@@ -348,66 +348,66 @@ def TentML(DgmsDF,
 			normalize = False,
 			verbose = True
 			):
-	#Choosing epsilon
+    #Choosing epsilon
+    if params == None:
+        print('You need to pass in a ParameterBucket. Exiting....')
+        return
+    if params.d == None or params.delta == None or params.epsilon == None or params.maxPower == None:
+        print('You need to finish filling the parameter bucket. ')
+        print(params)
+        # print('params.d = ', params.d)
+        # print('params.delta = ', params.delta)
+        # print('params.epsilon = ', params.epsilon)
+        # print('params.maxPower = ', params.maxPower)
+        print('Exiting....')
+        return
+    
+    clf = params.clfClass()
+    
+    if verbose:
+        print('Training estimator.')
+        
+#    startTime = time.time()
+    
+    #check to see if only one column label was passed. If so, turn it into a list.
+    if type(dgm_col) == str:
+        dgm_col = [dgm_col]
+        
+    if verbose:
+        print('Making G...')
+        
+    listOfG = []
+    for dgmColLabel in dgm_col:
+        print("dgmColLabel = {}".format(dgmColLabel))
+        G = build_G(DgmsDF[dgmColLabel],params)
+        listOfG.append(G)
+        
+    G = np.concatenate(listOfG,axis = 1)
+    
+    # Normalize G
+    if normalize:
+        G = scale(G)
 
-	if params == None:
-		print('You need to pass in a ParameterBucket. Exiting....')
-		return
-	if params.d == None or params.delta == None or params.epsilon == None or params.maxPower == None:
-		print('You need to finish filling the parameter bucket. ')
-		print(params)
-		# print('params.d = ', params.d)
-		# print('params.delta = ', params.delta)
-		# print('params.epsilon = ', params.epsilon)
-		# print('params.maxPower = ', params.maxPower)
-		print('Exiting....')
-		return
-
-	clf = params.clfClass()
-
-	if verbose:
-		print('Training estimator.')
-
-	startTime = time.time()
-
-	#check to see if only one column label was passed. If so, turn it into a list.
-	if type(dgm_col) == str:
-		dgm_col = [dgm_col,]
-
-	if verbose:
-		print('Making G...')
-
-	listOfG = []
-	for dgmColLabel in dgm_col:
-		G = build_G(DgmsDF[dgmColLabel],params)
-		listOfG.append(G)
-
-	G = np.concatenate(listOfG,axis = 1)
-
-	# Normalize G
-	if normalize:
-		G = scale(G)
-
-	numFeatures = np.shape(G)[1]
-	if verbose:
-		print('Number of features used is', numFeatures,'...')
-
-	clf.fit(G,list(DgmsDF[labels_col]))
-
-	if verbose:
-		print('Checking score on training set...')
-
-	score = clf.score(G,list(DgmsDF[labels_col]))
-	if verbose:
-		print('Score on training set: ' + str(score) + '.\n')
-
-
-	clf.delta = params.delta
-	clf.epsilon = params.epsilon
-	clf.trainingScore = score
-	clf.d = params.d
-
-	return clf
+    numFeatures = np.shape(G)[1]
+    if verbose:
+        print('Number of features used is', numFeatures,'...')
+        
+    clf.fit(G,list(DgmsDF[labels_col]))
+    
+    if verbose:
+        print('Checking score on training set...')
+        
+    score = clf.score(G,list(DgmsDF[labels_col]))
+    
+    if verbose:
+        print('Score on training set: ' + str(score) + '.\n')
+        
+    clf.delta = params.delta
+    clf.epsilon = params.epsilon
+    clf.trainingScore = score
+    clf.d = params.d
+    
+    return clf
 
 
 
@@ -467,7 +467,7 @@ def getPercentScore(DgmsDF,
 
 	#check to see if only one column label was passed. If so, turn it into a list.
 	if type(dgm_col) == str:
-		dgm_col = [dgm_col,]
+		dgm_col = [dgm_col]
 
 	# Run actual train/test experiment using sklearn
 	D_train, D_test, L_train,L_test = train_test_split(DgmsDF,
