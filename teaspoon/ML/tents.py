@@ -378,7 +378,8 @@ def TentML(DgmsDF,
         
     listOfG = []
     for dgmColLabel in dgm_col:
-        print("dgmColLabel = {}".format(dgmColLabel))
+        #----------------remove this after debugging
+        print(dgmColLabel)
         G = build_G(DgmsDF[dgmColLabel],params)
         listOfG.append(G)
         

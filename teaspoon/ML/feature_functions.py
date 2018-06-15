@@ -30,7 +30,7 @@ import matplotlib.pyplot as plt
 # where
 # \f$| * |_+\f$ is positive part; equivalently, min of \f$*\f$ and 0.
 # @note This code does not take care of the maxPower polynomial stuff.  The build_G() function does it after all the rows have been calculated.
-def tent(Dgm, params, type = 'BirthDeath'):
+def tent(Dgm, params, dgm_type = 'BirthDeath'):
 
     d = params.d
     
@@ -38,11 +38,11 @@ def tent(Dgm, params, type = 'BirthDeath'):
     epsilon = params.epsilon
     # print(Dgm[:3])
     # Move to birth,lifetime plane
-    if type == 'BirthDeath':
+    if dgm_type == 'BirthDeath':
         T = np.array(((1,-1),(0,1)))
         A = np.dot( Dgm, T)
 		
-    elif type == 'BirthLifetime':
+    elif dgm_type == 'BirthLifetime':
             
         A = Dgm
     else:
@@ -199,42 +199,41 @@ def bary_weights(x):
 
 
 def bary_diff_matrix(xnew, xbase, w=None):
-	# Calculate both the derivative and plain Lagrange interpolation matrix
-	# using Barycentric formulae from Berrut and Trefethen, SIAM Review, 2004.
-	# xnew     Interpolation points
-	
-	# xbase    Base points for interpolation
-	# w        Weights calculated for base points (optional)
-	
-	# if w is not set, set it
-	if w is None:
-		w = bary_weights(xbase)
-		
-	# get the length of the base points
-	n = xbase.size
-	
-	# get the length of the requested points
-	nn = xnew.size
-	
-	# replicate the weights vector into a matrix
-	wex = np.tile(w, (nn, 1))
-	
-	# Barycentric Lagrange interpolation (from Berrut and Trefethen, SIAM Review, 2004)
-	xdiff = np.tile(xnew[np.newaxis].T, (1, n)) - np.tile(xbase, (nn, 1))
-
-	M = wex / xdiff
-	
-
-	divisor = np.tile(np.sum(M, axis=1)[np.newaxis].T, (1, n))
-	divisor[np.isinf(divisor)] = float("inf")
-	
-	M[np.isinf(M)] = float("inf")
-	
-	M = M / divisor
-	
-#	M[np.isnan(M)] = 0
-	
-	M[xdiff == 0] = 1
+    # Calculate both the derivative and plain Lagrange interpolation matrix
+    # using Barycentric formulae from Berrut and Trefethen, SIAM Review, 2004.
+    # xnew     Interpolation points
+    
+    # xbase    Base points for interpolation
+    # w        Weights calculated for base points (optional)
+    
+    # if w is not set, set it
+    if w is None:
+        w = bary_weights(xbase)
+        
+    # get the length of the base points
+    n = xbase.size
+    
+    # get the length of the requested points
+    nn = xnew.size
+    
+    # replicate the weights vector into a matrix
+    wex = np.tile(w, (nn, 1))
+    
+    # Barycentric Lagrange interpolation (from Berrut and Trefethen, SIAM Review, 2004)
+    xdiff = np.tile(xnew[np.newaxis].T, (1, n)) - np.tile(xbase, (nn, 1))
+    
+    M = wex / xdiff
+    
+    divisor = np.tile(np.sum(M, axis=1)[np.newaxis].T, (1, n))
+    divisor[np.isinf(divisor)] = np.inf
+    
+    M[np.isinf(M)] = np.inf
+    
+    M = M / divisor
+    
+    #	M[np.isnan(M)] = 0
+    
+    M[xdiff == 0] = 1
 	
 #	# Construct the derivative (Section 9.3 of Berrut and Trefethen)
 #	xdiff2 = xdiff ** 2
@@ -253,8 +252,7 @@ def bary_diff_matrix(xnew, xbase, w=None):
 #		idx = sub2ind(DM.shape, row, col)
 #		DM[idx] = 0
 #		DM[idx] = -np.sum(DM[row, ], axis=1)
-		
-	return M
+    return M
 
 
 ## Extracts the weights on the interpolation mesh using barycentric Lagrange interpolation.
@@ -265,10 +263,10 @@ def bary_diff_matrix(xnew, xbase, w=None):
 # @param type
 #	This code accepts diagrams either 
 #	* in (birth, death) coordinates, in which case `type = 'BirthDeath'`, or 
-#	* in (birth, lifetime) = (birth, death-birth) coordinates, in which case `type = 'BirthLifetime'`
+#	* in (birth, lifetime) = (birth, death-birth) coordinates, in which case `dgm_type = 'BirthLifetime'`
 # @return interp_weight, which is a matrix with each entry representiting the weight of an interpolation
 #	function on the base mesh. This matrix assumes that on a 2D mesh the functions are ordered row-wise.
-def interp_polynomial(Dgm, params, type='BirthDeath'):
+def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
     #	jacobi_func = params.jacobi_func
 	# check if we asked for a squre mesh or not
     if isinstance(params.d,int):
@@ -276,22 +274,21 @@ def interp_polynomial(Dgm, params, type='BirthDeath'):
         ny = params.d
     else:
         nx, ny = params.d
-        
-		
 	
     # get the number of query points
     num_query_pts = Dgm.shape[0]
 	
     # Move to birth,lifetime plane
-    if type == 'BirthDeath':
+    if dgm_type == 'BirthDeath':
         T = np.array(((1,-1),(0,1)))
         A = np.dot( Dgm, T)
-    elif type == 'BirthLifetime':
+    elif dgm_type == 'BirthLifetime':
         A = Dgm
     else:
         print('Your choices for type are "BirthDeath" or "BirthLifetime".')
         print('Exiting...')
-        return
+        return    
+
 
     # get the query points. xq are the brith times, yq are the death times.
     xq, yq = np.sort(A[:, 0]), np.sort(A[:, 1])
@@ -345,5 +342,10 @@ def interp_polynomial(Dgm, params, type='BirthDeath'):
 	
     # get the weights for each interpolation function/base-point
     interp_weights = np.sum(np.abs(Psi), axis=0)
+    
+#    print('I ran the feature function!')
+#    plt.figure(10)
+#    plt.plot(np.abs(interp_weights),'x')
+#    plt.show()
 	
     return np.abs(interp_weights)

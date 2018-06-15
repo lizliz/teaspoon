@@ -91,5 +91,5 @@ print('\navg success rate = {}\nStdev = {}'.format(np.mean(yy), np.std(yy)))
 kernel = stats.gaussian_kde(yy)
 values = np.linspace(yy.min(), yy.max(), 1000)
 # plotting
-plt.plot(values, kernel(values), '.')
-plt.show()
+#plt.plot(values, kernel(values), '.')
+#plt.show()
