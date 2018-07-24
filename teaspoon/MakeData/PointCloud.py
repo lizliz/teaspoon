@@ -13,7 +13,7 @@ from scipy.spatial.distance import euclidean
 
 
 #-------------Circles and Annuli---------------------------------------#
-def Circle(N = 100, r=1, seed = None):
+def Circle(N = 100, r=1, gamma=None, seed = None):
     """
     Generate N points in R^2 from the circle centered
     at the origin with radius r.
@@ -24,6 +24,9 @@ def Circle(N = 100, r=1, seed = None):
         Number of points to generate
     r -
         Radius of the circle
+    gamma -
+        Amplitude of the noise. Magnitude of a random vector with entries samples from a Gaussian centered on 0
+            with a std of 0.5
     seed -
         Fixes the seed.  Good if we want to replicate results.
 
@@ -34,13 +37,18 @@ def Circle(N = 100, r=1, seed = None):
         A Nx2 numpy array with the points drawn as the rows.
 
     """
-    P = []
     np.random.seed(seed)
     theta = np.random.rand(N,1)
     theta = theta.reshape((N,))
     P = np.zeros([N,2])
+
     P[:,0] = r*np.cos(2*np.pi*theta)
     P[:,1] = r*np.sin(2*np.pi*theta)
+
+    if gamma is not None:
+        # better be a number of some type!
+        noise = gamma * np.random.normal(0, 0.5, size=(N,2))
+        P += noise
 
     return P    
 
