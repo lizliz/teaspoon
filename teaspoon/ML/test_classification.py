@@ -44,8 +44,9 @@ params = ParameterBucket()
 
 
 #--- Test manifold classification
-df = gpc.testSetManifolds(numDgms = 100, numPts = 200) # numpTs=200
-dgmColLabel = ['Dgm0', 'Dgm1']
+df = gpc.testSetManifolds(numDgms = 50, numPts = 100) # numpTs=200
+# dgmColLabel = ['Dgm0', 'Dgm1']
+dgmColLabel = ['Dgm1']
 params.clfClass = RidgeClassifierCV
 
 #print('\n', params, '\n')
@@ -62,7 +63,7 @@ params.jacobi_poly = 'cheb1'  # choose the interpolating polynomial
 #----------------------------------
 # define the number of base points
 #----------------------------------
-params.d = 2
+params.d = 10
 
 
 #----------------------------------
@@ -81,7 +82,7 @@ for i in np.arange(num_runs):
 					labels_col = 'trainingLabel',
 					dgm_col = dgmColLabel,
 					params = params,
-					normalize = True,
+					normalize = False,
 					verbose = False
 					)
 	yy[i] = xx['score']

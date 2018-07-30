@@ -17,17 +17,12 @@ Has code for computing pairwise distance for diagrams.
  
 
 \subsection{Function Documentation}
+\mbox{\Hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_distance_ad3481b3888962dbf302bacb9d9504e8b}\label{namespaceteaspoon_1_1_t_d_a_1_1_distance_ad3481b3888962dbf302bacb9d9504e8b}} 
 \index{teaspoon\+::\+T\+D\+A\+::\+Distance@{teaspoon\+::\+T\+D\+A\+::\+Distance}!dgm\+Dist\+\_\+\+Hera@{dgm\+Dist\+\_\+\+Hera}}
 \index{dgm\+Dist\+\_\+\+Hera@{dgm\+Dist\+\_\+\+Hera}!teaspoon\+::\+T\+D\+A\+::\+Distance@{teaspoon\+::\+T\+D\+A\+::\+Distance}}
-\subsubsection[{\texorpdfstring{dgm\+Dist\+\_\+\+Hera(\+D1, D2, wass\+Deg=\textquotesingle{}\+Bottleneck\textquotesingle{}, rel\+Error=\+None, internal\+\_\+p=\+None)}{dgmDist_Hera(D1, D2, wassDeg='Bottleneck', relError=None, internal_p=None)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+T\+D\+A.\+Distance.\+dgm\+Dist\+\_\+\+Hera (
-\begin{DoxyParamCaption}
-\item[{}]{D1, }
-\item[{}]{D2, }
-\item[{}]{wass\+Deg = {\ttfamily \textquotesingle{}Bottleneck\textquotesingle{}}, }
-\item[{}]{rel\+Error = {\ttfamily None}, }
-\item[{}]{internal\+\_\+p = {\ttfamily None}}
-\end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_t_d_a_1_1_distance_ad3481b3888962dbf302bacb9d9504e8b}{}\label{namespaceteaspoon_1_1_t_d_a_1_1_distance_ad3481b3888962dbf302bacb9d9504e8b}
+\subsubsection{\texorpdfstring{dgm\+Dist\+\_\+\+Hera()}{dgmDist\_Hera()}}
+{\footnotesize\ttfamily def teaspoon.\+T\+D\+A.\+Distance.\+dgm\+Dist\+\_\+\+Hera (\begin{DoxyParamCaption}\item[{}]{D1,  }\item[{}]{D2,  }\item[{}]{wass\+Deg = {\ttfamily \textquotesingle{}Bottleneck\textquotesingle{}},  }\item[{}]{rel\+Error = {\ttfamily None},  }\item[{}]{internal\+\_\+p = {\ttfamily None} }\end{DoxyParamCaption})}
+
 
 
 Computes the distance using the geom\+\_\+bottleneck and geom\+\_\+matching code from \href{https://bitbucket.org/grey_narn/hera}{\tt Hera}. 
@@ -44,8 +39,8 @@ internal\+\_\+p must be in $[1.0, \infty]$ (to explicitly set internal\+\_\+p to
 
 hera input format\+: 
 \begin{DoxyCode}
-1 bottleneck\_dist file1 file2  [relative\_error]
-2 wasserstein\_dist file1 file2  [wasserstein degree] [relative error] [internal norm] 
+bottleneck\_dist file1 file2  [relative\_error]
+wasserstein\_dist file1 file2  [wasserstein degree] [relative error] [internal norm] 
 \end{DoxyCode}
 
 

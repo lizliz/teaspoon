@@ -31,22 +31,20 @@ If you make use of this code, please cite the following paper\+:~\newline
 
 An example workflow to ensure that classification is working\+: 
 \begin{DoxyCode}
-1 \textcolor{keyword}{import} \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud}{teaspoon.MakeData.PointCloud} \textcolor{keyword}{as} gPC
-2 \textcolor{keyword}{import} \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents}{teaspoon.ML.tents} \textcolor{keyword}{as} tents 
-3 df = gPC.testSetClassification()
-4 tents.getPercentScore(df,dgm\_col = \textcolor{stringliteral}{'Dgm'}) 
+\textcolor{keyword}{import} \hyperlink{namespaceteaspoon_1_1_make_data_1_1_point_cloud}{teaspoon.MakeData.PointCloud} \textcolor{keyword}{as} gPC
+\textcolor{keyword}{import} \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents}{teaspoon.ML.tents} \textcolor{keyword}{as} tents
+df = gPC.testSetClassification()
+tents.getPercentScore(df,dgm\_col = \textcolor{stringliteral}{'Dgm'}) 
 \end{DoxyCode}
 
 
 \subsection{Function Documentation}
+\mbox{\Hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a2a752f63d55c359140dc7dbbf8fc9b45}\label{namespaceteaspoon_1_1_m_l_1_1tents_a2a752f63d55c359140dc7dbbf8fc9b45}} 
 \index{teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}!build\+\_\+G@{build\+\_\+G}}
 \index{build\+\_\+G@{build\+\_\+G}!teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}}
-\subsubsection[{\texorpdfstring{build\+\_\+\+G(\+Dgm\+Series, params)}{build_G(DgmSeries, params)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+M\+L.\+tents.\+build\+\_\+G (
-\begin{DoxyParamCaption}
-\item[{}]{Dgm\+Series, }
-\item[{}]{params}
-\end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a2a752f63d55c359140dc7dbbf8fc9b45}{}\label{namespaceteaspoon_1_1_m_l_1_1tents_a2a752f63d55c359140dc7dbbf8fc9b45}
+\subsubsection{\texorpdfstring{build\+\_\+\+G()}{build\_G()}}
+{\footnotesize\ttfamily def teaspoon.\+M\+L.\+tents.\+build\+\_\+G (\begin{DoxyParamCaption}\item[{}]{Dgm\+Series,  }\item[{}]{params }\end{DoxyParamCaption})}
+
 
 
 Applies the tent function to all diagrams in the series and outputs the feature matrix $G_{a,b}$ is the $b^{th}$ tent function (after flattening the order) evaluated on the $a^{th}$ diagram in the series. 
@@ -58,18 +56,12 @@ Applies the tent function to all diagrams in the series and outputs the feature 
 {\em params} & \+: \hyperlink{classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket}{tents.\+Parameter\+Bucket} A parameter bucket used for calculations. \\
 \hline
 \end{DoxyParams}
+\mbox{\Hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a227e874560c3fe1181643b41f65dc92c}\label{namespaceteaspoon_1_1_m_l_1_1tents_a227e874560c3fe1181643b41f65dc92c}} 
 \index{teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}!get\+Percent\+Score@{get\+Percent\+Score}}
 \index{get\+Percent\+Score@{get\+Percent\+Score}!teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}}
-\subsubsection[{\texorpdfstring{get\+Percent\+Score(\+Dgms\+D\+F, labels\+\_\+col=\textquotesingle{}training\+Label\textquotesingle{}, dgm\+\_\+col=\textquotesingle{}\+Dgm1\textquotesingle{}, params=\+Parameter\+Bucket(), normalize=\+False, verbose=\+True)}{getPercentScore(DgmsDF, labels_col='trainingLabel', dgm_col='Dgm1', params=ParameterBucket(), normalize=False, verbose=True)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+M\+L.\+tents.\+get\+Percent\+Score (
-\begin{DoxyParamCaption}
-\item[{}]{Dgms\+DF, }
-\item[{}]{labels\+\_\+col = {\ttfamily \textquotesingle{}trainingLabel\textquotesingle{}}, }
-\item[{}]{dgm\+\_\+col = {\ttfamily \textquotesingle{}Dgm1\textquotesingle{}}, }
-\item[{}]{params = {\ttfamily {\bf Parameter\+Bucket}()}, }
-\item[{}]{normalize = {\ttfamily False}, }
-\item[{}]{verbose = {\ttfamily True}}
-\end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a227e874560c3fe1181643b41f65dc92c}{}\label{namespaceteaspoon_1_1_m_l_1_1tents_a227e874560c3fe1181643b41f65dc92c}
+\subsubsection{\texorpdfstring{get\+Percent\+Score()}{getPercentScore()}}
+{\footnotesize\ttfamily def teaspoon.\+M\+L.\+tents.\+get\+Percent\+Score (\begin{DoxyParamCaption}\item[{}]{Dgms\+DF,  }\item[{}]{labels\+\_\+col = {\ttfamily \textquotesingle{}trainingLabel\textquotesingle{}},  }\item[{}]{dgm\+\_\+col = {\ttfamily \textquotesingle{}Dgm1\textquotesingle{}},  }\item[{}]{params = {\ttfamily \hyperlink{classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket}{Parameter\+Bucket}()},  }\item[{}]{normalize = {\ttfamily False},  }\item[{}]{verbose = {\ttfamily True} }\end{DoxyParamCaption})}
+
 
 
 Main testing function for classification or regression methods. 
@@ -102,15 +94,12 @@ Returned as a dictionary of entries\+:
 \item {\bfseries clf} The classifier object. 
 \end{DoxyItemize}
 \end{DoxyReturn}
+\mbox{\Hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a6a7e3aad0e7229895aa9f204df7e6304}\label{namespaceteaspoon_1_1_m_l_1_1tents_a6a7e3aad0e7229895aa9f204df7e6304}} 
 \index{teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}!tent@{tent}}
 \index{tent@{tent}!teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}}
-\subsubsection[{\texorpdfstring{tent(\+Dgm, params, type=\textquotesingle{}\+Birth\+Death\textquotesingle{})}{tent(Dgm, params, type='BirthDeath')}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+M\+L.\+tents.\+tent (
-\begin{DoxyParamCaption}
-\item[{}]{Dgm, }
-\item[{}]{params, }
-\item[{}]{type = {\ttfamily \textquotesingle{}BirthDeath\textquotesingle{}}}
-\end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a6a7e3aad0e7229895aa9f204df7e6304}{}\label{namespaceteaspoon_1_1_m_l_1_1tents_a6a7e3aad0e7229895aa9f204df7e6304}
+\subsubsection{\texorpdfstring{tent()}{tent()}}
+{\footnotesize\ttfamily def teaspoon.\+M\+L.\+tents.\+tent (\begin{DoxyParamCaption}\item[{}]{Dgm,  }\item[{}]{params,  }\item[{}]{type = {\ttfamily \textquotesingle{}BirthDeath\textquotesingle{}} }\end{DoxyParamCaption})}
+
 
 
 Applies the tent function to a diagram. 
@@ -134,18 +123,12 @@ $\sum_{x,y \in \text{Dgm}}g_{i,j}(x,y)$ where \[g_{i,j}(x,y) = \bigg| 1- \max\le
 \begin{DoxyNote}{Note}
 This code does not take care of the max\+Power polynomial stuff. The \hyperlink{namespaceteaspoon_1_1_m_l_1_1tents_a2a752f63d55c359140dc7dbbf8fc9b45}{build\+\_\+\+G()} function does it after all the rows have been calculated. 
 \end{DoxyNote}
+\mbox{\Hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a44f03361919ae7223766344ad9f620df}\label{namespaceteaspoon_1_1_m_l_1_1tents_a44f03361919ae7223766344ad9f620df}} 
 \index{teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}!Tent\+ML@{Tent\+ML}}
 \index{Tent\+ML@{Tent\+ML}!teaspoon\+::\+M\+L\+::tents@{teaspoon\+::\+M\+L\+::tents}}
-\subsubsection[{\texorpdfstring{Tent\+M\+L(\+Dgms\+D\+F, labels\+\_\+col=\textquotesingle{}training\+Label\textquotesingle{}, dgm\+\_\+col=\textquotesingle{}\+Dgm1\textquotesingle{}, params=\+None, normalize=\+False, verbose=\+True)}{TentML(DgmsDF, labels_col='trainingLabel', dgm_col='Dgm1', params=None, normalize=False, verbose=True)}}]{\setlength{\rightskip}{0pt plus 5cm}def teaspoon.\+M\+L.\+tents.\+Tent\+ML (
-\begin{DoxyParamCaption}
-\item[{}]{Dgms\+DF, }
-\item[{}]{labels\+\_\+col = {\ttfamily \textquotesingle{}trainingLabel\textquotesingle{}}, }
-\item[{}]{dgm\+\_\+col = {\ttfamily \textquotesingle{}Dgm1\textquotesingle{}}, }
-\item[{}]{params = {\ttfamily None}, }
-\item[{}]{normalize = {\ttfamily False}, }
-\item[{}]{verbose = {\ttfamily True}}
-\end{DoxyParamCaption}
-)}\hypertarget{namespaceteaspoon_1_1_m_l_1_1tents_a44f03361919ae7223766344ad9f620df}{}\label{namespaceteaspoon_1_1_m_l_1_1tents_a44f03361919ae7223766344ad9f620df}
+\subsubsection{\texorpdfstring{Tent\+M\+L()}{TentML()}}
+{\footnotesize\ttfamily def teaspoon.\+M\+L.\+tents.\+Tent\+ML (\begin{DoxyParamCaption}\item[{}]{Dgms\+DF,  }\item[{}]{labels\+\_\+col = {\ttfamily \textquotesingle{}trainingLabel\textquotesingle{}},  }\item[{}]{dgm\+\_\+col = {\ttfamily \textquotesingle{}Dgm1\textquotesingle{}},  }\item[{}]{params = {\ttfamily None},  }\item[{}]{normalize = {\ttfamily False},  }\item[{}]{verbose = {\ttfamily True} }\end{DoxyParamCaption})}
+
 
 
 Main function to run ML with tents on persistence diagrams. 
