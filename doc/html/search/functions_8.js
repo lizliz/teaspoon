@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['normaldiagram',['normalDiagram',['../namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c',1,'teaspoon::MakeData::PointCloud']]]
+  ['interp_5fpolynomial',['interp_polynomial',['../namespaceteaspoon_1_1_m_l_1_1feature__functions.html#a006083e689fab1e041a2cf933397e8ee',1,'teaspoon::ML::feature_functions']]]
 ];
