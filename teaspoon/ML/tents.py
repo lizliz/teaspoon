@@ -378,18 +378,18 @@ def TentML(DgmsDF,
         
     listOfG = []
     for dgmColLabel in dgm_col:
-        #----------------remove this after debugging
-        print(dgmColLabel)
         G = build_G(DgmsDF[dgmColLabel],params)
         listOfG.append(G)
         
     G = np.concatenate(listOfG,axis = 1)
-    
+
+    numFeatures = np.shape(G)[1]
+     
     # Normalize G
     if normalize:
         G = scale(G)
 
-    numFeatures = np.shape(G)[1]
+
     if verbose:
         print('Number of features used is', numFeatures,'...')
         
