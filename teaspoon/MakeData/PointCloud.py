@@ -1,6 +1,6 @@
 ## @package teaspoon.MakeData.PointCloud
 # Generates data sets related to persistence diagrams and point clouds.
-# 
+#
 #All point clouds are returned as a numpy array, larger collection data is returned as a pandas DataFrame.
 
 import random
@@ -18,6 +18,11 @@ def Circle(N = 100, r=1, gamma=None, seed = None):
     Generate N points in R^2 from the circle centered
     at the origin with radius r.
 
+    If `gamma` is not `None`, then we add noise
+    using a normal distribution.  Note that this means the resulting
+    distribution is not bounded, so your favorite stability theorem doesn't
+    immediately apply.
+
     Parameters
     ----------
     N -
@@ -25,15 +30,14 @@ def Circle(N = 100, r=1, gamma=None, seed = None):
     r -
         Radius of the circle
     gamma -
-        Amplitude of the noise. Magnitude of a random vector with entries samples from a Gaussian centered on 0
-            with a std of 0.5
+        Standard deviation of the normally distributed noise. 
     seed -
         Fixes the seed.  Good if we want to replicate results.
 
 
     Returns
     -------
-    P -  
+    P -
         A Nx2 numpy array with the points drawn as the rows.
 
     """
@@ -47,17 +51,17 @@ def Circle(N = 100, r=1, gamma=None, seed = None):
 
     if gamma is not None:
         # better be a number of some type!
-        noise = gamma * np.random.normal(0, 0.5, size=(N,2))
+        noise = np.random.normal(0, gamma, size=(N,2))
         P += noise
 
-    return P    
+    return P
 
 
 def Sphere(N = 100, r = 1, noise = 0, seed = None):
     """
     Generate N points in R^3 from the sphere centered
     at the origin with radius r.
-    If noise is set to a positive number, the points 
+    If noise is set to a positive number, the points
     can be at distance r +/- noise from the origin.
 
     Parameters
@@ -72,7 +76,7 @@ def Sphere(N = 100, r = 1, noise = 0, seed = None):
 
     Returns
     -------
-    P -  
+    P -
         A Nx3 numpy array with the points drawn as the rows.
 
     """
@@ -92,7 +96,7 @@ def Sphere(N = 100, r = 1, noise = 0, seed = None):
 
 def Annulus(N=200,r=1,R=2, seed = None):
     '''
-    Returns point cloud sampled from uniform distribution on  
+    Returns point cloud sampled from uniform distribution on
     annulus in R^2 of inner radius r and outer radius R
 
     Parameters
@@ -109,7 +113,7 @@ def Annulus(N=200,r=1,R=2, seed = None):
 
     Returns
     -------
-    P -  
+    P -
         A Nx2 numpy array with the points drawn as the rows.
 
     '''
@@ -125,7 +129,7 @@ def Annulus(N=200,r=1,R=2, seed = None):
         Q = Q[np.logical_and(S>= r**2, S<= R**2)]
         P = np.append(P,Q,0)
         #print np.shape(P)
-    
+
     return P[:N,:]
 
 
@@ -133,11 +137,11 @@ def Annulus(N=200,r=1,R=2, seed = None):
 
 def Torus(N = 100, r = 1,R = 2,  seed = None):
     '''
-    Sampling method taken from Sampling from a Manifold by Diaconis, 
+    Sampling method taken from Sampling from a Manifold by Diaconis,
     Holmes and Shahshahani, arXiv:1206.6913
 
     Generates torus with points
-    x = ( R + r*cos(theta) ) * cos(psi),  
+    x = ( R + r*cos(theta) ) * cos(psi),
     y = ( R + r*cos(theta) ) * sin(psi),
     z = r * sin(theta)
 
@@ -147,9 +151,9 @@ def Torus(N = 100, r = 1,R = 2,  seed = None):
 
     and psi with uniform density on [0,2pi).
 
-    For theta, draw theta uniformly from [0,2pi) and 
+    For theta, draw theta uniformly from [0,2pi) and
     eta from [1-r/R,1+r/R].  If eta< 1 + (r/R) cos(theta), return theta.
-    
+
     Parameters
     ----------
     N -
@@ -164,15 +168,15 @@ def Torus(N = 100, r = 1,R = 2,  seed = None):
 
     Returns
     -------
-    P -  
+    P -
         A Nx3 numpy array with the points drawn as the rows.
 
-    ''' 
+    '''
 
     np.random.seed(seed)
     psi = np.random.rand(N,1)
     psi = 2*np.pi*psi
-    
+
     outputTheta = []
     while len(outputTheta)<N:
         theta = np.random.rand(2*N,1)
@@ -190,7 +194,7 @@ def Torus(N = 100, r = 1,R = 2,  seed = None):
     theta = theta.reshape(N,1)
 
 
-    x = ( R + r*np.cos(theta) ) * np.cos(psi)  
+    x = ( R + r*np.cos(theta) ) * np.cos(psi)
     y = ( R + r*np.cos(theta) ) * np.sin(psi)
     z = r * np.sin(theta)
     x = x.reshape((N,))
@@ -219,14 +223,14 @@ def Cube(N = 100, diam = 1, dim = 2, seed = None):
     N -
         Number of points to generate
     diam -
-        Points are pulled from the box 
+        Points are pulled from the box
         [0,diam]x[0,diam]x...x[0,diam]
     dim -
         Points are embedded in R^dim
 
     Returns
     -------
-    P -  
+    P -
         A Nxdim numpy array with the points drawn as the rows.
 
     """
@@ -240,13 +244,13 @@ def Cube(N = 100, diam = 1, dim = 2, seed = None):
 
 #----------------------------------------------------------------------#
 
-def Clusters(N = 100, 
+def Clusters(N = 100,
             centers = np.array(((0,0),(3,3))),
-            sd = 1, 
+            sd = 1,
             seed = None):
     """
     Generate k clusters of points, N points in total (evenly divided?)
-    centers is a k x d numpy array, where centers[i,:] is the center of 
+    centers is a k x d numpy array, where centers[i,:] is the center of
     the ith cluster in R^d.
     Points are drawn from a normal distribution with std dev = sd
 
@@ -255,10 +259,10 @@ def Clusters(N = 100,
     N -
         Number of points to be generated
     centers -
-        k x d numpy array, where centers[i,:] is the center of 
+        k x d numpy array, where centers[i,:] is the center of
         the ith cluster in R^d.
 
-    sd - 
+    sd -
         standard deviation of clusters.
         TODO: Make this enterable as a vector so each cluster can have
         a different sd?
@@ -267,7 +271,7 @@ def Clusters(N = 100,
 
     Returns
     -------
-    P -  
+    P -
         A Nxd numpy array with the points drawn as the rows.
 
     """
@@ -320,8 +324,8 @@ def Clusters(N = 100,
 
 ## Generates a diagram with points drawn from a normal distribution  in the persistence diagram plane.
 # Pulls `N` points from a normal distribution with mean `mu` and standard deviation `sd`, then discards any points that are below the diagonal.  Note, however, that this does not get rid of negative birth times.
-# 
-# @param N 
+#
+# @param N
 #   Original number of points drawn for the persistence diagram.
 # @param mu, sd
 #   Mean and standard deviation of the normal distribution used to generate the points.
@@ -368,13 +372,13 @@ def normalDiagram(N=20, mu=(2,4), sd=1, seed = None):
 # @param seed
 #   Used to fix the seed if passed an integer; otherwise should be `None`.
 #
-# @return 
+# @return
 #   A pandas dataframe with columns ```['Dgm', 'mean', 'sd', 'trainingLabel']```. In this case, the entry in `trainingLabel` is -1 if the diagram was drawn from the red type, and 1 if drawn from the blue type.
 def testSetClassification(N = 20,
                     numDgms = (10,10),
                     muRed = (1,3),
                     muBlue = (2,5),
-                    sd = 1, 
+                    sd = 1,
                     permute = True,
                     seed = None):
 
@@ -388,7 +392,7 @@ def testSetClassification(N = 20,
     DgmsDF = pd.DataFrame(columns = columns, index = index)
 
 
-    counter = 0 
+    counter = 0
 
     for i in range(numDgms[0]):
         if not seed == None:
@@ -422,7 +426,7 @@ def testSetClassification(N = 20,
 # @param N
 #   The number of initial points pulled to create each diagram.  Diagrams could end up with fewer than `N` pts as the pts drawn below the diagonal will be discarded. See normalDiagram() for more information.
 # @param numDgms
-#   The number of diagrams for the collection given as an integer.  
+#   The number of diagrams for the collection given as an integer.
 # @param muStart, muEnd
 #   The means used for the normal distribution in normalDiagram() are evenly spread along the line segment spanned by `muStart` and `muEnd`.
 # @param sd
@@ -432,13 +436,13 @@ def testSetClassification(N = 20,
 # @param seed
 #   Used to fix the seed if passed an integer; otherwise should be `None`.
 #
-# @return 
-#   A pandas dataframe with columns ```['Dgm', 'mean', 'sd', 'trainingLabel']```.  In this case, `trainingLabel` is the distance from the mean used for that persistence diagram to `muStart`. 
+# @return
+#   A pandas dataframe with columns ```['Dgm', 'mean', 'sd', 'trainingLabel']```.  In this case, `trainingLabel` is the distance from the mean used for that persistence diagram to `muStart`.
 def testSetRegressionLine(N = 20,
                     numDgms = 40,
                     muStart = (1,3),
                     muEnd = (2,5),
-                    sd = 1, 
+                    sd = 1,
                     permute = True,
                     seed = None):
     columns = ['Dgm', 'mean', 'sd', 'trainingLabel']
@@ -474,7 +478,7 @@ def testSetRegressionLine(N = 20,
 # @param N
 #   The number of initial diagrams pulled to create each diagram.  Diagrams could end up with fewer than `N` pts as the pts drawn below the diagonal will be discarded. See normalDiagram() for more information.
 # @param numDgms
-#   The number of diagrams for the collection given as an integer.  
+#   The number of diagrams for the collection given as an integer.
 # @param muCenter
 #   The means used for the normal distribution in normalDiagram() are drawn from the normal distribution with mean `muCenter`.
 # @param sd
@@ -484,12 +488,12 @@ def testSetRegressionLine(N = 20,
 # @param seed
 #   Used to fix the seed if passed an integer; otherwise should be `None`.
 #
-# @return 
-#   A pandas dataframe with columns ```['Dgm', 'mean', 'sd', 'trainingLabel']```.  In this case, `trainingLabel` is the distance from the mean used for that persistence diagram to `muCenter`. 
+# @return
+#   A pandas dataframe with columns ```['Dgm', 'mean', 'sd', 'trainingLabel']```.  In this case, `trainingLabel` is the distance from the mean used for that persistence diagram to `muCenter`.
 def testSetRegressionBall(N = 20,
                     numDgms = 40,
                     muCenter = (1,3),
-                    sd = 1, 
+                    sd = 1,
                     permute = True,
                     seed = None):
 
@@ -544,8 +548,8 @@ def testSetRegressionBall(N = 20,
 # @return
 #   A pandas DataFrame with columns ```['Dgm0', 'Dgm1', 'trainingLabel']```.  The `trainingLabel` row has entries with labels given as the boldface above.
 #
-def testSetManifolds(numDgms = 50, 
-                        numPts = 300, 
+def testSetManifolds(numDgms = 50,
+                        numPts = 300,
                         permute = True,
                         seed = None
                         ):
@@ -617,8 +621,8 @@ def testSetManifolds(numDgms = 50,
     for i in range(numDgms):
         if fixSeed:
             seed += 1
-        dgmOut = pP.VR_Ripser(Clusters(centers=centers, 
-                                        N = numPts, 
+        dgmOut = pP.VR_Ripser(Clusters(centers=centers,
+                                        N = numPts,
                                         sd = .05,
                                         seed = seed))
         # Dgms.append([dgmOut[0],dgmOut[1]])
