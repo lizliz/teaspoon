@@ -297,14 +297,14 @@ def tent(Dgm, params, type = 'BirthDeath'):
 # @param params : tents.ParameterBucket
 # 	A parameter bucket used for calculations.
 def build_G(DgmSeries, params):
-	applyTents = lambda x: params.feature_function(x,params = params)
-	G = np.array(list(DgmSeries.apply(applyTents )))
-
-	# Include powers if necessary
-	if params.maxPower>1:
-		poly = PolynomialFeatures(params.maxPower)
-		G = poly.fit_transform(G)
-	return G
+    applyTents = lambda x: params.feature_function(x,params = params)
+    G = np.array(list(DgmSeries.apply(applyTents )))
+    
+    # Include powers if necessary
+    if params.maxPower>1:
+        poly = PolynomialFeatures(params.maxPower)
+        G = poly.fit_transform(G)
+    return G
 
 #----------------------------------------------------#
 #----------------------------------------------------#
@@ -380,7 +380,7 @@ def TentML(DgmsDF,
     for dgmColLabel in dgm_col:
         G = build_G(DgmsDF[dgmColLabel],params)
         listOfG.append(G)
-        
+    
     G = np.concatenate(listOfG,axis = 1)
 
     numFeatures = np.shape(G)[1]
