@@ -13,7 +13,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
       name='teaspoon',
-      version='0.3.15',
+      version='0.4.01c',
       description='Python wrappers for various applied topology related code.',
       long_description=long_description,
 
@@ -33,7 +33,7 @@ setup(
         #   3 - Alpha
         #   4 - Beta
         #   5 - Production/Stable
-        'Development Status :: 1 - Planning',
+        'Development Status :: 3 - Alpha',
 
         # This project is intended for mathematicians and researchers
         'Intended Audience :: Science/Research',
@@ -48,7 +48,7 @@ setup(
         # 'Programming Language :: Python :: 3',
         # 'Programming Language :: Python :: 3.3',
         # 'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5', 
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.5.2',
 
       ],

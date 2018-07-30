@@ -18,7 +18,6 @@
 #
 
 
-import matplotlib.pyplot as plt
 import numpy as np
 import os
 import subprocess
@@ -26,7 +25,7 @@ from subprocess import DEVNULL, STDOUT, call
 from scipy.spatial.distance import pdist, squareform
 import glob
 import warnings
-
+import re
 
 
 #-----------------------------------------------------#
@@ -39,19 +38,12 @@ def prepareFolders():
 ## Checks that necessary folder structure system exists.
 # Empties out all previously saved files to avoid confusion.
     #---- Make folders for saving files
-    folders = ['.teaspoonData','.teaspoonData/input','.teaspoonData/output']
+    folders = ['.teaspoonData',
+			   '.teaspoonData'+ os.path.sep + 'input',
+			   '.teaspoonData'+os.path.sep + 'output']
     for location in folders:
         if not os.path.exists(location):
             os.makedirs(location)
-
-
-    for path in ['.teaspoonData/input/*', '.teaspoonData/output/*']:
-        files = glob.glob(path)
-        for f in files:
-            # print(f)
-            os.remove(f)
-
-
 
 
 def readPerseusOutput(outputFileName):
@@ -83,46 +75,69 @@ def readPerseusOutput(outputFileName):
         # Add the diagram to the dictionary
         Dgms[dim] = Dgm
 
-    return Dgms
+    return Dgms    
 
 
 def readRipserString(s):
-    if s == ' ':
-        return np.inf
+
+    birth_death_str = re.findall(r"(\d*[.]?\d*)", s)
+    
+    stuff = list(filter(None, birth_death_str))
+    
+    if not stuff:
+#        print("empty stuff: {}". format(stuff))
+        return np.nan
     else:
-        return float(s)
+#        print("full stuff: {}".format(stuff))
+        return float(stuff[0])
+    
 
-def readRipserOutput(out):
-
+def readRipserOutput(out, drop_inf_class=True):
     # split into persistence diagrams
     Dgms = {}
-
+	
     # Find locations where the text splits the output
     breaks = [i for i, s in enumerate(out) if 'persistence' in s]
-
+	
     for j in range(len(breaks)):
-
-        # Get the dimension
-        dim = out[breaks[j]].split(' ')[-1][:-1]
-        dim = int(dim)
+        # Get the dimension using regex
+        dim = int(re.search('\d+', out[breaks[j]]).group(0))
 
         # Extract the portions of the output between
         # the places that say persistence.
         # Note the len(out)-1 for the endIndex is because
         # the last entry of out is a blank space ' '
-        startIndex = breaks[j]
+        #		startIndex = breaks[j]
         if j+1 == len(breaks):
             endIndex = len(out)-1
         else:
             endIndex = breaks[j+1]
-
+            
         Dgm = out[breaks[j]+1 : endIndex]
-        Dgm = [X[2:-1].split(',') for X in Dgm]
-        Dgm = [ [readRipserString(X) for X in row]   for row in Dgm ]
-        Dgm = np.array(Dgm)
+        Dgm = [X.strip()[2:-1].split(',') for X in Dgm]
+        
+        # use regular expressions to extract the birth/death times
+        Dgm = [[readRipserString(X) for X in row]   for row in Dgm]
+        
+        # get rid of spurious dimensions, and reshape into D x 2
+        Dgm = np.squeeze(Dgm).reshape((-1, 2))
+    
+        # check that the diagram is not empty
+        if Dgm.size > 0: 
+            # for 0-dim persistence, set birth time to zero
+            if dim is 0:
+                Dgm[:,0] = 0
 
+            # if the last entry is nan it signals an infinite class,set to inf
+            if np.isnan(Dgm[-1, 1]):
+                Dgm[-1, 1] = np.inf
+                
+            # remove the row with infinite classes, if requested 
+            if drop_inf_class and np.isinf(Dgm[-1, 1]):
+                Dgm = np.delete(Dgm, -1, 0) 
+        
+        # add the diagram to the dictionary
         Dgms[dim] = Dgm
-
     return Dgms
 
 #-----------------------------------------------------#
@@ -160,7 +175,7 @@ def VR_Ripser(P, maxDim = 1):
     X = squareform(pdist(P))
 
     Dgms = distMat_Ripser(X,maxDim = maxDim)
-
+    
     return Dgms
 
 
@@ -315,7 +330,7 @@ def VR_Perseus(P,dim = 1,
 
 ## \brief Computes persistence up to maxDim using Uli Bauer's [Ripser](https://github.com/Ripser/ripser).
 #
-# \remark Ripser needs to be installed on machine in advance. This code doesn't check for it's existance.
+# \remark Ripser needs to be installed on machine in advance. This code doesn't check for it's existence.
 # 
 # @param distMat -
 #     A distance matrix given as a NxN numpy array
@@ -327,46 +342,48 @@ def VR_Perseus(P,dim = 1,
 #     A dictionary Dgms where Dgms[k] is a lx2 matrix 
 #     giving points in the k-dimensional pers diagram
 def distMat_Ripser(distMat, maxDim = 1):
-
-    # Check/setup the folder structure
-    # Note: empties the folders in preparation
+	# Check/setup the folder structure
+	# Note: empties the folders in preparation
     prepareFolders()
+    
+    current_path = os.getcwd()
+    base_dir = r'.teaspoonData'
+    filename = r'input{0}pointCloud.txt'.format(os.path.sep)
+	
+#	inputFileName = tempfile.TemporaryFile(dir=base_dir).name
+	
 
-
-    inputFileName = '.teaspoonData/input/pointCloud.txt'
-    # outputFileName = '.teaspoonData/output/perseusMatrix'
-
-
-    # Note: Uli's readme says that the lower-triangluar distance 
-    #       matrix is preferred. TODO: try writing just the point
-    #       cloud to the file and let his faster code do the
-    #       heavy lifting to see if it goes faster.
-
-    # Compute pairwise distance matrix
-    # X = squareform(pdist(P))
-
-
-    # Open file to write the point cloud info
-    F = open(inputFileName,'w')
-
-    #Write lower triang matrix to file
-    for i in range(np.shape(distMat)[0]):
-        #Get part of row before diagonal
-        L = str(list(distMat[i,:i]))[1:-1] #[1:-1] cuts off brackets
-        F.write(L + '\n')
-    F.close()
-
+	
+    inputFileName = os.path.join(current_path, base_dir, filename)
+	
+	#     = '.teaspoonData/input/pointCloud.txt'
+	# outputFileName = '.teaspoonData/output/perseusMatrix'
+	# Note: Uli's readme says that the lower-triangluar distance 
+	#       matrix is preferred. TODO: try writing just the point
+	#       cloud to the file and let his faster code do the
+	#       heavy lifting to see if it goes faster.
+	
+	# Compute pairwise distance matrix
+	# X = squareform(pdist(P))
+	
+	# Open file to write the point cloud info
+    with open(inputFileName,'w') as F:
+		# Write lower triang matrix to file
+        for i in range(np.shape(distMat)[0]):
+			#Get part of row before diagonal
+            L = str(list(distMat[i,:i]))[1:-1] #[1:-1] cuts off brackets
+            F.write(L + '\n')
+            
     cmd = 'ripser --dim ' + str(maxDim) + ' ' + inputFileName
-
+    
     # Run ripser and pull the output from the terminal.
     proc = subprocess.Popen(cmd,stdout=subprocess.PIPE,shell = True)
     (out,err) = proc.communicate()
     out = out.decode().split('\n')
-
-
+    
     # Parse the output
     Dgms = readRipserOutput(out)
-
+        
     return Dgms
 
 #---------------Perseus-------------------------------#

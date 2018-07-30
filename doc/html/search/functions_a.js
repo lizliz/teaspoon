@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['sphere',['Sphere',['../namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#af130e51668240f775bca4ff195be2bea',1,'teaspoon::MakeData::PointCloud']]]
+  ['normaldiagram',['normalDiagram',['../namespaceteaspoon_1_1_make_data_1_1_point_cloud.html#afb6f087ced9440d9c2834a2a35e4344c',1,'teaspoon::MakeData::PointCloud']]]
 ];

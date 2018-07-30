@@ -92,9 +92,15 @@ def&#160;</td><td class="memItemRight" valign="bottom"><b>readPerseusOutput</b> 
 <tr class="memitem:a862eea03c953145bb9290c1681f1f850"><td class="memItemLeft" align="right" valign="top"><a id="a862eea03c953145bb9290c1681f1f850"></a>
 def&#160;</td><td class="memItemRight" valign="bottom"><b>readRipserString</b> (s)</td></tr>
 <tr class="separator:a862eea03c953145bb9290c1681f1f850"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<<<<<<< HEAD
 <tr class="memitem:a4ea0e5c0180eff1391c4ac0cf126694c"><td class="memItemLeft" align="right" valign="top"><a id="a4ea0e5c0180eff1391c4ac0cf126694c"></a>
 def&#160;</td><td class="memItemRight" valign="bottom"><b>readRipserOutput</b> (out)</td></tr>
 <tr class="separator:a4ea0e5c0180eff1391c4ac0cf126694c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+=======
+<tr class="memitem:a18684f9ea2d52bb31094f8de25dcbc90"><td class="memItemLeft" align="right" valign="top"><a id="a18684f9ea2d52bb31094f8de25dcbc90"></a>
+def&#160;</td><td class="memItemRight" valign="bottom"><b>readRipserOutput</b> (out, drop_inf_class=True)</td></tr>
+<tr class="separator:a18684f9ea2d52bb31094f8de25dcbc90"><td class="memSeparator" colspan="2">&#160;</td></tr>
+>>>>>>> windows-indexing-issue
 <tr class="memitem:ae38f90d312da5c7fb8587a2f44e67b8a"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_t_d_a_1_1_persistence.html#ae38f90d312da5c7fb8587a2f44e67b8a">VR_Ripser</a> (P, maxDim=1)</td></tr>
 <tr class="memdesc:ae38f90d312da5c7fb8587a2f44e67b8a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes persistence up to dimension maxDim using Uli Bauer's Ripser.  <a href="#ae38f90d312da5c7fb8587a2f44e67b8a">More...</a><br /></td></tr>
 <tr class="separator:ae38f90d312da5c7fb8587a2f44e67b8a"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -146,12 +152,15 @@ def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="names
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
 Variables</h2></td></tr>
-<tr class="memitem:a5d89c08933153d3fea60fd71e9e16800"><td class="memItemLeft" align="right" valign="top">list&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_t_d_a_1_1_persistence.html#a5d89c08933153d3fea60fd71e9e16800">folders</a> = ['.teaspoonData','.teaspoonData/input','.teaspoonData/output']</td></tr>
+<tr class="memitem:a5d89c08933153d3fea60fd71e9e16800"><td class="memItemLeft" align="right" valign="top">list&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_t_d_a_1_1_persistence.html#a5d89c08933153d3fea60fd71e9e16800">folders</a></td></tr>
 <tr class="memdesc:a5d89c08933153d3fea60fd71e9e16800"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks that necessary folder structure system exists.  <a href="#a5d89c08933153d3fea60fd71e9e16800">More...</a><br /></td></tr>
 <tr class="separator:a5d89c08933153d3fea60fd71e9e16800"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<<<<<<< HEAD
 <tr class="memitem:ad1e9deccaa1b4485ba18e22b81101f09"><td class="memItemLeft" align="right" valign="top"><a id="ad1e9deccaa1b4485ba18e22b81101f09"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>files</b> = glob.glob(path)</td></tr>
 <tr class="separator:ad1e9deccaa1b4485ba18e22b81101f09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+=======
+>>>>>>> windows-indexing-issue
 <tr class="memitem:ae41c85513e98b32d96c75124929c4d2c"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceteaspoon_1_1_t_d_a_1_1_persistence.html#ae41c85513e98b32d96c75124929c4d2c">outputFiles</a> = glob.glob(outputFileName + '*')</td></tr>
 <tr class="memdesc:ae41c85513e98b32d96c75124929c4d2c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads in the diagrams in the format that Perseus uses.  <a href="#ae41c85513e98b32d96c75124929c4d2c">More...</a><br /></td></tr>
 <tr class="separator:ae41c85513e98b32d96c75124929c4d2c"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -266,7 +275,7 @@ dictionary&#160;</td><td class="memItemRight" valign="bottom"><b>Dgms</b> = {}</
 </div><div class="memdoc">
 
 <p>Computes persistence up to maxDim using Uli Bauer's <a href="https://github.com/Ripser/ripser">Ripser</a>. </p>
-<dl class="section remark"><dt>Remarks</dt><dd>Ripser needs to be installed on machine in advance. This code doesn't check for it's existance.</dd></dl>
+<dl class="section remark"><dt>Remarks</dt><dd>Ripser needs to be installed on machine in advance. This code doesn't check for it's existence.</dd></dl>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">distMat</td><td>- A distance matrix given as a NxN numpy array </td></tr>
@@ -620,11 +629,11 @@ column with label dgm_col
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">list teaspoon.TDA.Persistence.folders = ['.teaspoonData','.teaspoonData/input','.teaspoonData/output']</td>
+          <td class="memname">list teaspoon.TDA.Persistence.folders</td>
         </tr>
       </table>
 </div><div class="memdoc">
-
+<b>Initial value:</b><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;=  [<span class="stringliteral">&#39;.teaspoonData&#39;</span>,</div><div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160;               <span class="stringliteral">&#39;.teaspoonData&#39;</span>+ os.path.sep + <span class="stringliteral">&#39;input&#39;</span>,</div><div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;               <span class="stringliteral">&#39;.teaspoonData&#39;</span>+os.path.sep + <span class="stringliteral">&#39;output&#39;</span>]</div></div><!-- fragment -->
 <p>Checks that necessary folder structure system exists. </p>
 <p>Empties out all previously saved files to avoid confusion. -&mdash; Make folders for saving files </p>
 

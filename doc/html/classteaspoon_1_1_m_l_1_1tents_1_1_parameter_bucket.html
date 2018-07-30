@@ -59,7 +59,7 @@ $(function() {
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
-<iframe src="javascript:void(0)" frameborder="0" 
+<iframe src="javascript:void(0)" frameborder="0"
         name="MSearchResults" id="MSearchResults">
 </iframe>
 </div>
@@ -79,7 +79,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>A class for storing all of the chosen parameters for a data frame and computation of ML.  
+<p>A class for storing all of the chosen parameters for a data frame and computation of ML.
  <a href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html#details">More...</a></p>
 <div class="dynheader">
 Inheritance diagram for teaspoon.ML.tents.ParameterBucket:</div>
@@ -94,9 +94,9 @@ Collaboration diagram for teaspoon.ML.tents.ParameterBucket:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3134297e20272c91ac6ab54a92efb6e5"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html#a3134297e20272c91ac6ab54a92efb6e5">__init__</a> (self, description='', d=10, delta=1, epsilon=0, maxPower=1, clfClass=RidgeClassifierCV, seed=None, test_size=.33)</td></tr>
-<tr class="memdesc:a3134297e20272c91ac6ab54a92efb6e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html" title="A class for storing all of the chosen parameters for a data frame and computation of ML...">ParameterBucket</a> object.  <a href="#a3134297e20272c91ac6ab54a92efb6e5">More...</a><br /></td></tr>
-<tr class="separator:a3134297e20272c91ac6ab54a92efb6e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a560cd613a020c1081f2ac0fa8caec4c5"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html#a560cd613a020c1081f2ac0fa8caec4c5">__init__</a> (self, description='', d=10, delta=1, epsilon=0, maxPower=1, clfClass=RidgeClassifierCV, seed=None, test_size=.33, feature_function=None, boundingBoxMatrix=None)</td></tr>
+<tr class="memdesc:a560cd613a020c1081f2ac0fa8caec4c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a new <a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html" title="A class for storing all of the chosen parameters for a data frame and computation of ML...">ParameterBucket</a> object.  <a href="#a560cd613a020c1081f2ac0fa8caec4c5">More...</a><br /></td></tr>
+<tr class="separator:a560cd613a020c1081f2ac0fa8caec4c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a39e9d1148208dce4a8dec9354afb789d"><td class="memItemLeft" align="right" valign="top"><a id="a39e9d1148208dce4a8dec9354afb789d"></a>
 def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html#a39e9d1148208dce4a8dec9354afb789d">__str__</a> (self)</td></tr>
 <tr class="memdesc:a39e9d1148208dce4a8dec9354afb789d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Nicely prints all currently set values in the <a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html" title="A class for storing all of the chosen parameters for a data frame and computation of ML...">ParameterBucket</a>. <br /></td></tr>
@@ -106,6 +106,8 @@ def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 <tr class="separator:afbc1ce46c67e2a86a72d93cdcba558ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4dd95135123384b08f2e8fccd11e7d27"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html#a4dd95135123384b08f2e8fccd11e7d27">chooseDeltaEpsWithPadding</a> (self, DgmsSeries, pad=0)</td></tr>
 <tr class="separator:a4dd95135123384b08f2e8fccd11e7d27"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fc98af840bf6f0f9f552e2e2f664fe8"><td class="memItemLeft" align="right" valign="top">def&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html#a3fc98af840bf6f0f9f552e2e2f664fe8">findBoundingBox</a> (self, DgmsSeries, pad=0)</td></tr>
+<tr class="separator:a3fc98af840bf6f0f9f552e2e2f664fe8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
@@ -133,12 +135,18 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a6702b903295c0a0e86888783b3273972"><td class="memItemLeft" align="right" valign="top"><a id="a6702b903295c0a0e86888783b3273972"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>test_size</b></td></tr>
 <tr class="separator:a6702b903295c0a0e86888783b3273972"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a92399a8b30c9702a153195df4e015c46"><td class="memItemLeft" align="right" valign="top"><a id="a92399a8b30c9702a153195df4e015c46"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>feature_function</b></td></tr>
+<tr class="separator:a92399a8b30c9702a153195df4e015c46"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aefd9a11fe4f3f2a93431bf23b4fb8212"><td class="memItemLeft" align="right" valign="top"><a id="aefd9a11fe4f3f2a93431bf23b4fb8212"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>boundingBox</b></td></tr>
+<tr class="separator:aefd9a11fe4f3f2a93431bf23b4fb8212"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A class for storing all of the chosen parameters for a data frame and computation of ML. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a3134297e20272c91ac6ab54a92efb6e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3134297e20272c91ac6ab54a92efb6e5">&#9670;&nbsp;</a></span>__init__()</h2>
+<a id="a560cd613a020c1081f2ac0fa8caec4c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a560cd613a020c1081f2ac0fa8caec4c5">&#9670;&nbsp;</a></span>__init__()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -195,7 +203,19 @@ Public Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname"><em>test_size</em> = <code>.33</code>&#160;</td>
+          <td class="paramname"><em>test_size</em> = <code>.33</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>feature_function</em> = <code>None</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>boundingBoxMatrix</em> = <code>None</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -216,6 +236,8 @@ Public Attributes</h2></td></tr>
     <tr><td class="paramname">clfClass</td><td>The choice of tool used for classification or regression, passed as the function. This code has been tested using <code>sklearn</code> functions <code>RidgeClassiferCV</code> for classification and <code>RidgeCV</code> for regression. </td></tr>
     <tr><td class="paramname">seed</td><td>The seed for the pseudo-random number generator. Pass None if you don't want it fixed; otherwise, pass an integer. </td></tr>
     <tr><td class="paramname">test_size</td><td>A number in \([0,1]\). Gives the percentage of data points to be reserved for the testing set if this is being used for a train/test split experiment. Otherwise, ignored. </td></tr>
+    <tr><td class="paramname">feature_function</td><td>The basis function you want to use for interpolation. Default is <a class="el" href="namespaceteaspoon_1_1_m_l_1_1tents.html#a6a7e3aad0e7229895aa9f204df7e6304" title="Applies the tent function to a diagram. ">tent()</a> </td></tr>
+    <tr><td class="paramname">boundingBoxMatrix</td><td>Not yet implemented. See self.findBoundingBox() </td></tr>
   </table>
   </dd>
 </dl>
@@ -258,7 +280,7 @@ Public Attributes</h2></td></tr>
 d is number of grid elements in either direction
 pad is the additional padding outside of the points in the diagrams
 
-Sets the needed delta and epsilon </pre> 
+Sets the needed delta and epsilon</pre>
 </div>
 </div>
 <a id="afbc1ce46c67e2a86a72d93cdcba558ea"></a>
@@ -290,6 +312,49 @@ Sets the needed delta and epsilon </pre>
 <p>Tests to see if the parameters enclose the persistence diagrams in the DgmSeries. </p>
 <dl class="section return"><dt>Returns</dt><dd>boolean </dd></dl>
 
+</div>
+</div>
+<a id="a3fc98af840bf6f0f9f552e2e2f664fe8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fc98af840bf6f0f9f552e2e2f664fe8">&#9670;&nbsp;</a></span>findBoundingBox()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">def teaspoon.ML.tents.ParameterBucket.findBoundingBox </td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>self</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>DgmsSeries</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname"><em>pad</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<pre class="fragment">DgmsSeries is of type pd.series
+pad is the additional padding outside of the points in the diagrams
+
+
+Sets a bounding box in the birth-lifetime plane
+to use for creating support of function collection.
+
+Result is `self.boundingBox` is a dictionary with
+two keys, 'birthAxis' and 'lifetimeAxis', each outputing
+a tuple of length 2.</pre>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>

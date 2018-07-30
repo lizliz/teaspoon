@@ -27,4 +27,4 @@ Compiled documentation goes into the `doc` folder.  Point your browser to `doc/h
 - Have you incremented the version number?
 
 # Questions, comments, and other issues
-...should be sent to [Liz Munch](mailto:muncheli@msu.edu).
+...should be sent to [Liz Munch](mailto:muncheli@egr.msu.edu).

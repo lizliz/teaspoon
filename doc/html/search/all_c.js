@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['removeinfiniteclasses',['removeInfiniteClasses',['../namespaceteaspoon_1_1_t_d_a_1_1_persistence.html#abdeeb8bb1d1c2c82b26d2e55b0fd42a3',1,'teaspoon::TDA::Persistence']]]
+  ['parameterbucket',['ParameterBucket',['../classteaspoon_1_1_m_l_1_1tents_1_1_parameter_bucket.html',1,'teaspoon::ML::tents']]]
 ];
