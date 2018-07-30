@@ -13,11 +13,11 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 setup(
       name='teaspoon',
-      version='0.4.01c',
+      version='0.4.02',
       description='Python wrappers for various applied topology related code.',
       long_description=long_description,
 
-      url = 'http://www.elizabethmunch.com/math',
+      url = 'http://www.elizabethmunch.com',
 
       #Author details
       author='Elizabeth Munch',

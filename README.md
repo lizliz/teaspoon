@@ -10,6 +10,7 @@ The code is an compilation of work done by [Elizabeth Munch](http://www.elizabet
 
 
 - [Firas Khasawneh](http://www.firaskhasawneh.com)
+- Jesse Berwald
 - Brian Bollen
 
 
@@ -57,11 +58,6 @@ cd teaspoon
 pip install .
 ```
 
-If you already have teaspoon installed but want to update to a newer version, run the following from the teaspoon folder.
-```{bash}
-pip install -U .
-```
-
 ### Installing using python:
 
 According to the internet, the pip version of install appears to be better. However, if you don't use pip, another option is to cd into the teaspoon directory and run:
@@ -81,7 +77,8 @@ Documentation
 =============
 
 Documentation is done using [doxygen](http://www.doxygen.org).
-The most recent version of the [teaspoon documentation is hosted here](http://elizabethmunch.com/code/teaspoon/index.html), but can also be found locally in the [doc folder](https://gitlab.msu.edu/TSAwithTDA/teaspoon/doc/html/index.html).  Further info on documentation can be found in the [contributing](https://gitlab.msu.edu/TSAwithTDA/teaspoon/blob/master/CONTRIBUTING.md) page.
+The most recent version of the [teaspoon documentation is hosted here](http://elizabethmunch.com/code/teaspoon/index.html).  
+Further info on documentation can be found in the [contributing](https://gitlab.msu.edu/TSAwithTDA/teaspoon/blob/master/CONTRIBUTING.md) page.
 
 
 Contributing

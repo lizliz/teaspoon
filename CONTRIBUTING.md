@@ -19,7 +19,7 @@ Automatic documentation is being done with [doxygen](www.doxygen.org).  Info to 
 ```sh
 doxygen /path/to/Doxyfile
 ```
-Compiled documentation goes into the `doc` folder.  Point your browser to `doc/html/index.html` to see the result.  Don't forget to refresh your brower after you compile the documentation since most browsers won't automatically update the page for you.
+Compiled documentation goes into the `doc` folder.  Point your browser to `doc/html/index.html` to see the result.  Don't forget to refresh your browser after you compile the documentation since most browsers (coughchromecough) rely heavily on caching and won't automatically update the page for you, even after you've just opened it.
 
 # Before you push
 
