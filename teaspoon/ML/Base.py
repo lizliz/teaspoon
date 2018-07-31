@@ -6,6 +6,7 @@
 
 from teaspoon.Misc import printPrettyTime
 from teaspoon.ML import feature_functions as fF
+from teaspoon.TDA import Persistence as pP
 
 import time
 import numpy as np
