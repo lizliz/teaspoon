@@ -71,6 +71,23 @@ class Partitions:
             output += '---\n'
         return output
 
+    def plot(self):
+        # plot the partitions
+        fig1, ax1 = plt.subplots()
+        for binNode in self.partitionBucket:
+            print(binNode)
+            # get the bottom left corner
+            corner = (binNode['nodes'][0], binNode['nodes'][2])
+
+            # get the width and height
+            width = binNode['nodes'][1] - binNode['nodes'][0]
+            height = binNode['nodes'][3] - binNode['nodes'][2]
+
+            # add the corresponding rectangle
+            ax1.add_patch(patches.Rectangle(corner, width, height, fill=False))
+
+        # Doesn't show unless we do this
+        plt.axis('tight')
 
 
 
