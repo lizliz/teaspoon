@@ -17,28 +17,43 @@ class Partitions:
     data must be converted to ordinal!!!!! TODO: put a catch for this
     TODO: Finish documentation
     '''
-    def __init__(self, data = None, meshingScheme = None):
+    def __init__(self, data = None, 
+                 meshingScheme = None, 
+                 numParts=3, 
+                 alpha=0.05):
+        
         if data is not None:
+            
+            # check that the data is in ordinal coordinates
+            if not self.isOrdinal(data):
+                print("The data must be in ordinal coordinates. " + 
+                      "Please perform ordinal transformation first.")  
+                # and return an empty partition bucket
+                self.borders = {}
+            
             # If there is data, set the bounding box to be the max and min in the data
+            else:                
 
-            xmin = data[:,0].min()
-            xmax = data[:,0].max()
-            ymin = data[:,1].min()
-            ymax = data[:,1].max()
-
-            self.borders = {}
-            self.borders['nodes'] = np.array([xmin, xmax, ymin, ymax])
-            self.borders['npts'] = data.shape[0]
+                xmin = data[:,0].min()
+                xmax = data[:,0].max()
+                ymin = data[:,1].min()
+                ymax = data[:,1].max()
+    
+                self.borders = {}
+                self.borders['nodes'] = np.array([xmin, xmax, ymin, ymax])
+                self.borders['npts'] = data.shape[0]
+                self.numParts = numParts
+                self.alpha = alpha
+            
+            
 
             # If there is data, use the chosen meshing scheme to build the partitions.
-
-
-            if meshingScheme == 'DV':
+            if meshingScheme == 'DV' and self.isOrdinal(data):
                 # Figure out
                 self.partitionBucket = self.return_partition_DV(data = data,
                                         borders = self.borders,
-                                        r = 3,
-                                        alpha = .05)
+                                        r = self.numParts,
+                                        alpha = self.alpha)
             else: # meshingScheme == None
             # Note that right now, this will just do the dumb thing for every other input
                 self.partitionBucket = [self.borders]
@@ -88,7 +103,14 @@ class Partitions:
 
         # Doesn't show unless we do this
         plt.axis('tight')
-
+    
+    # helper function for error checking. Used to make sure input is in 
+    # ordinarl coordinates. It checks that when the two data columns are sorted        
+    # they are each equal to an ordered vector with the same number of rows.
+    def isOrdinal(self, dd):
+        return np.all(np.equal(np.sort(dd, axis=0), 
+                        np.reshape(np.repeat(np.arange(start=1,stop=dd.shape[0]+1), 
+                                             2), (dd.shape[0], 2))))
 
 
 
@@ -231,29 +253,18 @@ if __name__ == "__main__":
     yRanked = rankdata(y, method='ordinal')
 
     # obtain the adaptive mesh
-    numParts = 3
+    numParts = 4
 
     # define bin0, which is the whole initial data set
     bin0 = {'nodes': np.array([1, xRanked.size, 1, yRanked.size]),
             'npts': xRanked.size}
 
     # get the adaptive partition of the data
-    partitions = self.return_partition_DV(np.column_stack((xRanked, yRanked)),
-                                       borders = bin0,
-                                       r=numParts)
+    partitionList = Partitions(np.column_stack((xRanked, yRanked)),
+                                       meshingScheme = "DV", numParts=numParts)
 
     # plot the partitions
-    fig1, ax1 = plt.subplots()
-    for binNode in partitions:
-        # get the bottom left corner
-        corner = (binNode['nodes'][0], binNode['nodes'][2])
-
-        # get the width and height
-        width = binNode['nodes'][1] - binNode['nodes'][0]
-        height = binNode['nodes'][3] - binNode['nodes'][2]
-
-        # add the corresponding rectangle
-        ax1.add_patch(patches.Rectangle(corner, width, height, fill=False))
+    partitionList.plot()
 
     # overlay the data
     plt.plot(xRanked, yRanked, 'r*')
