@@ -23,7 +23,6 @@ class Partitions:
                  alpha=0.05):
 
         if data is not None:
-
             # check that the data is in ordinal coordinates
             if not self.isOrdinal(data):
                 print("Converting the data to ordinal...")
@@ -31,13 +30,22 @@ class Partitions:
                 xRanked = rankdata(data[:,0], method='ordinal')
                 yRanked = rankdata(data[:,1], method='ordinal')
 
-                self.originalData = data
+
+                xFloats = np.copy(data[:,0])
+                xFloats.sort()
+                yFloats = np.copy(data[:,1])
+                yFloats.sort()
+
+                self.xFloats = xFloats
+                self.yFloats = yFloats
+
 
                 data = np.column_stack((xRanked,yRanked))
 
                 # and return an empty partition bucket
 
             # If there is data, set the bounding box to be the max and min in the data
+
 
             xmin = data[:,0].min()
             xmax = data[:,0].max()
