@@ -82,7 +82,8 @@ def readRipserString(s):
 
     birth_death_str = re.findall(r"(\d*[.]?\d*)", s)
     
-    stuff = list(filter(None, birth_death_str))
+    # stuff = list(filter(None, birth_death_str))
+	stuff = [x for x in birth_death_str if x is not None]
     
     if not stuff:
 #        print("empty stuff: {}". format(stuff))

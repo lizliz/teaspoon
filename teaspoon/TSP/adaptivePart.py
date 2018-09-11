@@ -255,10 +255,6 @@ if __name__ == "__main__":
     # obtain the adaptive mesh
     numParts = 4
 
-    # define bin0, which is the whole initial data set
-    bin0 = {'nodes': np.array([1, xRanked.size, 1, yRanked.size]),
-            'npts': xRanked.size}
-
     # get the adaptive partition of the data
     partitionList = Partitions(np.column_stack((xRanked, yRanked)),
                                        meshingScheme = "DV", numParts=numParts)
