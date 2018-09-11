@@ -14,38 +14,43 @@ class Partitions:
     '''
     A data structure for storing a partition coming from an adapative meshing scheme.
     data is a numpy array of type many by 2
-    data must be converted to ordinal!!!!! TODO: put a catch for this
+    data converted to ordinal and stored locally if not already
     TODO: Finish documentation
     '''
-    def __init__(self, data = None, 
-                 meshingScheme = None, 
-                 numParts=3, 
+    def __init__(self, data = None,
+                 meshingScheme = None,
+                 numParts=3,
                  alpha=0.05):
-        
+
         if data is not None:
-            
+
             # check that the data is in ordinal coordinates
             if not self.isOrdinal(data):
-                print("The data must be in ordinal coordinates. " + 
-                      "Please perform ordinal transformation first.")  
-                # and return an empty partition bucket
-                self.borders = {}
-            
-            # If there is data, set the bounding box to be the max and min in the data
-            else:                
+                print("Converting the data to ordinal...")
+                # perform ordinal sampling (ranking) transformation
+                xRanked = rankdata(data[:,0], method='ordinal')
+                yRanked = rankdata(data[:,1], method='ordinal')
 
-                xmin = data[:,0].min()
-                xmax = data[:,0].max()
-                ymin = data[:,1].min()
-                ymax = data[:,1].max()
-    
-                self.borders = {}
-                self.borders['nodes'] = np.array([xmin, xmax, ymin, ymax])
-                self.borders['npts'] = data.shape[0]
-                self.numParts = numParts
-                self.alpha = alpha
-            
-            
+                self.originalData = data
+
+                data = np.column_stack((xRanked,yRanked))
+
+                # and return an empty partition bucket
+
+            # If there is data, set the bounding box to be the max and min in the data
+
+            xmin = data[:,0].min()
+            xmax = data[:,0].max()
+            ymin = data[:,1].min()
+            ymax = data[:,1].max()
+
+            self.borders = {}
+            self.borders['nodes'] = np.array([xmin, xmax, ymin, ymax])
+            self.borders['npts'] = data.shape[0]
+            self.numParts = numParts
+            self.alpha = alpha
+
+
 
             # If there is data, use the chosen meshing scheme to build the partitions.
             if meshingScheme == 'DV' and self.isOrdinal(data):
@@ -103,13 +108,13 @@ class Partitions:
 
         # Doesn't show unless we do this
         plt.axis('tight')
-    
-    # helper function for error checking. Used to make sure input is in 
-    # ordinarl coordinates. It checks that when the two data columns are sorted        
+
+    # helper function for error checking. Used to make sure input is in
+    # ordinarl coordinates. It checks that when the two data columns are sorted
     # they are each equal to an ordered vector with the same number of rows.
     def isOrdinal(self, dd):
-        return np.all(np.equal(np.sort(dd, axis=0), 
-                        np.reshape(np.repeat(np.arange(start=1,stop=dd.shape[0]+1), 
+        return np.all(np.equal(np.sort(dd, axis=0),
+                        np.reshape(np.repeat(np.arange(start=1,stop=dd.shape[0]+1),
                                              2), (dd.shape[0], 2))))
 
 
