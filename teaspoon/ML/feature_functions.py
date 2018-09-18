@@ -265,22 +265,19 @@ def bary_diff_matrix(xnew, xbase, w=None):
 #	function on the base mesh. This matrix assumes that on a 2D mesh the functions are ordered row-wise.
 def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
     #	jacobi_func = params.jacobi_func
+    
     # check if we asked for a squre mesh or not
     if isinstance(params.d, int):
         nx = params.d
         ny = params.d
     else:
-        nx, ny = params.d
-
-    # get the number of query points
-    num_query_pts = Dgm.shape[0]
-
+        nx, ny = params.d  
+        
     # check if the Dgm is empty. If it is, pass back zeros
     if Dgm.size == 0:
-        yy = np.zeros((nx + 1) * (ny + 1))
-        return yy
-
-        # Move to birth,lifetime plane
+        return  np.zeros((nx + 1) * (ny + 1))
+    
+    # Move to birth,lifetime plane
     if dgm_type == 'BirthDeath':
         T = np.array(((1, -1), (0, 1)))
         A = np.dot(Dgm, T)
@@ -289,65 +286,94 @@ def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
     else:
         print('Your choices for type are "BirthDeath" or "BirthLifetime".')
         print('Exiting...')
-        return
-
+        return        
+    
+    # first, get the entries in Dgm that are within each partition
+    for partition in params.partitions:
+        query_Dgm_pts = getSubset(A, partition)
+    
+        # get the number of query points
+        num_query_pts = len(query_Dgm_pts)
+        
+        # check if the intersection of the Dgm and the partition is empty.
+        # If it is, pass back zeros
+        if num_query_pts == 0:
+            return np.zeros((nx + 1) * (ny + 1))
+    
         # get the query points. xq are the brith times, yq are the death times.
-    xq, yq = np.sort(A[:, 0]), np.sort(A[:, 1])
+        xq, yq = np.sort(query_Dgm_pts[:, 0]), np.sort(query_Dgm_pts[:, 1])
+    
+        # 1) Get the base nodes:
+        # get the 1D base nodes in x and y
+    
+        xmesh, w = quad_pts_and_weights[params.jacobi_poly](nx)
+        ymesh, w = quad_pts_and_weights[params.jacobi_poly](ny)
+        xmesh = np.sort(xmesh)
+        ymesh = np.sort(ymesh)
+    
+        # shift the base mesh points to the interval of interpolation [ax, bx], and
+        # [ay, by]
+        ax, bx = params.boundingBox['birthAxis']
+        # ax = 5
+        # bx = 6
+        xmesh = (bx - ax) / 2 * xmesh + (bx + ax) / 2
+    
+        ay, by = params.boundingBox['lifetimeAxis']
+        # ay = 5
+        # by = 6
+        ymesh = (by - ay) / 2 * ymesh + (by + ay) / 2
+    
+        # define a mesh on the base points
+        x_base, y_base = np.meshgrid(xmesh, ymesh, sparse=False, indexing='ij')
+    
+        # get the x and y interpolation matrices
+        # get the 1D interpolation matrix for x
+        x_interp_mat = bary_diff_matrix(xnew=xq, xbase=xmesh)
+        x_interp_mat = x_interp_mat.T  # transpose the x-interplation matrix
+    
+        # get the 1D interpolation matrix for y
+        y_interp_mat = bary_diff_matrix(xnew=yq, xbase=ymesh)
+    
+        # replicate each column in the x-interpolation matrix n times
+        Gamma = np.repeat(x_interp_mat, ny + 1, axis=1)
+    
+        # unravel, then replicate each row in the y-interpolation matrix m times
+        y_interp_mat.shape = (1, y_interp_mat.size)
+        Phi = np.repeat(y_interp_mat, nx + 1, axis=0)
+    
+        # element-wise multiply Gamma and Phi
+        Psi = Gamma * Phi
+    
+        # split column-wise, then concatenate row-wise
+        #    if Psi.size > 0:  # check that Psi is not empty
+        Psi = np.concatenate(np.split(Psi, num_query_pts, axis=1), axis=0)
+    
+        # now reshape Psi so that each row corresponds to the weights of one query pt
+        Psi = np.reshape(Psi, (num_query_pts, -1))
+    
+        # get the weights for each interpolation function/base-point
+        interp_weights = np.sum(np.abs(Psi), axis=0)
+    
+        #    print('I ran the feature function!')
+        #    plt.figure(10)
+        #    plt.plot(np.abs(interp_weights),'x')
+        #    plt.show()
+    
+        return np.abs(interp_weights)
 
-    # 1) Get the base nodes:
-    # get the 1D base nodes in x and y
 
-    xmesh, w = quad_pts_and_weights[params.jacobi_poly](nx)
-    ymesh, w = quad_pts_and_weights[params.jacobi_poly](ny)
-    xmesh = np.sort(xmesh)
-    ymesh = np.sort(ymesh)
-
-    # shift the base mesh points to the interval of interpolation [ax, bx], and
-    # [ay, by]
-    ax, bx = params.boundingBox['birthAxis']
-    # ax = 5
-    # bx = 6
-    xmesh = (bx - ax) / 2 * xmesh + (bx + ax) / 2
-
-    ay, by = params.boundingBox['lifetimeAxis']
-    # ay = 5
-    # by = 6
-    ymesh = (by - ay) / 2 * ymesh + (by + ay) / 2
-
-    # define a mesh on the base points
-    x_base, y_base = np.meshgrid(xmesh, ymesh, sparse=False, indexing='ij')
-
-    # get the x and y interpolation matrices
-    # get the 1D interpolation matrix for x
-    x_interp_mat = bary_diff_matrix(xnew=xq, xbase=xmesh)
-    x_interp_mat = x_interp_mat.T  # transpose the x-interplation matrix
-
-    # get the 1D interpolation matrix for y
-    y_interp_mat = bary_diff_matrix(xnew=yq, xbase=ymesh)
-
-    # replicate each column in the x-interpolation matrix n times
-    Gamma = np.repeat(x_interp_mat, ny + 1, axis=1)
-
-    # unravel, then replicate each row in the y-interpolation matrix m times
-    y_interp_mat.shape = (1, y_interp_mat.size)
-    Phi = np.repeat(y_interp_mat, nx + 1, axis=0)
-
-    # element-wise multiply Gamma and Phi
-    Psi = Gamma * Phi
-
-    # split column-wise, then concatenate row-wise
-    #    if Psi.size > 0:  # check that Psi is not empty
-    Psi = np.concatenate(np.split(Psi, num_query_pts, axis=1), axis=0)
-
-    # now reshape Psi so that each row corresponds to the weights of one query pt
-    Psi = np.reshape(Psi, (num_query_pts, -1))
-
-    # get the weights for each interpolation function/base-point
-    interp_weights = np.sum(np.abs(Psi), axis=0)
-
-    #    print('I ran the feature function!')
-    #    plt.figure(10)
-    #    plt.plot(np.abs(interp_weights),'x')
-    #    plt.show()
-
-    return np.abs(interp_weights)
+# this function returns the points from querSet that are within the baseRecatangle
+def getSubset(querySet, baseRectangle):
+    # get the rectangel corners
+    xmin = baseRectangle['nodes'][0];
+    xmax = baseRectangle['nodes'][1];
+    ymin = baseRectangle['nodes'][2];
+    ymax = baseRectangle['nodes'][3];
+    
+    # subset
+    return querySet[(querySet[:, 0] >= xmin) &
+                    (querySet[:, 0] <= xmax) &
+                    (querySet[:, 1] >= ymin) &
+                    (querySet[:, 1] <= ymax), :]
+    
+    
