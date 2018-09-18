@@ -9,6 +9,7 @@ import numpy as np
 from scipy.stats import binned_statistic_2d, chisquare, rankdata
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
+from copy import deepcopy
 
 class Partitions:
     '''
@@ -76,13 +77,59 @@ class Partitions:
         else:
             self.partitionBucket = []
 
+    def convertOrdToFloat(self,partitionEntry):
+        bdyList = partitionEntry['nodes'].copy()
+        # Need to subtract one to deal with counting from
+        # 0 vs counting from 1 problems
+        xLow = int(bdyList[0])-1
+        xHigh = int(bdyList[1])-1
+        yLow = int(bdyList[2])-1
+        yHigh = int(bdyList[3])-1
+
+
+        if hasattr(self, 'xFloats'):
+            xLowFloat = self.xFloats[xLow]
+            xHighFloat= self.xFloats[xHigh]
+            yLowFloat = self.xFloats[yLow]
+            yHighFloat = self.xFloats[yHigh]
+            convertedBdyList = [xLowFloat, xHighFloat, yLowFloat,yHighFloat]
+            partitionEntry['nodes'] = convertedBdyList
+            return partitionEntry
+        else:
+            print("You're trying to convert your ordinal data")
+            print("back to floats, but you must have had ordinal")
+            print("to begin with so I can't.  Exiting...")
+
     def __len__(self):
         return len(self.partitionBucket)
 
     def __getitem__(self,key):
+        if hasattr(self,'xFloats'): #if the data wasn't ordinal
+            entry = self.partitionBucket[key].copy()
+            entry = self.convertOrdToFloat(entry)
+            return entry
+        else:
+            return self.partitionBucket[key]
+
+    def getOrdinal(self,key):
+        # overrides the builtin magic method in the case where
+        # you had non-ordinal data but still want the ordinal
+        # stuff back.
+        # If the data wasn't ordinal, this has the exact same
+        # effect as self[key]
         return self.partitionBucket[key]
 
     def __iter__(self):
+        # iterates over the converted entries in the
+        # parameter bucket
+        if hasattr(self,'xFloats'):
+            return map( self.convertOrdToFloat, deepcopy(self.partitionBucket)  )
+        else:
+            return iter(self.partitionBucket)
+
+    def iterOrdinal(self):
+        # functions just like iter magic method without
+        # converting each entry back to its float
         return iter(self.partitionBucket)
 
     def __str__(self):
@@ -102,8 +149,8 @@ class Partitions:
     def plot(self):
         # plot the partitions
         fig1, ax1 = plt.subplots()
-        for binNode in self.partitionBucket:
-            print(binNode)
+        for binNode in self:
+            # print(binNode)
             # get the bottom left corner
             corner = (binNode['nodes'][0], binNode['nodes'][2])
 
