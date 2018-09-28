@@ -7,6 +7,7 @@
 from teaspoon.Misc import printPrettyTime
 from teaspoon.ML import feature_functions as fF
 from teaspoon.TDA import Persistence as pP
+from teaspoon.TSP.adaptivePart import Partitions
 
 import time
 import numpy as np
@@ -205,6 +206,29 @@ class ParameterBucket(object):
 
 		self.delta = delta
 		self.epsilon = epsilon
+
+
+
+
+	def makeAdaptivePartition(self, DgmsSeries, type = 'BirthDeath'):
+		'''
+		Combines all persistence diagrams in the series together, then generates an adaptive partition mesh and includes it in the parameter bucket as self.partitions
+
+		The partitions can be viewed using self.partitions.plot()
+		'''
+
+		# TODO Deal with infinite points???
+		AllPoints = np.concatenate(list(DgmsSeries))
+		x = AllPoints[:,0]
+		y = AllPoints[:,1]
+		life = y-x
+		fullData = np.column_stack((x,life))
+
+		self.partitions = Partitions(data = fullData, meshingScheme = 'DV')
+
+
+
+
 
 #-------------------------------------------------------------------------
 #-------------------------------------------------------------------------

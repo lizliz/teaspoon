@@ -90,8 +90,8 @@ class Partitions:
         if hasattr(self, 'xFloats'):
             xLowFloat = self.xFloats[xLow]
             xHighFloat= self.xFloats[xHigh]
-            yLowFloat = self.xFloats[yLow]
-            yHighFloat = self.xFloats[yHigh]
+            yLowFloat = self.yFloats[yLow]
+            yHighFloat = self.yFloats[yHigh]
             convertedBdyList = [xLowFloat, xHighFloat, yLowFloat,yHighFloat]
             partitionEntry['nodes'] = convertedBdyList
             return partitionEntry
