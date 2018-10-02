@@ -215,6 +215,7 @@ class ParameterBucket(object):
 		Combines all persistence diagrams in the series together, then generates an adaptive partition mesh and includes it in the parameter bucket as self.partitions
 
 		The partitions can be viewed using self.partitions.plot()
+		TODO: This can't handle infinite points in the diagram yet
 		'''
 
 		# TODO Deal with infinite points???
@@ -243,6 +244,12 @@ class ParameterBucket(object):
 # @param params : ParameterBucket.
 # 	A parameter bucket used for calculations.
 def build_G(DgmSeries, params):
+
+	# if not hasattr(params,'partitions'):
+	# 	print('You have to have a partition bucket set in the')
+	# 	print('params.  I should probably tell you how to do')
+	# 	print('this here.  Exiting...')
+	# 	return
 
 	applyFeaturization = lambda x: params.feature_function(x,params = params)
 	G = np.array(list(DgmSeries.apply(applyFeaturization )))
@@ -408,6 +415,7 @@ def getPercentScore(DgmsDF,
 	if verbose:
 		print(params)
 
+
 	#check to see if only one column label was passed. If so, turn it into a list.
 	if type(dgm_col) == str:
 		dgm_col = [dgm_col]
@@ -418,6 +426,13 @@ def getPercentScore(DgmsDF,
 													test_size=params.test_size,
 													random_state = params.seed
 													)
+
+	if params.useAdapativePart == True:
+		# Get the portions of the test data frame with diagrams and concatenate into giant series:
+
+		allDgms = pd.concat((D_train[label] for label in dgm_col))
+		# Hand the series to the makeAdaptivePartition function
+		params.makeAdaptivePartition(allDgms, meschingScheme = 'DV')
 
 	#--------Training------------#
 	if verbose:
