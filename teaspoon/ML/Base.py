@@ -89,6 +89,103 @@ class ParameterBucket(object):
 		output += '---\n'
 		return output
 
+
+	def makeAdaptivePartition(self, DgmsSeries, type = 'BirthDeath',meshingScheme = 'DV'):
+		'''
+		Combines all persistence diagrams in the series together, then generates an adaptive partition mesh and includes it in the parameter bucket as self.partitions
+
+		The partitions can be viewed using self.partitions.plot()
+		TODO: This can't handle infinite points in the diagram yet
+		'''
+
+		# TODO Deal with infinite points???
+		AllPoints = np.concatenate(list(DgmsSeries))
+		x = AllPoints[:,0]
+		y = AllPoints[:,1]
+		if type == 'BirthDeath':
+			life = y-x
+		else:
+			life = y
+		fullData = np.column_stack((x,life))
+
+		self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme)
+
+
+
+
+
+## A new type of parameter ParameterBucket
+#
+# This is the type specially built for tents
+class InterpPolyParameters(ParameterBucket):
+
+	def __init__(self, d = 3,
+					useAdapativePart = False,
+					meshingScheme = 'DV',
+					jacobi_poly = 'cheb1',
+				clf_model = RidgeClassifierCV,
+				test_size = .33,
+				seed = None,
+				maxPower = 1,
+				**kwargs
+					):
+		# Set all the necessary parameters for tents function
+		# TODO
+
+		self.feature_function = fF.interp_polynomial
+		self.partitions = None
+		self.jacobi_poly = jacobi_poly
+		self.d = d
+		self.useAdapativePart = useAdapativePart #This should be boolean
+		self.meshingScheme = meshingScheme
+		self.clf_model = clf_model
+		self.seed = seed
+		self.test_size = test_size
+		self.maxPower = maxPower
+		self.__dict__.update(kwargs)
+
+
+	def check(self):
+		# Check for all the parameters required for tents function
+		# TODO
+		print("This hasn't been made yet. Ask me later.")
+		pass
+
+
+
+
+## A new type of parameter ParameterBucket
+#
+# This is the type specially built for tents
+class TentParameters(ParameterBucket):
+
+	def __init__(self, d = 10, delta = 1, epsilon = 0,
+				clf_model = RidgeClassifierCV,
+				test_size = .33,
+				seed = None,
+				maxPower = 1,
+				**kwargs):
+		# Set all the necessary parameters for tents function
+		self.feature_function = fF.tent
+		self.useAdapativePart = False
+
+		self.d = d
+		self.delta = delta
+		self.epsilon = epsilon
+		self.clf_model = clf_model
+		self.seed = seed
+		self.test_size = test_size
+		self.maxPower = maxPower
+		self.__dict__.update(kwargs)
+
+
+	def check(self):
+		# Check for all the parameters required for tents function
+		# TODO
+		print("This hasn't been made yet. Ask me later.")
+		pass
+
+
 	def setBoundingBox(self,DgmsPD,pad = 0):
 		"""!@brief Sets a bounding box in the birth-lifetime planeself.
 
@@ -136,6 +233,7 @@ class ParameterBucket(object):
 		self.boundingBox = {}
 		self.boundingBox['birthAxis'] = (bottomBirth - pad, topBirth + pad)
 		self.boundingBox['lifetimeAxis'] = (bottomPers/2, topPers + pad)
+
 
 	def testEnclosesDgms(self, DgmSeries):
 		'''!
@@ -206,28 +304,6 @@ class ParameterBucket(object):
 
 		self.delta = delta
 		self.epsilon = epsilon
-
-
-
-
-	def makeAdaptivePartition(self, DgmsSeries, type = 'BirthDeath'):
-		'''
-		Combines all persistence diagrams in the series together, then generates an adaptive partition mesh and includes it in the parameter bucket as self.partitions
-
-		The partitions can be viewed using self.partitions.plot()
-		TODO: This can't handle infinite points in the diagram yet
-		'''
-
-		# TODO Deal with infinite points???
-		AllPoints = np.concatenate(list(DgmsSeries))
-		x = AllPoints[:,0]
-		y = AllPoints[:,1]
-		life = y-x
-		fullData = np.column_stack((x,life))
-
-		self.partitions = Partitions(data = fullData, meshingScheme = 'DV')
-
-
 
 
 
@@ -303,7 +379,7 @@ def build_G(DgmSeries, params):
 def ML_via_featurization(DgmsDF,
 			labels_col = 'trainingLabel',
 			dgm_col = 'Dgm1',
-			params = ParameterBucket(),
+			params = TentParameters(),
 			normalize = False,
 			verbose = True
 			):
@@ -405,7 +481,7 @@ def ML_via_featurization(DgmsDF,
 def getPercentScore(DgmsDF,
 					labels_col = 'trainingLabel',
 					dgm_col = 'Dgm1',
-					params = ParameterBucket(),
+					params = TentParameters(),
 					normalize = False,
 					verbose = True
 					):
@@ -427,12 +503,15 @@ def getPercentScore(DgmsDF,
 													random_state = params.seed
 													)
 
-	if params.useAdapativePart == True:
-		# Get the portions of the test data frame with diagrams and concatenate into giant series:
+	# Get the portions of the test data frame with diagrams and concatenate into giant series:
+	allDgms = pd.concat((D_train[label] for label in dgm_col))
 
-		allDgms = pd.concat((D_train[label] for label in dgm_col))
+	if params.useAdapativePart == True:
 		# Hand the series to the makeAdaptivePartition function
-		params.makeAdaptivePartition(allDgms, meschingScheme = 'DV')
+		params.makeAdaptivePartition(allDgms, meshingScheme = 'DV')
+	else:
+		# TODO this should work for both interp and tents but doesn't yet
+		params.makeAdaptivePartition(allDgms, meshingScheme = None)
 
 	#--------Training------------#
 	if verbose:
