@@ -10,7 +10,7 @@ import pandas as pd
 #import teaspoon.TDA.Persistence as pP
 from teaspoon.TDA import Persistence as pP
 from scipy.spatial.distance import euclidean
-
+from ripser import ripser
 
 
 #-------------Circles and Annuli---------------------------------------#
@@ -561,7 +561,8 @@ def testSetManifolds(numDgms = 50,
     for i in range(numDgms):
         if fixSeed:
             seed += 1
-        dgmOut = pP.VR_Ripser(Torus(N=numPts,seed = seed))
+#        dgmOut = pP.VR_Ripser(Torus(N=numPts,seed = seed))  # using built-in wrapper
+        dgmOut = ripser(Torus(N=numPts,seed = seed))['dgms']  # using ripser package
         DgmsDF.loc[counter] = [dgmOut[0],dgmOut[1], 'Torus']
         counter +=1
 
@@ -570,7 +571,7 @@ def testSetManifolds(numDgms = 50,
     for i in range(numDgms):
         if fixSeed:
             seed += 1
-        dgmOut = pP.VR_Ripser(Annulus(N=numPts,seed = seed))
+        dgmOut = ripser(Annulus(N=numPts,seed = seed))['dgms']
         DgmsDF.loc[counter] = [dgmOut[0],dgmOut[1], 'Annulus']
         counter +=1
 
@@ -579,7 +580,7 @@ def testSetManifolds(numDgms = 50,
     for i in range(numDgms):
         if fixSeed:
             seed += 1
-        dgmOut = pP.VR_Ripser(Cube(N=numPts,seed = seed))
+        dgmOut = ripser(Cube(N=numPts,seed = seed))['dgms']
         # Dgms.append([dgmOut[0],dgmOut[1]])
         DgmsDF.loc[counter] = [dgmOut[0],dgmOut[1], 'Cube']
         counter +=1
@@ -593,7 +594,7 @@ def testSetManifolds(numDgms = 50,
     for i in range(numDgms):
         if fixSeed:
             seed += 1
-        dgmOut = pP.VR_Ripser(Clusters(centers=centers, N = numPts, seed = seed, sd = .05))
+        dgmOut = ripser(Clusters(centers=centers, N = numPts, seed = seed, sd = .05))['dgms']
         DgmsDF.loc[counter] = [dgmOut[0],dgmOut[1], '3Cluster']
         counter +=1
 
@@ -610,10 +611,10 @@ def testSetManifolds(numDgms = 50,
     for i in range(numDgms):
         if fixSeed:
             seed += 1
-        dgmOut = pP.VR_Ripser(Clusters(centers=centers, 
+        dgmOut = ripser(Clusters(centers=centers, 
                                         N = numPts, 
                                         sd = .05,
-                                        seed = seed))
+                                        seed = seed))['dgms']
         # Dgms.append([dgmOut[0],dgmOut[1]])
         DgmsDF.loc[counter] = [dgmOut[0],dgmOut[1], '3Clusters of 3Clusters']
         counter +=1
@@ -626,7 +627,7 @@ def testSetManifolds(numDgms = 50,
     for i in range(numDgms):
         if fixSeed:
             seed += 1
-        dgmOut = pP.VR_Ripser(Sphere(N = numPts, noise = .05,seed = seed))
+        dgmOut = ripser(Sphere(N = numPts, noise = .05,seed = seed))['dgms']
         DgmsDF.loc[counter] = [dgmOut[0],dgmOut[1], 'Sphere']
         counter +=1
 

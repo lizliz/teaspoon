@@ -115,6 +115,7 @@ def readRipserOutput(out, drop_inf_class=True):
             endIndex = breaks[j+1]
 
         Dgm = out[breaks[j]+1 : endIndex]
+        print(Dgm)
         Dgm = [X.strip()[2:-1].split(',') for X in Dgm]
 
         # use regular expressions to extract the birth/death times

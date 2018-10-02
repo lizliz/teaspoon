@@ -313,12 +313,11 @@ def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
     
         # shift the base mesh points to the interval of interpolation [ax, bx], and
         # [ay, by]
-        ax, bx = params.boundingBox['birthAxis']
+        ax, bx, ay, by = partition['nodes']
         # ax = 5
         # bx = 6
         xmesh = (bx - ax) / 2 * xmesh + (bx + ax) / 2
     
-        ay, by = params.boundingBox['lifetimeAxis']
         # ay = 5
         # by = 6
         ymesh = (by - ay) / 2 * ymesh + (by + ay) / 2
