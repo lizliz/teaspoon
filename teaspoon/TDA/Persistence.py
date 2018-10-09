@@ -544,7 +544,13 @@ def minPers(Dgm):
 def maxPers(Dgm):
     try:
         lifetimes = Dgm[:,1] - Dgm[:,0]
-        return max(lifetimes)
+        m = max(lifetimes)
+        if m == np.inf:
+            # Get rid of rows with death time infinity
+            numRows = Dgm.shape[0]
+            rowsWithoutInf = list(set(np.where(Dgm[:,1] != np.inf)[0]))
+            m = max(lifetimes[rowsWithoutInf])
+        return m
     except:
         return 0
 
@@ -557,6 +563,12 @@ def maxPers(Dgm):
 def maxBirth(Dgm):
     try:
         m = max(Dgm[:,0])
+        if m == np.inf:
+            # Get rid of rows with death time infinity
+            numRows = Dgm.shape[0]
+            rowsWithoutInf = list(set(np.where(Dgm[:,1] != np.inf)[0]))
+            m = max(Dgm[rowsWithoutInf,0])
+
         return m
     except:
         return 0
