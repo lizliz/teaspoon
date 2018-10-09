@@ -109,6 +109,11 @@ class ParameterBucket(object):
 		except:
 			# you had a series to start with
 			AllPoints = np.concatenate(list(DgmsPD))
+
+		# Remove inifinite points
+
+		AllPoints = pP.removeInfiniteClasses(AllPoints)
+
 		x = AllPoints[:,0]
 		y = AllPoints[:,1]
 		if type == 'BirthDeath':
@@ -118,82 +123,6 @@ class ParameterBucket(object):
 		fullData = np.column_stack((x,life))
 
 		self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme)
-
-
-
-
-
-## A new type of parameter ParameterBucket
-#
-# This is the type specially built for tents
-class InterpPolyParameters(ParameterBucket):
-
-	def __init__(self, d = 3,
-					useAdaptivePart = False,
-					meshingScheme = 'DV',
-					jacobi_poly = 'cheb1',
-				clf_model = RidgeClassifierCV,
-				test_size = .33,
-				seed = None,
-				maxPower = 1,
-				**kwargs
-					):
-		# Set all the necessary parameters for tents function
-		# TODO
-
-		self.feature_function = fF.interp_polynomial
-		self.partitions = None
-		self.jacobi_poly = jacobi_poly
-		self.d = d
-		self.useAdaptivePart = useAdaptivePart #This should be boolean
-		self.meshingScheme = meshingScheme
-		self.clf_model = clf_model
-		self.seed = seed
-		self.test_size = test_size
-		self.maxPower = maxPower
-		self.__dict__.update(kwargs)
-
-
-	def check(self):
-		# Check for all the parameters required for tents function
-		# TODO
-		print("This hasn't been made yet. Ask me later.")
-		pass
-
-
-
-
-## A new type of parameter ParameterBucket
-#
-# This is the type specially built for tents
-class TentParameters(ParameterBucket):
-
-	def __init__(self, d = 10, delta = 1, epsilon = 0,
-				clf_model = RidgeClassifierCV,
-				test_size = .33,
-				seed = None,
-				maxPower = 1,
-				**kwargs):
-		# Set all the necessary parameters for tents function
-		self.feature_function = fF.tent
-		self.useAdaptivePart = False
-
-		self.d = d
-		self.delta = delta
-		self.epsilon = epsilon
-		self.clf_model = clf_model
-		self.seed = seed
-		self.test_size = test_size
-		self.maxPower = maxPower
-		self.__dict__.update(kwargs)
-
-
-	def check(self):
-		# Check for all the parameters required for tents function
-		# TODO
-		print("This hasn't been made yet. Ask me later.")
-		pass
-
 
 	def setBoundingBox(self,DgmsPD,pad = 0):
 		"""!@brief Sets a bounding box in the birth-lifetime planeself.
@@ -280,7 +209,83 @@ class TentParameters(ParameterBucket):
 		return True
 
 
-	def chooseDeltaEpsWithPadding(self, DgmsSeries, pad = 0):
+
+## A new type of parameter ParameterBucket
+#
+# This is the type specially built for tents
+class InterpPolyParameters(ParameterBucket):
+
+	def __init__(self, d = 3,
+					useAdaptivePart = False,
+					meshingScheme = 'DV',
+					jacobi_poly = 'cheb1',
+				clf_model = RidgeClassifierCV,
+				test_size = .33,
+				seed = None,
+				maxPower = 1,
+				**kwargs
+					):
+		# Set all the necessary parameters for tents function
+		# TODO
+
+		self.feature_function = fF.interp_polynomial
+		self.partitions = None
+		self.jacobi_poly = jacobi_poly
+		self.d = d
+		self.useAdaptivePart = useAdaptivePart #This should be boolean
+		self.meshingScheme = meshingScheme
+		self.clf_model = clf_model
+		self.seed = seed
+		self.test_size = test_size
+		self.maxPower = maxPower
+		self.__dict__.update(kwargs)
+
+
+	def check(self):
+		# Check for all the parameters required for tents function
+		# TODO
+		print("This hasn't been made yet. Ask me later.")
+		pass
+
+
+
+
+## A new type of parameter ParameterBucket
+#
+# This is the type specially built for tents
+class TentParameters(ParameterBucket):
+
+	def __init__(self, d = 10, delta = 1, epsilon = 0,
+				clf_model = RidgeClassifierCV,
+				test_size = .33,
+				seed = None,
+				maxPower = 1,
+				**kwargs):
+		# Set all the necessary parameters for tents function
+		self.feature_function = fF.tent
+		self.useAdaptivePart = False
+
+		self.d = d
+		self.delta = delta
+		self.epsilon = epsilon
+		self.clf_model = clf_model
+		self.seed = seed
+		self.test_size = test_size
+		self.maxPower = maxPower
+		self.__dict__.update(kwargs)
+
+
+	def check(self):
+		# Check for all the parameters required for tents function
+		# TODO
+		print("This hasn't been made yet. Ask me later.")
+		pass
+
+
+
+
+
+	def chooseDeltaEpsWithPadding(self, DgmsPD, pad = 0):
 		"""!@brief Sets delta and epsilon for tent function mesh
 
 		@param DgmsSeries is pd.series consisting of persistence diagrams
@@ -294,25 +299,29 @@ class TentParameters(ParameterBucket):
 
 
 		"""
+		if isinstance(DgmsPD, pd.DataFrame):
+			AllDgms = []
+			for label in DgmsPD.columns:
+				DgmsSeries = DgmsPD[label]
+				AllDgms.extend(list(DgmsSeries))
 
-		if not hasattr(self, 'boundingBox'):
+			DgmsSeries = pd.Series(AllDgms)
 
-			topPers = pP.maxPersistenceSeries(DgmsSeries)
-			bottomPers = pP.minPersistenceSeries(DgmsSeries)
-			topBirth = max(DgmsSeries.apply(pP.maxBirth))
+		elif isinstance(DgmsPD, pd.Series):
+			DgmSeries = DgmsPD
 
-			height = max(topPers,topBirth)
+		topPers = pP.maxPersistenceSeries(DgmsSeries)
+		bottomPers = pP.minPersistenceSeries(DgmsSeries)
+		topBirth = max(DgmsSeries.apply(pP.maxBirth))
 
-			bottomBirth = min(DgmsSeries.apply(pP.minBirth))
-			if bottomBirth < 0:
-				print('This code assumes that birth time is always positive\nbut you have negative birth times....')
-				print('Your minimum birth time was', bottomBirth)
-		else:
-			bottomPers = self.boundingBox['lifetimeAxis'][0]
+		height = max(topPers,topBirth)
 
-			topBirth = self.boundingBox['birthAxis'][1]
-			topPers = self.boundingBox['lifetimeAxis'][1]
-			height = max(topBirth, topPers)
+		bottomBirth = min(DgmsSeries.apply(pP.minBirth))
+
+
+		if bottomBirth < 0:
+			print('This code assumes that birth time is always positive\nbut you have negative birth times....')
+			print('Your minimum birth time was', bottomBirth)
 
 		epsilon = bottomPers/2
 
@@ -503,9 +512,9 @@ def getPercentScore(DgmsDF,
 					verbose = True
 					):
 
-	print('---')
-	print('Beginning experiment.')
 	if verbose:
+		print('---')
+		print('Beginning experiment.')
 		print(params)
 
 
@@ -564,7 +573,7 @@ def getPercentScore(DgmsDF,
 	if verbose:
 		print('Score on testing set: ' + str(score) +"...\n")
 
-	print('Finished with train/test experiment.')
+		print('Finished with train/test experiment.')
 
 	output = {}
 	output['score'] = score
