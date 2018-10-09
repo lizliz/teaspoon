@@ -36,6 +36,7 @@ import itertools
 
 
 print('-'*37)
+print('You imported teaspoon.ML.tents')
 print('This module is on its way out.  The majority of the content')
 print('has been moved to into teaspoon.ML.Base.')
 

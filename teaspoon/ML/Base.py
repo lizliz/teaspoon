@@ -90,7 +90,7 @@ class ParameterBucket(object):
 		return output
 
 
-	def makeAdaptivePartition(self, DgmsSeries, type = 'BirthDeath',meshingScheme = 'DV'):
+	def makeAdaptivePartition(self, DgmsPD, type = 'BirthDeath',meshingScheme = 'DV'):
 		'''
 		Combines all persistence diagrams in the series together, then generates an adaptive partition mesh and includes it in the parameter bucket as self.partitions
 
@@ -99,7 +99,16 @@ class ParameterBucket(object):
 		'''
 
 		# TODO Deal with infinite points???
-		AllPoints = np.concatenate(list(DgmsSeries))
+		try:
+			AllDgms = []
+			for label in DgmsPD.columns:
+				DgmsSeries = DgmsPD[label]
+				AllDgms.extend(list(DgmsSeries))
+
+			AllPoints = np.concatenate(AllDgms)
+		except:
+			# you had a series to start with
+			AllPoints = np.concatenate(list(DgmsPD))
 		x = AllPoints[:,0]
 		y = AllPoints[:,1]
 		if type == 'BirthDeath':
@@ -120,7 +129,7 @@ class ParameterBucket(object):
 class InterpPolyParameters(ParameterBucket):
 
 	def __init__(self, d = 3,
-					useAdapativePart = False,
+					useAdaptivePart = False,
 					meshingScheme = 'DV',
 					jacobi_poly = 'cheb1',
 				clf_model = RidgeClassifierCV,
@@ -136,7 +145,7 @@ class InterpPolyParameters(ParameterBucket):
 		self.partitions = None
 		self.jacobi_poly = jacobi_poly
 		self.d = d
-		self.useAdapativePart = useAdapativePart #This should be boolean
+		self.useAdaptivePart = useAdaptivePart #This should be boolean
 		self.meshingScheme = meshingScheme
 		self.clf_model = clf_model
 		self.seed = seed
@@ -167,7 +176,7 @@ class TentParameters(ParameterBucket):
 				**kwargs):
 		# Set all the necessary parameters for tents function
 		self.feature_function = fF.tent
-		self.useAdapativePart = False
+		self.useAdaptivePart = False
 
 		self.d = d
 		self.delta = delta
@@ -286,16 +295,24 @@ class TentParameters(ParameterBucket):
 
 		"""
 
-		topPers = pP.maxPersistenceSeries(DgmsSeries)
-		bottomPers = pP.minPersistenceSeries(DgmsSeries)
-		topBirth = max(DgmsSeries.apply(pP.maxBirth))
+		if not hasattr(self, 'boundingBox'):
 
-		height = max(topPers,topBirth)
+			topPers = pP.maxPersistenceSeries(DgmsSeries)
+			bottomPers = pP.minPersistenceSeries(DgmsSeries)
+			topBirth = max(DgmsSeries.apply(pP.maxBirth))
 
-		bottomBirth = min(DgmsSeries.apply(pP.minBirth))
-		if bottomBirth < 0:
-			print('This code assumes that birth time is always positive\nbut you have negative birth times....')
-			print('Your minimum birth time was', bottomBirth)
+			height = max(topPers,topBirth)
+
+			bottomBirth = min(DgmsSeries.apply(pP.minBirth))
+			if bottomBirth < 0:
+				print('This code assumes that birth time is always positive\nbut you have negative birth times....')
+				print('Your minimum birth time was', bottomBirth)
+		else:
+			bottomPers = self.boundingBox['lifetimeAxis'][0]
+
+			topBirth = self.boundingBox['birthAxis'][1]
+			topPers = self.boundingBox['lifetimeAxis'][1]
+			height = max(topBirth, topPers)
 
 		epsilon = bottomPers/2
 
@@ -506,7 +523,7 @@ def getPercentScore(DgmsDF,
 	# Get the portions of the test data frame with diagrams and concatenate into giant series:
 	allDgms = pd.concat((D_train[label] for label in dgm_col))
 
-	if params.useAdapativePart == True:
+	if params.useAdaptivePart == True:
 		# Hand the series to the makeAdaptivePartition function
 		params.makeAdaptivePartition(allDgms, meshingScheme = 'DV')
 	else:
