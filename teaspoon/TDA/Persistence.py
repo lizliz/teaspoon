@@ -25,7 +25,8 @@ from subprocess import DEVNULL, STDOUT, call
 from scipy.spatial.distance import pdist, squareform
 import glob
 import warnings
-import re
+from collections import defaultdict
+import ast
 
 
 #-----------------------------------------------------#
@@ -77,68 +78,101 @@ def readPerseusOutput(outputFileName):
 
     return Dgms    
 
-
-def readRipserString(s):
-
-    birth_death_str = re.findall(r"(\d*[.]?\d*)", s)
-    
-    stuff = list(filter(None, birth_death_str))
-    
-    if not stuff:
-#        print("empty stuff: {}". format(stuff))
-        return np.nan
-    else:
-#        print("full stuff: {}".format(stuff))
-        return float(stuff[0])
-    
-
 def readRipserOutput(out, drop_inf_class=True):
-    # split into persistence diagrams
-    Dgms = {}
-	
-    # Find locations where the text splits the output
-    breaks = [i for i, s in enumerate(out) if 'persistence' in s]
-	
-    for j in range(len(breaks)):
-        # Get the dimension using regex
-        dim = int(re.search('\d+', out[breaks[j]]).group(0))
+    """
+    Parse a list of lines output from Ripser.
 
-        # Extract the portions of the output between
-        # the places that say persistence.
-        # Note the len(out)-1 for the endIndex is because
-        # the last entry of out is a blank space ' '
-        #		startIndex = breaks[j]
-        if j+1 == len(breaks):
-            endIndex = len(out)-1
-        else:
-            endIndex = breaks[j+1]
-            
-        Dgm = out[breaks[j]+1 : endIndex]
-        Dgm = [X.strip()[2:-1].split(',') for X in Dgm]
-        
-        # use regular expressions to extract the birth/death times
-        Dgm = [[readRipserString(X) for X in row]   for row in Dgm]
-        
-        # get rid of spurious dimensions, and reshape into D x 2
-        Dgm = np.squeeze(Dgm).reshape((-1, 2))
-    
-        # check that the diagram is not empty
-        if Dgm.size > 0: 
-            # for 0-dim persistence, set birth time to zero
-            if dim is 0:
-                Dgm[:,0] = 0
+    Args:
+        out: list of lines from stdout produced by Ripser
+        drop_inf_class: bool,
 
-            # if the last entry is nan it signals an infinite class,set to inf
-            if np.isnan(Dgm[-1, 1]):
-                Dgm[-1, 1] = np.inf
-                
-            # remove the row with infinite classes, if requested 
-            if drop_inf_class and np.isinf(Dgm[-1, 1]):
-                Dgm = np.delete(Dgm, -1, 0) 
-        
-        # add the diagram to the dictionary
-        Dgms[dim] = Dgm
-    return Dgms
+    Returns:
+        dict keyed by dimension, with values as lists of intervals
+    """
+    def _convert_to_2dim(x):
+        return [x[0], np.inf]
+
+        # store intervals by dimension
+    simplices = defaultdict(list)
+    for line in out:
+        line = line.lstrip().rstrip()
+        if "persistence intervals" in line:
+            # assumes only using single-digit dimensions
+            dim = int(line[-2])
+        if line.startswith("["):
+            interval = tuple(ast.literal_eval(line.replace("[", "(")))
+            if len(interval) == 2:
+                simplices[dim].append(interval)
+            # Handles the case for 0-dim homology for the infinite generator (0,), which needs to be converted
+            # to (0, inf), or just dropped
+            elif len(interval) < 2 and drop_inf_class is False:
+                simplices[dim].append(_convert_to_2dim(interval))
+            else:
+                continue
+    return simplices
+
+    #
+# def readRipserString(s):
+#
+#     birth_death_str = re.findall(r"(\d*[.]?\d*)", s)
+#
+#     stuff = list(filter(None, birth_death_str))
+#
+#     if not stuff:
+# #        print("empty stuff: {}". format(stuff))
+#         return np.nan
+#     else:
+# #        print("full stuff: {}".format(stuff))
+#         return float(stuff[0])
+#
+#
+# def readRipserOutput(out, drop_inf_class=True):
+#     # split into persistence diagrams
+#     Dgms = {}
+#
+#     # Find locations where the text splits the output
+#     breaks = [i for i, s in enumerate(out) if 'persistence' in s]
+#
+#     for j in range(len(breaks)):
+#         # Get the dimension using regex
+#         dim = int(re.search('\d+', out[breaks[j]]).group(0))
+#
+#         # Extract the portions of the output between
+#         # the places that say persistence.
+#         # Note the len(out)-1 for the endIndex is because
+#         # the last entry of out is a blank space ' '
+#         #		startIndex = breaks[j]
+#         if j+1 == len(breaks):
+#             endIndex = len(out)-1
+#         else:
+#             endIndex = breaks[j+1]
+#
+#         Dgm = out[breaks[j]+1 : endIndex]
+#         Dgm = [X.strip()[2:-1].split(',') for X in Dgm]
+#
+#         # use regular expressions to extract the birth/death times
+#         Dgm = [[readRipserString(X) for X in row]   for row in Dgm]
+#
+#         # get rid of spurious dimensions, and reshape into D x 2
+#         Dgm = np.squeeze(Dgm).reshape((-1, 2))
+#
+#         # check that the diagram is not empty
+#         if Dgm.size > 0:
+#             # for 0-dim persistence, set birth time to zero
+#             if dim is 0:
+#                 Dgm[:,0] = 0
+#
+#             # if the last entry is nan it signals an infinite class,set to inf
+#             if np.isnan(Dgm[-1, 1]):
+#                 Dgm[-1, 1] = np.inf
+#
+#             # remove the row with infinite classes, if requested
+#             if drop_inf_class and np.isinf(Dgm[-1, 1]):
+#                 Dgm = np.delete(Dgm, -1, 0)
+#
+#         # add the diagram to the dictionary
+#         Dgms[dim] = Dgm
+#     return Dgms
 
 #-----------------------------------------------------#
 #-----------------------------------------------------#
