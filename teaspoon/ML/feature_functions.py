@@ -30,7 +30,7 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
     :Parameter Dgm:
      	A persistence diagram, given as a :math:`K \times 2` numpy array
     :Parameter params:
-     	An tents.ParameterBucket object.  Really, we need d, delta, and epsilon from that.
+     	An tents.ParameterBucket object.  Really, we need d, delta, epsilon, and the partitions from that.
     :Parameter type:
     	This code accepts diagrams either
             1. in (birth, death) coordinates, in which case `type = 'BirthDeath'`, or
@@ -49,6 +49,8 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
 .. note:: This code does not take care of the maxPower polynomial stuff.  The build_G() function does it after all the rows have been calculated.
 
     '''
+
+
     d = params.d
 
     delta = params.delta
@@ -67,49 +69,59 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
         print('Exiting...')
         return
 
-    I, J = np.meshgrid(range(d + 1), range(1, d + 1))
+    all_out = []
+    # first, get the entries in Dgm that are within each partition
+    for partition in params.partitions:
 
-    Iflat = delta * I.reshape(np.prod(I.shape))
-    Jflat = delta * J.reshape(np.prod(I.shape)) + epsilon
+        Asub = getSubset(A, partition)
 
-    Irepeated = Iflat.repeat(Dgm.shape[0])
-    Jrepeated = Jflat.repeat(Dgm.shape[0])
+        I, J = np.meshgrid(range(d + 1), range(1, d + 1))
 
-    DgmRepeated = np.tile(A, (len(Iflat), 1))
+        Iflat = delta * I.reshape(np.prod(I.shape))
+        Jflat = delta * J.reshape(np.prod(I.shape)) + epsilon
 
-    BigIJ = np.array((Irepeated, Jrepeated)).T
+        Irepeated = Iflat.repeat(Asub.shape[0])
+        Jrepeated = Jflat.repeat(Asub.shape[0])
 
-    B = DgmRepeated - BigIJ
-    B = np.abs(B)
-    B = np.max(B, axis=1)
-    B = delta - B
-    B = np.where(B >= 0, B, 0)
-    B = B.reshape((Iflat.shape[0], Dgm.shape[0]))
-    out = np.sum(B, axis=1)
+        DgmRepeated = np.tile(Asub, (len(Iflat), 1))
 
-    out = out.reshape((d, d + 1)).T.flatten()
-    out = out / delta
+        BigIJ = np.array((Irepeated, Jrepeated)).T
 
-    # TO BE REMOVED.... THIS HAS BEEN MOVED TO build_G()
-    # if params.maxPower >1:
+        B = DgmRepeated - BigIJ
+        B = np.abs(B)
+        B = np.max(B, axis=1)
+        B = delta - B
+        B = np.where(B >= 0, B, 0)
+        B = B.reshape((Iflat.shape[0], Asub.shape[0]))
+        out = np.sum(B, axis=1)
 
-    # 	BigOuts = [out]
-    # 	# Make 2 using np.triu_indices
-    # 	indices = np.array(np.triu_indices(len(out)))
-    # 	C = out[indices.T]
-    # 	C = np.prod(C,1)
-    # 	BigOuts.append(C)
-    # 	# Make 3 or above using itertools
-    # 	# NOTE: This is incredibly slow and should be improved.
-    # 	for i in range(3,params.maxPower + 1):
-    # 		C = [a for a in itertools.combinations_with_replacement(out,i)]
-    # 		C = np.array(C)
-    # 		C = np.prod(C,1)
-    # 		BigOuts.append(C)
-    # 	# turn all of them into one long vector
-    # 	out = np.concatenate(BigOuts)
+        out = out.reshape((d, d + 1)).T.flatten()
+        out = out / delta
 
-    return out
+        # TO BE REMOVED.... THIS HAS BEEN MOVED TO build_G()
+        # if params.maxPower >1:
+
+        # 	BigOuts = [out]
+        # 	# Make 2 using np.triu_indices
+        # 	indices = np.array(np.triu_indices(len(out)))
+        # 	C = out[indices.T]
+        # 	C = np.prod(C,1)
+        # 	BigOuts.append(C)
+        # 	# Make 3 or above using itertools
+        # 	# NOTE: This is incredibly slow and should be improved.
+        # 	for i in range(3,params.maxPower + 1):
+        # 		C = [a for a in itertools.combinations_with_replacement(out,i)]
+        # 		C = np.array(C)
+        # 		C = np.prod(C,1)
+        # 		BigOuts.append(C)
+        # 	# turn all of them into one long vector
+        # 	out = np.concatenate(BigOuts)
+
+        #
+
+        all_out = np.concatenate((all_out, out), axis=0)
+
+    return all_out
 
 def sub2ind(array_shape, rows, cols):
     '''
@@ -329,7 +341,7 @@ def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
     '''
     #	jacobi_func = params.jacobi_func
 
-    # check if we asked for a squre mesh or not
+    # check if we asked for a square mesh or not
     if isinstance(params.d, int):
         nx = params.d
         ny = params.d
@@ -351,8 +363,10 @@ def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
         print('Exiting...')
         return
 
+    all_weights = []
     # first, get the entries in Dgm that are within each partition
     for partition in params.partitions:
+
         query_Dgm_pts = getSubset(A, partition)
 
         # get the number of query points
@@ -361,7 +375,9 @@ def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
         # check if the intersection of the Dgm and the partition is empty.
         # If it is, pass back zeros
         if num_query_pts == 0:
-            return np.zeros((nx + 1) * (ny + 1))
+            all_weights = np.concatenate((all_weights, np.zeros((nx + 1) * (ny +1))), axis=0)
+            continue
+            #return np.zeros((nx + 1) * (ny + 1))
 
         # get the query points. xq are the brith times, yq are the death times.
         xq, yq = query_Dgm_pts[:, 0], query_Dgm_pts[:, 1]
@@ -408,7 +424,7 @@ def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
         Psi = Gamma * Phi
 
         # split column-wise, then concatenate row-wise
-        #    if Psi.size > 0:  # check that Psi is not empty
+        # if Psi.size > 0:  # check that Psi is not empty
         Psi = np.concatenate(np.split(Psi, num_query_pts, axis=1), axis=0)
 
         # now reshape Psi so that each row corresponds to the weights of one query pt
@@ -417,12 +433,16 @@ def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
         # get the weights for each interpolation function/base-point
         interp_weights = np.sum(np.abs(Psi), axis=0)
 
-        #    print('I ran the feature function!')
-        #    plt.figure(10)
-        #    plt.plot(np.abs(interp_weights),'x')
-        #    plt.show()
+        # print('I ran the feature function!')
+        # print(partition)
+        # plt.figure(10)
+        # plt.plot(np.abs(interp_weights),'x')
+        # plt.show()
 
-        return np.abs(interp_weights)
+        all_weights = np.concatenate((all_weights, np.abs(interp_weights)), axis=0)
+        #return np.abs(interp_weights)
+
+    return all_weights
 
 
 # this function returns the points from querSet that are within the baseRecatangle

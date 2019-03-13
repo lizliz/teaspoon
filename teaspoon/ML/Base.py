@@ -140,7 +140,6 @@ class ParameterBucket(object):
 			for label in DgmsPD.columns:
 				DgmsSeries = DgmsPD[label]
 				AllDgms.extend(list(DgmsSeries))
-
 			AllPoints = np.concatenate(AllDgms)
 		except:
 			# you had a series to start with
@@ -390,8 +389,8 @@ def build_G(DgmSeries, params):
 	# 	return
 
 	applyFeaturization = lambda x: params.feature_function(x,params = params)
-	G = np.array(list(DgmSeries.apply(applyFeaturization )))
 
+	G = np.array(list(DgmSeries.apply(applyFeaturization )))
 	# Include powers if necessary
 	try:
 		if params.maxPower>1:
@@ -572,7 +571,7 @@ def getPercentScore(DgmsDF,
 		# Hand the series to the makeAdaptivePartition function
 		params.makeAdaptivePartition(allDgms, meshingScheme = 'DV')
 	else:
-		# TODO this should work for both interp and tents but doesn't yet
+		# Just use the bounding box as the partition
 		params.makeAdaptivePartition(allDgms, meshingScheme = None)
 
 	#--------Training------------#
@@ -616,4 +615,4 @@ def getPercentScore(DgmsDF,
 	output['DgmsDF'] = DgmsDF
 	output['clf'] = clf
 
-	return output
+	return output, allDgms, D_test[dgmColLabel]
