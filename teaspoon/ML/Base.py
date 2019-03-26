@@ -14,21 +14,21 @@ import teaspoon.ML.feature_functions as fF
 from sklearn.linear_model import RidgeClassifierCV
 
 params = Base.TentParameters(clf_model = RidgeClassifierCV,
-                             feature_function = fF.tent,
-                              test_size = .33,
-                              seed = 48824,
-                              d = 10,
-                              delta = 1,
-                              epsilon = 0
-                             )
+							 feature_function = fF.tent,
+							  test_size = .33,
+							  seed = 48824,
+							  d = 10,
+							  delta = 1,
+							  epsilon = 0
+							 )
 
 DgmsDF = gPC.testSetClassification(N = 20,
-                                  numDgms = 50,
-                                  muRed = (1,3),
-                                  muBlue = (2,5),
-                                  sd = 1,
-                                   seed = 48824
-                                  )
+								  numDgms = 50,
+								  muRed = (1,3),
+								  muBlue = (2,5),
+								  sd = 1,
+								   seed = 48824
+								  )
 
 out = Base.getPercentScore(DgmsDF,dgm_col = 'Dgm', labels_col = 'trainingLabel', params = params )
 
@@ -159,6 +159,7 @@ class ParameterBucket(object):
 
 		self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme)
 
+		
 	def setBoundingBox(self,DgmsPD,pad = 0):
 		"""!@brief Sets a bounding box in the birth-lifetime planeself.
 
@@ -243,6 +244,41 @@ class ParameterBucket(object):
 
 		return True
 
+	def testEnclosesDgmsPartition(self, DgmSeries):
+		'''!
+		@brief Tests to see if the parameters enclose the persistence diagrams in the DgmSeries
+
+		@returns boolean
+
+		@todo Change this to work with self.boundingbox instead of d, delta, and epsilon
+		'''
+
+		# Height of parallelogram; equivalently maximum lifetime enclosed
+
+		height = self.d * self.delta + self.epsilon
+		width = self.d * self.delta
+
+		minBirth = pP.minBirthSeries(DgmSeries)
+		if minBirth <0:
+			print("This code assumes positive birth times.")
+			return False
+
+		maxBirth = pP.maxBirthSeries(DgmSeries)
+		if maxBirth > width:
+			print('There are birth times outside the bounding box.')
+			return False
+
+		minPers = pP.minPersistenceSeries(DgmSeries)
+		if minPers < self.epsilon:
+			print('There are points below the epsilon shift.')
+			return False
+
+		maxPers = pP.maxPersistenceSeries(DgmSeries)
+		if maxPers > height:
+			print('There are points above the box.')
+			return False
+
+		return True
 
 
 ## A new type of parameter ParameterBucket
@@ -345,6 +381,10 @@ class TentParameters(ParameterBucket):
 		elif isinstance(DgmsPD, pd.Series):
 			DgmsSeries = DgmsPD
 
+		else:
+			print('Uh oh, you were supposed to pass a pd.series. \nExiting...')
+			return
+
 
 		topPers = pP.maxPersistenceSeries(DgmsSeries)
 		bottomPers = pP.minPersistenceSeries(DgmsSeries)
@@ -366,6 +406,15 @@ class TentParameters(ParameterBucket):
 
 		self.delta = delta
 		self.epsilon = epsilon
+
+	def chooseDeltaForPartitions(self, Partitions, d, pad=0):
+
+		# Not sure pad thing will work... or if we want it to work... just dont use it right now
+		for partition in Partitions.partitionBucket:    
+			xdiff = (Partitions.xFloats[ partition['nodes'][1] -1 ] - pad) - (Partitions.xFloats[ partition['nodes'][0] -1 ] + pad)
+			ydiff = (Partitions.yFloats[ partition['nodes'][3] -1 ] - pad) - (Partitions.yFloats[ partition['nodes'][2] -1 ] + pad)
+		
+			partition['delta'] = max(xdiff,ydiff) / d
 
 #-------------------------------------------------------------------------
 #-------------------------------------------------------------------------

@@ -53,7 +53,10 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
 
     d = params.d
 
-    delta = params.delta
+    print("delta is now rigged to be set for each partitions separately...")
+    print("PROBLEM! Each partition still starts from 0 so this doesn't work at all right now... Fix it!!")
+
+    # delta = params.delta
     epsilon = params.epsilon
     # print(Dgm[:3])
     # Move to birth,lifetime plane
@@ -72,7 +75,10 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
     all_out = []
     # first, get the entries in Dgm that are within each partition
     for partition in params.partitions:
-        #print(partition)
+        # print(partition)
+
+        # Get delta from partition bucket - each delta is specific to the partition you are in
+        delta = partition['delta']
 
         Asub = getSubset(A, partition)
 
