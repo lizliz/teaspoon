@@ -332,7 +332,7 @@ class TentParameters(ParameterBucket):
 		\f[  [0,d \cdot \delta] \, \times \, [\epsilon, d \cdot \delta + \epsilon].  \f]
 		In the usual coordinates, this creates a parallelogram.
 
-
+		
 		"""
 		if isinstance(DgmsPD, pd.DataFrame):
 			AllDgms = []
@@ -343,7 +343,8 @@ class TentParameters(ParameterBucket):
 			DgmsSeries = pd.Series(AllDgms)
 
 		elif isinstance(DgmsPD, pd.Series):
-			DgmSeries = DgmsPD
+			DgmsSeries = DgmsPD
+
 
 		topPers = pP.maxPersistenceSeries(DgmsSeries)
 		bottomPers = pP.minPersistenceSeries(DgmsSeries)
@@ -366,7 +367,7 @@ class TentParameters(ParameterBucket):
 		self.delta = delta
 		self.epsilon = epsilon
 
-
+		print(self.partitions)
 
 #-------------------------------------------------------------------------
 #-------------------------------------------------------------------------

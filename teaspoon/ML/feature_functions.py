@@ -72,8 +72,12 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
     all_out = []
     # first, get the entries in Dgm that are within each partition
     for partition in params.partitions:
+        #print(partition)
 
         Asub = getSubset(A, partition)
+
+        # if len(Asub) != 0:
+        #     print(Asub)
 
         I, J = np.meshgrid(range(d + 1), range(1, d + 1))
 
@@ -361,13 +365,15 @@ def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
     else:
         print('Your choices for type are "BirthDeath" or "BirthLifetime".')
         print('Exiting...')
-        return
-
+        
+    
     all_weights = []
     # first, get the entries in Dgm that are within each partition
     for partition in params.partitions:
 
         query_Dgm_pts = getSubset(A, partition)
+
+        print(query_Dgm_pts)
 
         # get the number of query points
         num_query_pts = len(query_Dgm_pts)
@@ -447,6 +453,7 @@ def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
 
 # this function returns the points from querSet that are within the baseRecatangle
 def getSubset(querySet, baseRectangle):
+
     # get the rectangel corners
     xmin = baseRectangle['nodes'][0];
     xmax = baseRectangle['nodes'][1];
