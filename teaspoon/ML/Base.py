@@ -367,8 +367,6 @@ class TentParameters(ParameterBucket):
 		self.delta = delta
 		self.epsilon = epsilon
 
-		print(self.partitions)
-
 #-------------------------------------------------------------------------
 #-------------------------------------------------------------------------
 #--------ML on diagrams using featurization ------------------------------
