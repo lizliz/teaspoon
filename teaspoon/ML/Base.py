@@ -244,42 +244,6 @@ class ParameterBucket(object):
 
 		return True
 
-	def testEnclosesDgmsPartition(self, DgmSeries):
-		'''!
-		@brief Tests to see if the parameters enclose the persistence diagrams in the DgmSeries
-
-		@returns boolean
-
-		@todo Change this to work with self.boundingbox instead of d, delta, and epsilon
-		'''
-
-		# Height of parallelogram; equivalently maximum lifetime enclosed
-
-		height = self.d * self.delta + self.epsilon
-		width = self.d * self.delta
-
-		minBirth = pP.minBirthSeries(DgmSeries)
-		if minBirth <0:
-			print("This code assumes positive birth times.")
-			return False
-
-		maxBirth = pP.maxBirthSeries(DgmSeries)
-		if maxBirth > width:
-			print('There are birth times outside the bounding box.')
-			return False
-
-		minPers = pP.minPersistenceSeries(DgmSeries)
-		if minPers < self.epsilon:
-			print('There are points below the epsilon shift.')
-			return False
-
-		maxPers = pP.maxPersistenceSeries(DgmSeries)
-		if maxPers > height:
-			print('There are points above the box.')
-			return False
-
-		return True
-
 
 ## A new type of parameter ParameterBucket
 #
@@ -407,15 +371,82 @@ class TentParameters(ParameterBucket):
 		self.delta = delta
 		self.epsilon = epsilon
 
+
+
+	def chooseEpsilon(self, DgmsPD):
+		if isinstance(DgmsPD, pd.DataFrame):
+			AllDgms = []
+			for label in DgmsPD.columns:
+				DgmsSeries = DgmsPD[label]
+				AllDgms.extend(list(DgmsSeries))
+
+			DgmsSeries = pd.Series(AllDgms)
+
+		elif isinstance(DgmsPD, pd.Series):
+			DgmsSeries = DgmsPD
+
+		else:
+			print('Uh oh, you were supposed to pass a pd.series. \nExiting...')
+			return
+
+		bottomPers = pP.minPersistenceSeries(DgmsSeries)
+		epsilon = bottomPers/2
+
+		self.epsilon = epsilon
+
+
+
 	def chooseDeltaForPartitions(self, Partitions, d, pad=0):
+		"""!@brief Sets delta and epsilon for tent function mesh - this is an alternative to chooseDeltaEpsWithPadding.
+		It also assigns d to each partition. Currently the only option is to use the same d for each partition but this may change in the future.
+		This function chooses delta based on each partition and adds it to the partition bucket as another dictionary element.
 
-		# Not sure pad thing will work... or if we want it to work... just dont use it right now
-		for partition in Partitions.partitionBucket:    
-			xdiff = (Partitions.xFloats[ partition['nodes'][1] -1 ] - pad) - (Partitions.xFloats[ partition['nodes'][0] -1 ] + pad)
-			ydiff = (Partitions.yFloats[ partition['nodes'][3] -1 ] - pad) - (Partitions.yFloats[ partition['nodes'][2] -1 ] + pad)
+		@param Partitions is a partition bucket (ie a list of dictionaries, one for each partition)
+
+		@param d is the mesh parameter for within a partition
+
+		@param pad is the additional padding outside of the points in the diagrams (this doesn't work currently don't use it)
 		
-			partition['delta'] = max(xdiff,ydiff) / d
+		"""
 
+		if pad != 0:
+			print("Sorry padding doesn't work right now... Setting pad back to zero and continuing")
+			pad = 0
+
+		# in here somewhere we could account for if we're too close to zero or if we want
+		# to add padding but it would cause us to go past zero... 
+		# lots of little details to figure out
+
+
+		# choose delta to be the max of the width or the height of the partition divided by d
+		# Note need to iterate over partitionBucket so we can add dictionary elements
+		for partition in Partitions.partitionBucket:    
+			xmin = Partitions.xFloats[ partition['nodes'][0] -1 ] 
+			xmax = Partitions.xFloats[ partition['nodes'][1] -1 ] 
+			ymin = Partitions.yFloats[ partition['nodes'][2] -1 ]
+			ymax = Partitions.yFloats[ partition['nodes'][3] -1 ]
+
+			# xmin = partition['nodes'][0]
+			# xmax = partition['nodes'][1]
+			# ymin = partition['nodes'][2]
+			# ymax = partition['nodes'][3]
+
+			xdiff = xmax - xmin
+			ydiff = ymax - ymin
+		
+			delta = max(xdiff,ydiff) / d
+
+			partition['delta'] = delta
+
+			if xmin - delta < 0:
+				print('Uh oh your support will cross the diagonal')
+
+			# Assign d as an element in the dictionary for each partition
+			partition['d'] = d
+
+		print("Note, delta is stored in a new place now!!")
+		print("To retrieve the delta you calculated look in the parition bucket, not the general parameter bucket")
+		print("Each partition has its own delta. Tent function takes this into account already.")
 #-------------------------------------------------------------------------
 #-------------------------------------------------------------------------
 #--------ML on diagrams using featurization ------------------------------

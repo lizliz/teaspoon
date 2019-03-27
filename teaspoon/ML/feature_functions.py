@@ -50,8 +50,13 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
 
     '''
 
+    if len(d) == 2:
+        dx = params.d[0]
+        dy = params.d[1]
+    else:
+        dx = params.d
+        dy = params.d
 
-    d = params.d
 
     print("delta is now rigged to be set for each partitions separately...")
     print("PROBLEM! Each partition still starts from 0 so this doesn't work at all right now... Fix it!!")
@@ -85,7 +90,7 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
         # if len(Asub) != 0:
         #     print(Asub)
 
-        I, J = np.meshgrid(range(d + 1), range(1, d + 1))
+        I, J = np.meshgrid(range(dx + 1), range(1, dy + 2))
 
         Iflat = delta * I.reshape(np.prod(I.shape))
         Jflat = delta * J.reshape(np.prod(I.shape)) + epsilon
@@ -105,7 +110,7 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
         B = B.reshape((Iflat.shape[0], Asub.shape[0]))
         out = np.sum(B, axis=1)
 
-        out = out.reshape((d, d + 1)).T.flatten()
+        out = out.reshape((d + 1, d + 1)).T.flatten()
         out = out / delta
 
         # TO BE REMOVED.... THIS HAS BEEN MOVED TO build_G()
@@ -457,10 +462,10 @@ def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
     return all_weights
 
 
-# this function returns the points from querSet that are within the baseRecatangle
+# this function returns the points from querySet that are within the baseRecatangle
 def getSubset(querySet, baseRectangle):
 
-    # get the rectangel corners
+    # get the rectangle corners
     xmin = baseRectangle['nodes'][0];
     xmax = baseRectangle['nodes'][1];
     ymin = baseRectangle['nodes'][2];
