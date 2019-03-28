@@ -56,6 +56,9 @@ from sklearn import metrics
 from sklearn.preprocessing import scale, PolynomialFeatures
 from scipy.special import comb
 import itertools
+from copy import deepcopy
+import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 
 
 class ParameterBucket(object):
@@ -126,7 +129,7 @@ class ParameterBucket(object):
 		return output
 
 
-	def makeAdaptivePartition(self, DgmsPD, type = 'BirthDeath',meshingScheme = 'DV'):
+	def makeAdaptivePartition(self, DgmsPD, type = 'BirthDeath',meshingScheme = 'DV',numParts = 3):
 		'''
 		Combines all persistence diagrams in the series together, then generates an adaptive partition mesh and includes it in the parameter bucket as self.partitions
 
@@ -157,7 +160,17 @@ class ParameterBucket(object):
 			life = y
 		fullData = np.column_stack((x,life))
 
-		self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme)
+		self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme, numParts = numParts)
+
+		
+
+		# create new attribute to keep the index of the floats for the partition bucket
+		self.partitions.partitionBucketInd = deepcopy(self.partitions.partitionBucket)
+
+		# convert nodes in partitions to floats in partition bucket
+		for partition in self.partitions.partitionBucket:
+			self.partitions.convertOrdToFloat(partition)
+
 
 		
 	def setBoundingBox(self,DgmsPD,pad = 0):
@@ -372,8 +385,13 @@ class TentParameters(ParameterBucket):
 		self.epsilon = epsilon
 
 
-
 	def chooseEpsilon(self, DgmsPD):
+		"""!@brief Sets epsilon for tent function to be 1/2*(min(lifetime)). 
+
+		@param DgmsPD is a pd.series of persistence diagrams
+
+		"""
+
 		if isinstance(DgmsPD, pd.DataFrame):
 			AllDgms = []
 			for label in DgmsPD.columns:
@@ -396,35 +414,36 @@ class TentParameters(ParameterBucket):
 
 
 
-	def chooseDeltaForPartitions(self, Partitions, d, pad=0):
+	def chooseDeltaEpsForPartitions(self, d=3, epsilon=0, pad=0):
 		"""!@brief Sets delta and epsilon for tent function mesh - this is an alternative to chooseDeltaEpsWithPadding.
-		It also assigns d to each partition. Currently the only option is to use the same d for each partition but this may change in the future.
-		This function chooses delta based on each partition and adds it to the partition bucket as another dictionary element.
+		It also assigns d to each partition and adds it to the partition bucket as another dictionary element. 
+		Currently the only option is to use the same d for each partition but this may change in the future.
+		You can choose different number of divisions in the mesh for x and y directions.
 
 		@param Partitions is a partition bucket (ie a list of dictionaries, one for each partition)
 
-		@param d is the mesh parameter for within a partition
+		@param d is the mesh parameter for within a partition - can be an integer or a list of two ints, first for number of divisions in x direction, and second for number of divisions in y direction.
+
+		@paral epsilon is the epsilon parameter you want assigned (currently it can only assign one number to each of the partitions) 
 
 		@param pad is the additional padding outside of the points in the diagrams (this doesn't work currently don't use it)
 		
 		"""
-
+		
 		if pad != 0:
 			print("Sorry padding doesn't work right now... Setting pad back to zero and continuing")
 			pad = 0
 
-		# in here somewhere we could account for if we're too close to zero or if we want
-		# to add padding but it would cause us to go past zero... 
-		# lots of little details to figure out
-
+		if epsilon != 0: 
+			print("Sorry only option for epsilon is zero right now... This could be updated later...")
 
 		# choose delta to be the max of the width or the height of the partition divided by d
-		# Note need to iterate over partitionBucket so we can add dictionary elements
-		for partition in Partitions.partitionBucket:    
-			xmin = Partitions.xFloats[ partition['nodes'][0] -1 ] 
-			xmax = Partitions.xFloats[ partition['nodes'][1] -1 ] 
-			ymin = Partitions.yFloats[ partition['nodes'][2] -1 ]
-			ymax = Partitions.yFloats[ partition['nodes'][3] -1 ]
+		# Note need to iterate over partitionBucket (not just Partitions class) so we can add dictionary elements
+		for partition in self.partitions.partitionBucket:    
+			xmin = partition['nodes'][0]
+			xmax = partition['nodes'][1]
+			ymin = partition['nodes'][2]
+			ymax = partition['nodes'][3]
 
 			# xmin = partition['nodes'][0]
 			# xmax = partition['nodes'][1]
@@ -438,15 +457,52 @@ class TentParameters(ParameterBucket):
 
 			partition['delta'] = delta
 
-			if xmin - delta < 0:
-				print('Uh oh your support will cross the diagonal')
+			# supportNodes contain the nodes of the bounding box for where tent functions are supported
+			partition['supportNodes'] = [xmin - delta, xmax + delta, ymin - delta, ymax + delta]
+			
+			if partition['supportNodes'][2] < 0:
+				print('Uh oh your support will cross the diagonal, your bottom boundary is ', partition['supportNodes'][2])
+				print('Shifting the boundary of the partition up by necessary amount...')
+				
+				#Shift top boundary up by however negative you went
+				partition['supportNodes'][3] = partition['supportNodes'][3] - (partition['supportNodes'][2])
+
+				#Shift bottom boundary up to zero
+				partition['supportNodes'][2] = 0
+			
 
 			# Assign d as an element in the dictionary for each partition
 			partition['d'] = d
 
-		print("Note, delta is stored in a new place now!!")
-		print("To retrieve the delta you calculated look in the parition bucket, not the general parameter bucket")
-		print("Each partition has its own delta. Tent function takes this into account already.")
+			# Just assigns epsilon based on what you want it to be
+			# TO DO: could implement another method here to calculate it
+			partition['epsilon'] = 0
+
+		print('\nd, delta and epsilon have all been assigned\n')
+
+
+	def plotTentSupport(self):
+		'''!
+		@brief Plots the bounding box of the support of all the tent functions 
+
+		'''
+
+		# plot the partitions
+		for binNode in self.partitions:
+			suppXmin = binNode['supportNodes'][0]
+			suppXmax = binNode['supportNodes'][1]
+			suppYmin = binNode['supportNodes'][2]
+			suppYmax = binNode['supportNodes'][3]
+
+			plt.xlim([suppXmin - 1, suppXmax+1])
+			plt.ylim([suppYmin - 1, suppYmax+1])
+
+			plt.hlines([suppYmin, suppYmax], suppXmin, suppXmax, color='b', linestyles='dashed')
+			plt.vlines([suppXmin, suppXmax], suppYmin, suppYmax, color='b', linestyles='dashed')
+
+		# Doesn't show unless we do this
+		plt.axis('tight')
+
 #-------------------------------------------------------------------------
 #-------------------------------------------------------------------------
 #--------ML on diagrams using featurization ------------------------------
