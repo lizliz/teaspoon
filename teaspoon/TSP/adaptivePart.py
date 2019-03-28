@@ -122,15 +122,15 @@ class Partitions:
     def __iter__(self):
         # iterates over the converted entries in the
         # parameter bucket
-        if hasattr(self,'xFloats'):
-            return map( self.convertOrdToFloat, deepcopy(self.partitionBucket)  )
-        else:
-            return iter(self.partitionBucket)
+        # if hasattr(self,'xFloats'):
+        #     return map( self.convertOrdToFloat, deepcopy(self.partitionBucket)  )
+        # else:
+        return iter(self.partitionBucket)
 
     def iterOrdinal(self):
         # functions just like iter magic method without
         # converting each entry back to its float
-        return iter(self.partitionBucket)
+        return iter(self.partitionBucketInd)
 
     def __str__(self):
         """!
