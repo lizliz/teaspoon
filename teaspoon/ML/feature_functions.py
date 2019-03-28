@@ -46,7 +46,7 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
 
     where :math:`| * |_+` is positive part; equivalently, min of * and 0.
 
-.. note:: This code does not take care of the maxPower polynomial stuff.  The build_G() function does it after all the rows have been calculated.
+    .. note:: This code does not take care of the maxPower polynomial stuff.  The build_G() function does it after all the rows have been calculated.
 
     '''
 
@@ -59,6 +59,8 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
     else:
         print('Uh oh something is wrong with the parameter d...')
         print('d needs to be an int or a list of 2 ints (one for x direction and one for y direction.) ')
+        print('Exiting...')
+        return
 
 
     # delta = params.delta
