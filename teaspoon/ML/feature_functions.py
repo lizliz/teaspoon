@@ -50,19 +50,19 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
 
     '''
 
-    if len(d) == 2:
+    if isinstance(params.d, list):
         dx = params.d[0]
         dy = params.d[1]
-    else:
+    elif isinstance(params.d,int):
         dx = params.d
         dy = params.d
+    else:
+        print('Uh oh something is wrong with the parameter d...')
+        print('d needs to be an int or a list of 2 ints (one for x direction and one for y direction.) ')
 
-
-    print("delta is now rigged to be set for each partitions separately...")
-    print("PROBLEM! Each partition still starts from 0 so this doesn't work at all right now... Fix it!!")
 
     # delta = params.delta
-    epsilon = params.epsilon
+    #epsilon = params.epsilon
     # print(Dgm[:3])
     # Move to birth,lifetime plane
     if dgm_type == 'BirthDeath':
@@ -82,18 +82,33 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
     for partition in params.partitions:
         # print(partition)
 
-        # Get delta from partition bucket - each delta is specific to the partition you are in
+        # Get delta and epsilon from partition bucket
         delta = partition['delta']
+        epsilon = partition['epsilon']
 
+
+        # get the nodes of the support
+        xmin, xmax, ymin, ymax = partition['supportNodes']
+
+        # get nodes of the bounding box for the mesh so everything stays within the support
+        xmin = xmin + delta
+        xmax = xmax - delta
+        ymin = ymin + delta
+        ymax = ymax - delta
+
+        # get subset of points in the diagram that are in the original partition
         Asub = getSubset(A, partition)
 
         # if len(Asub) != 0:
         #     print(Asub)
 
-        I, J = np.meshgrid(range(dx + 1), range(1, dy + 2))
+        I, J = I,J = np.meshgrid(range(dx + 1), range(dy + 1))
 
-        Iflat = delta * I.reshape(np.prod(I.shape))
-        Jflat = delta * J.reshape(np.prod(I.shape)) + epsilon
+        # Iflat = delta * I.reshape(np.prod(I.shape))
+        # Jflat = delta * J.reshape(np.prod(I.shape)) + epsilon
+
+        Iflat = xmin + (delta * I.reshape(np.prod(I.shape)))
+        Jflat = ymin + (delta * J.reshape(np.prod(J.shape))) + epsilon
 
         Irepeated = Iflat.repeat(Asub.shape[0])
         Jrepeated = Jflat.repeat(Asub.shape[0])
@@ -110,7 +125,7 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
         B = B.reshape((Iflat.shape[0], Asub.shape[0]))
         out = np.sum(B, axis=1)
 
-        out = out.reshape((d + 1, d + 1)).T.flatten()
+        out = out.reshape((dx + 1, dy + 1)).T.flatten()
         out = out / delta
 
         # TO BE REMOVED.... THIS HAS BEEN MOVED TO build_G()
