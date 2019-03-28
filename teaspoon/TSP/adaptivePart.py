@@ -12,19 +12,31 @@ import matplotlib.patches as patches
 from copy import deepcopy
 
 class Partitions:
-    '''
-    A data structure for storing a partition coming from an adapative meshing scheme.
-    data is a numpy array of type many by 2
-    data converted to ordinal and stored locally if not already
-    TODO: Finish documentation
-    '''
     def __init__(self, data = None,
                  meshingScheme = None,
                  numParts=3,
                  alpha=0.05):
+        '''
+        A data structure for storing a partition coming from an adapative meshing scheme.
+        
+        :Parameter data:
+            A numpy array of type many by 2
+        
+        :Parameter meshingScheme:
+            The type of meshing scheme. Only option currently is 'DV', a method based on this paper (add paper). Any other input here will only use the bounding box of all points in the Dgms in the training set.     
+        
+        :Parameter numParts:
+            Number of partitions in each direction
+
+        :Parameter alpha:
+            The significance level to test for independence
+
+        TODO: Finish documentation
+        '''
 
         if data is not None:
             # check that the data is in ordinal coordinates
+            # data converted to ordinal and stored locally if not already
             if not self.isOrdinal(data):
                 print("Converting the data to ordinal...")
                 # perform ordinal sampling (ranking) transformation
@@ -53,6 +65,7 @@ class Partitions:
             ymin = data[:,1].min()
             ymax = data[:,1].max()
 
+            # self.borders stores x and y min and max of overall bounding box in 'nodes' and the number of points in the bounding box in 'npts'
             self.borders = {}
             self.borders['nodes'] = np.array([xmin, xmax, ymin, ymax])
             self.borders['npts'] = data.shape[0]
@@ -77,7 +90,17 @@ class Partitions:
         else:
             self.partitionBucket = []
 
+
     def convertOrdToFloat(self,partitionEntry):
+        '''
+        Converts to nodes of a partition entry from ordinal back to floats. 
+
+        :Parameter partitionEntry:
+            The partition that you want to convert.
+
+        :returns:
+            Partition entry with converted nodes. Also sets dictionary element to the converted version.
+        '''
         bdyList = partitionEntry['nodes'].copy()
         # Need to subtract one to deal with counting from
         # 0 vs counting from 1 problems
@@ -100,9 +123,11 @@ class Partitions:
             print("back to floats, but you must have had ordinal")
             print("to begin with so I can't.  Exiting...")
 
+    # magic method to get number of partitions
     def __len__(self):
         return len(self.partitionBucket)
 
+    # magic method ot extract partitions
     def __getitem__(self,key):
         if hasattr(self,'xFloats'): #if the data wasn't ordinal
             entry = self.partitionBucket[key].copy()
@@ -111,31 +136,35 @@ class Partitions:
         else:
             return self.partitionBucket[key]
 
+
     def getOrdinal(self,key):
-        # overrides the builtin magic method in the case where
-        # you had non-ordinal data but still want the ordinal
-        # stuff back.
-        # If the data wasn't ordinal, this has the exact same
-        # effect as self[key]
+        '''
+        Overrides the builtin magic method in the case where you had non-ordinal data but still want the ordinal stuff back.
+        If the data wasn't ordinal, this has the exact same effect as self[key].
+        '''
+
         return self.partitionBucket[key]
 
     def __iter__(self):
-        # iterates over the converted entries in the
-        # parameter bucket
+        '''
+        Iterates over the converted entries in the parameter bucket
+        '''
+
         # if hasattr(self,'xFloats'):
         #     return map( self.convertOrdToFloat, deepcopy(self.partitionBucket)  )
         # else:
         return iter(self.partitionBucket)
 
     def iterOrdinal(self):
-        # functions just like iter magic method without
-        # converting each entry back to its float
+        '''
+        Functions just like iter magic method without converting each entry back to its float
+        '''
         return iter(self.partitionBucketInd)
 
     def __str__(self):
-        """!
-        @brief Nicely prints all currently set values in the bucket.
-        """
+        '''
+        Nicely prints all currently set values in the bucket.
+        '''
         attrs = vars(self)
         output = ''
         output += 'Variables in partition bucket\n'
@@ -146,8 +175,12 @@ class Partitions:
             output += '---\n'
         return output
 
+
     def plot(self):
-        # plot the partitions
+        '''
+        Plot the partitions. Can plot in ordinal or float, whichever is in the partition bucket when it's called.
+        '''
+
         fig1, ax1 = plt.subplots()
         for binNode in self:
             # print(binNode)
@@ -164,10 +197,12 @@ class Partitions:
         # Doesn't show unless we do this
         plt.axis('tight')
 
-    # helper function for error checking. Used to make sure input is in
-    # ordinarl coordinates. It checks that when the two data columns are sorted
-    # they are each equal to an ordered vector with the same number of rows.
+
     def isOrdinal(self, dd):
+        '''
+        Helper function for error checking. Used to make sure input is in ordinal coordinates. 
+        It checks that when the two data columns are sorted they are each equal to an ordered vector with the same number of rows.
+        '''
         return np.all(np.equal(np.sort(dd, axis=0),
                         np.reshape(np.repeat(np.arange(start=1,stop=dd.shape[0]+1),
                                              2), (dd.shape[0], 2))))
@@ -175,12 +210,27 @@ class Partitions:
 
 
 
-    # data: is a manyx2 numpy array that contains all the original data
-    # borders: a dictionary that contains 'nodes' with a numpyu array of Xmin, Xmax, Ymin, Ymax,
-    # and 'npts' which contains the number of points in the bin
-    # r: is the number of partitions
-    # alpha: the significance level to test for independence
+
     def return_partition_DV(self, data, borders, r=2, alpha=0.05):
+        '''
+        Recursive method that partitions the data based on the DV method. 
+
+        :Parameter data:
+            A manyx2 numpy array that contains all the original data
+
+        :Parameter borders:
+            A dictionary that contains 'nodes' with a numpy array of Xmin, Xmax, Ymin, Ymax,
+        
+        :Parameter r:
+            The number of partitions
+
+        :Parameter alpha:
+            The significance level to test for independence
+
+        :returns:
+            List of dictionaries. Each dictionary corresponds to a partition and contains 'nodes', a numpy array of Xmin, Xmax, Ymin, Ymax of the partition, and 'npts', the number of points in the partition.
+        
+        '''
         # extract the bin boundaries
         Xmin = borders['nodes'][0]
         Xmax = borders['nodes'][1]
@@ -289,43 +339,43 @@ class Partitions:
 
         return partitions
 
-#--------------------------------------------------
+# #--------------------------------------------------
 
-# this part tests the adaptive meshing algorithm
-if __name__ == "__main__":
-    # generate a bivariate Gaussian
+# # this part tests the adaptive meshing algorithm
+# if __name__ == "__main__":
+#     # generate a bivariate Gaussian
 
-    # fix the seed For reproducibility
-    np.random.seed(48824)
+#     # fix the seed For reproducibility
+#     np.random.seed(48824)
 
-    # create a bivariate Gaussian
-    mu = np.array([0, 0])  # the means
-    cov = 0.7 # covariance
-    sigma = np.array([[1, cov], [cov, 1]])  # covariance matrix
+#     # create a bivariate Gaussian
+#     mu = np.array([0, 0])  # the means
+#     cov = 0.7 # covariance
+#     sigma = np.array([[1, cov], [cov, 1]])  # covariance matrix
 
-    # create the multivariate random variable
-    nsamples = 2000  # number of random samples
-    x, y = np.random.multivariate_normal(mu, sigma, nsamples).T
+#     # create the multivariate random variable
+#     nsamples = 2000  # number of random samples
+#     x, y = np.random.multivariate_normal(mu, sigma, nsamples).T
 
 
-    # perform ordinal sampling (ranking) transformation
-    xRanked = rankdata(x, method='ordinal')
-    yRanked = rankdata(y, method='ordinal')
+#     # perform ordinal sampling (ranking) transformation
+#     xRanked = rankdata(x, method='ordinal')
+#     yRanked = rankdata(y, method='ordinal')
 
-    # obtain the adaptive mesh
-    numParts = 4
+#     # obtain the adaptive mesh
+#     numParts = 4
 
-    # get the adaptive partition of the data
-    partitionList = Partitions(np.column_stack((xRanked, yRanked)),
-                                       meshingScheme = "DV", numParts=numParts)
+#     # get the adaptive partition of the data
+#     partitionList = Partitions(np.column_stack((xRanked, yRanked)),
+#                                        meshingScheme = "DV", numParts=numParts)
 
-    # plot the partitions
-    partitionList.plot()
+#     # plot the partitions
+#     partitionList.plot()
 
-    # overlay the data
-    plt.plot(xRanked, yRanked, 'r*')
+#     # overlay the data
+#     plt.plot(xRanked, yRanked, 'r*')
 
-    # add formatting
-    plt.axis('tight')
-    # show the figure
-    plt.show()
+#     # add formatting
+#     plt.axis('tight')
+#     # show the figure
+#     plt.show()

@@ -259,7 +259,8 @@ def bary_weights(x):
     '''
     Find the barycentric interplation weights
 
-    Calculate Barycentric weights for the base points x.
+    :Parameter x:
+        Basepoints for Barycentric weights
 
     .. note:: this algorithm may be numerically unstable for high degree
 
@@ -479,8 +480,19 @@ def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
     return all_weights
 
 
-# this function returns the points from querySet that are within the baseRecatangle
 def getSubset(querySet, baseRectangle):
+    '''
+    Helper function that gets the subset of points that are contained within a certain region.
+
+    :Parameter querySet:
+        Set of all points
+
+    :Parameter baseRectange:
+        Dictionary containing key 'nodes' which is a list of [xmin, xmax, ymin, ymax].
+
+    :returns:
+        Many by 2 numpy array of the query points within the rectangle.
+    '''
 
     # get the rectangle corners
     xmin = baseRectangle['nodes'][0];

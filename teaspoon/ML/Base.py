@@ -77,37 +77,28 @@ class ParameterBucket(object):
 					# boundingBoxMatrix = None):
 
 
-		"""!@brief Creates a new ParameterBucket object.
+		'''
+		Creates a new ParameterBucket object.
 
 		This object is being used to keep track of all the parameters needed
 		for the tents ML featurization.
 
 		Parameters that are included in the ParameterBucket initially:
 
-		@param description
+		:Parameter description:
 			A description, has no effect on code. This can be set on initialization.
-		@param clf_model
+		:Parameter clf_model:
 			The choice of tool used for classification or regression, passed as the function.  This code has been tested using `sklearn` functions `RidgeClassiferCV` for classification and `RidgeCV` for regression.
-		@param feature_function
+		:Parameter feature_function:
 			The function you want to use for featurization.  This should be a function that takes as inputs a diagram and a ParameterBucket, and returns a vector of features. The default is ML.feature_functions.tents()
-		@param test_size
+		:Parameter test_size:
 			A number in \f$[0,1]\f$.  Gives the percentage of data points to be reserved for the testing set if this is being used for a train/test split experiment.  Otherwise, ignored.
-		@param seed
+		:Parameter seed:
 			The seed for the pseudo-random number generator.  Pass None if you don't want it fixed; otherwise, pass an integer.
-		@param kwargs
+		:Parameter kwargs:
 			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh. If its set, `boundingbox` keeps track of a box which encloses all points in all diagrams in a particular series; see setBoundingBox().
 
-		"""
-
-
-		# Parameters that used to be included. Documentation left here to figure out stuff for later.
-		#
-		# @param d, delta, epsilon
-		#     The bounding box for the persistence diagram in the (birth, lifetime) coordinates is [0,d * delta] x [epsilon, d* delta + epsilon].  In the usual coordinates, this creates a parallelogram.
-		# @param maxPower
-		#     The maximum degree used for the monomial combinations of the tent functions.  Testing suggests we usually want this to be 1.  Increasing causes large increase in number of features.
-		# @param boundingBoxMatrix
-		# 	Not yet implemented.  See self.findBoundingBox()
+		'''
 
 		self.description = description
 		self.clf_model = clf_model
@@ -117,9 +108,9 @@ class ParameterBucket(object):
 		self.__dict__.update(kwargs)
 
 	def __str__(self):
-		"""!
-		@brief Nicely prints all currently set values in the ParameterBucket.
-		"""
+		'''
+		Nicely prints all currently set values in the ParameterBucket.
+		'''
 		attrs = vars(self)
 		output = ''
 		output += 'Variables in parameter bucket\n'
@@ -131,11 +122,21 @@ class ParameterBucket(object):
 		return output
 
 
-	def makeAdaptivePartition(self, DgmsPD, type = 'BirthDeath',meshingScheme = 'DV',numParts = 3):
+	def makeAdaptivePartition(self, DgmsPD, type = 'BirthDeath', meshingScheme = 'DV', numParts = 3):
 		'''
 		Combines all persistence diagrams in the series together, then generates an adaptive partition mesh and includes it in the parameter bucket as self.partitions
 
-		The partitions can be viewed using self.partitions.plot()
+		The partitions can be viewed using self.partitions.plot().
+
+		:Parameter DgmsPD:
+			Structure of type pd.Series containing persistence diagrams
+		:Parameter type:
+			String specifying the type of persistence diagrams given, options are 'BirthDeath' or 'BirthLifetime'
+		:Parameter meshingScheme:
+			The type of meshing scheme. Only option currently is 'DV', a method based on this paper (add paper). Any other input here will only use the bounding box of all points in the Dgms in the training set. 
+		:Parameter numParts:
+			Number of partitions in each direction
+
 		TODO: This can't handle infinite points in the diagram yet
 		'''
 
@@ -176,22 +177,18 @@ class ParameterBucket(object):
 
 		
 	def setBoundingBox(self,DgmsPD,pad = 0):
-		"""!@brief Sets a bounding box in the birth-lifetime planeself.
-
-		@param DgmsPD a pd.Series or pd.DataFrame with a persistence diagram in each entry.
-		@param pad is the additional padding desired outside of the points in the diagrams.
-
-
-
-
-		Sets
-		`self.boundingBox`
-		to be a dictionary with two keys, 'birthAxis' and 'lifetimeAxis', each outputing
+		'''
+		Sets `self.boundingBox` to be a dictionary with two keys, 'birthAxis' and 'lifetimeAxis', each outputing
 		a tuple of length 2 so that all points in all diagrams (written in (birth,lifetime) coordinates) in the series are contained in the box `self.birthAxis X self.lifetimeAxis`.
-		If `pad` is non-zero, the boundaries of the bounding box on all sides except the one touching the diagonal 		are at least `pad` distance away from the closest point.
+		If `pad` is non-zero, the boundaries of the bounding box on all sides except the one touching the diagonal are at least `pad` distance away from the closest point.
 
+		:Parameter DgmsPD:
+			A pd.Series or pd.DataFrame with a persistence diagram in each entry.
+		:Parameter pad:
+			The additional padding desired outside of the points in the diagrams.
 
-		"""
+		'''
+
 		if isinstance(DgmsPD, pd.Series):
 			topPers = pP.maxPersistenceSeries(DgmsPD)
 			bottomPers = pP.minPersistenceSeries(DgmsPD)
@@ -225,12 +222,12 @@ class ParameterBucket(object):
 
 
 	def testEnclosesDgms(self, DgmSeries):
-		'''!
-		@brief Tests to see if the parameters enclose the persistence diagrams in the DgmSeries
+		'''
+		Tests to see if the parameters enclose the persistence diagrams in the DgmSeries
 
-		@returns boolean
+		:returns: boolean
 
-		@todo Change this to work with self.boundingbox instead of d, delta, and epsilon
+		TODO: Change this to work with self.boundingbox instead of d, delta, and epsilon
 		'''
 
 		# Height of parallelogram; equivalently maximum lifetime enclosed
@@ -275,32 +272,33 @@ class InterpPolyParameters(ParameterBucket):
 					maxPower = 1,
 					**kwargs
 						):
-		"""!@brief Creates a new subclass of ParameterBucket specifically for the interpolating polynomials and sets all necessary parameters.
+		'''
+		Creates a new subclass of ParameterBucket specifically for the interpolating polynomials and sets all necessary parameters.
 
 		This object is being used to keep track of all the parameters needed for the interpolating polynomial ML featurization.
 
 		Parameters that are included in the ParameterBucket initially:
 
-		@param d
+		:Parameter d:
 			
-		@param useAdaptivePart 
+		:Parameter useAdaptivePart: 
 			Boolean to determine whether you want to adaptively partition the persistence diagrams. By default it is set to False.
-		@param meshingScheme
-			The type of meshing scheme you want to use for the adaptive mesh. Only option currently is 'DV', a method based on this paper (add paper). Any other input here will only use the bounding box of all points in the Dgms in the training set. 
-		@param jacobi_poly
+		:Parameter meshingScheme:
+			The type of meshing scheme. Only option currently is 'DV', a method based on this paper (add paper). Any other input here will only use the bounding box of all points in the Dgms in the training set. 
+		:Parameter jacobi_poly:
 			The type of interpolating polynomial to use. Options are 'cheb1' and 'legendre'.
-		@param clf_model
+		:Parameter clf_model:
 			The choice of tool used for classification or regression, passed as the function.  This code has been tested using `sklearn` functions `RidgeClassiferCV` for classification and `RidgeCV` for regression.
-		@param feature_function
+		:Parameter feature_function:
 			The function you want to use for featurization.  This should be a function that takes as inputs a diagram and a ParameterBucket, and returns a vector of features. The default is ML.feature_functions.tents()
-		@param test_size
+		:Parameter test_size:
 			A number in \f$[0,1]\f$.  Gives the percentage of data points to be reserved for the testing set if this is being used for a train/test split experiment.  Otherwise, ignored.
-		@param seed
+		:Parameter seed:
 			The seed for the pseudo-random number generator.  Pass None if you don't want it fixed; otherwise, pass an integer.
-		@param kwargs
+		:Parameter kwargs:
 			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh. If its set, `boundingbox` keeps track of a box which encloses all points in all diagrams in a particular series; see setBoundingBox().
 
-		"""
+		'''
 
 
 		self.feature_function = fF.interp_polynomial
@@ -340,29 +338,30 @@ class TentParameters(ParameterBucket):
 				**kwargs):
 
 
-		"""!@brief Creates a new ParameterBucket object.
+		''' 
+		Creates a new ParameterBucket object.
 
 		This object is being used to keep track of all the parameters needed
 		for the tents ML featurization.
 
 		Parameters that are included in the ParameterBucket initially:
 
-		@param d, delta, epsilon
+		:Parameter d, delta, epsilon;
 		    The bounding box for the persistence diagram in the (birth, lifetime) coordinates is [0,d * delta] x [epsilon, d* delta + epsilon].  In the usual coordinates, this creates a parallelogram.
-		@param clf_model
+		:Parameter clf_model;
 			The choice of tool used for classification or regression, passed as the function.  This code has been tested using `sklearn` functions `RidgeClassiferCV` for classification and `RidgeCV` for regression.
-		@param feature_function
+		:Parameter feature_function;
 			The function you want to use for featurization.  This should be a function that takes as inputs a diagram and a ParameterBucket, and returns a vector of features. The default is ML.feature_functions.tents()
-		@param test_size
+		:Parameter test_size;
 			A number in \f$[0,1]\f$.  Gives the percentage of data points to be reserved for the testing set if this is being used for a train/test split experiment.  Otherwise, ignored.
-		@param seed
+		:Parameter seed;
 			The seed for the pseudo-random number generator.  Pass None if you don't want it fixed; otherwise, pass an integer.
-		@param maxPower
+		:Parameter maxPower;
 			The maximum degree used for the monomial combinations of the tent functions.  Testing suggests we usually want this to be 1.  Increasing causes large increase in number of features.
-		@param kwargs
+		:Parameter kwargs;
 			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh. If its set, `boundingbox` keeps track of a box which encloses all points in all diagrams in a particular series; see setBoundingBox().
 
-		"""
+		'''
 	
 		# Set all the necessary parameters for tents function
 		self.feature_function = fF.tent
@@ -399,19 +398,20 @@ class TentParameters(ParameterBucket):
 
 
 	def chooseDeltaEpsWithPadding(self, DgmsPD, pad = 0):
-		"""!@brief Sets delta and epsilon for tent function mesh
-
-		@param DgmsSeries is pd.series consisting of persistence diagrams
-		@param pad is the additional padding outside of the points in the diagrams
-
-		This code assumes that self.d has been set.
+		'''
+		Sets delta and epsilon for tent function mesh. This code assumes that self.d has been set.
 
 		The result is to set self.delta\f$=\delta\f$ and self.epsilon\f$=\epsilon\f$ so that the bounding box for the persistence diagram in the (birth, lifetime) coordinates is
 		\f[  [0,d \cdot \delta] \, \times \, [\epsilon, d \cdot \delta + \epsilon].  \f]
 		In the usual coordinates, this creates a parallelogram.
 
+		:Parameter DgmsSeries: 
+			A pd.series consisting of persistence diagrams
+		:Parameter pad:
+			The additional padding outside of the points in the diagrams
+
+		'''
 		
-		"""
 		if isinstance(DgmsPD, pd.DataFrame):
 			AllDgms = []
 			for label in DgmsPD.columns:
@@ -451,11 +451,13 @@ class TentParameters(ParameterBucket):
 
 
 	def chooseEpsilon(self, DgmsPD):
-		"""!@brief Sets epsilon for tent function to be 1/2*(min(lifetime)). 
+		'''
+		Sets epsilon for tent function to be 1/2*(min(lifetime)). 
 
-		@param DgmsPD is a pd.series of persistence diagrams
+		:Parameter DgmsPD: 
+			A pd.series of persistence diagrams
 
-		"""
+		'''
 
 		if isinstance(DgmsPD, pd.DataFrame):
 			AllDgms = []
@@ -480,20 +482,16 @@ class TentParameters(ParameterBucket):
 
 
 	def chooseDeltaEpsForPartitions(self, pad=0):
-		"""!@brief Sets delta and epsilon for tent function mesh - this is an alternative to chooseDeltaEpsWithPadding.
+		'''
+		Sets delta and epsilon for tent function mesh - this is an alternative to chooseDeltaEpsWithPadding.
 		It also assigns d to each partition and adds it to the partition bucket as another dictionary element. 
 		Currently the only option is to use the same d for each partition but this may change in the future.
 		You can choose different number of divisions in the mesh for x and y directions.
 
-		@param Partitions is a partition bucket (ie a list of dictionaries, one for each partition)
-
-		@param d is the mesh parameter for within a partition - can be an integer or a list of two ints, first for number of divisions in x direction, and second for number of divisions in y direction.
-
-		@paral epsilon is the epsilon parameter you want assigned (currently it can only assign one number to each of the partitions) 
-
-		@param pad is the additional padding outside of the points in the diagrams (this doesn't work currently don't use it)
+		:Parameter pad: 
+			The additional padding outside of the points in the diagrams (this doesn't work currently don't use it)
 		
-		"""
+		'''
 
 		d = self.d
 		epsilon = self.epsilon
@@ -550,8 +548,8 @@ class TentParameters(ParameterBucket):
 
 
 	def plotTentSupport(self):
-		'''!
-		@brief Plots the bounding box of the support of all the tent functions 
+		'''
+		Plots the bounding box of the support of all the tent functions 
 
 		'''
 
@@ -572,12 +570,12 @@ class TentParameters(ParameterBucket):
 		plt.axis('tight')
 
 	def calcTentCenters(self):
-		'''!
-		@brief Calculates the points on the mesh where a tent function is centered. Mainly useful for debugging and
+		'''
+		Calculates the points on the mesh where a tent function is centered. Mainly useful for debugging and
 		making figures
 
-		@return a list of '(d+1)*(d+1) \times 2' numpy arrays, one for each partition containing 
-		the centers of the mesh where tents can be centered
+		:returns: 
+			A list of '(d+1)*(d+1) \times 2' numpy arrays, one for each partition containing the centers of the mesh where tents can be centered
 
 		'''
 
@@ -611,11 +609,10 @@ class TentParameters(ParameterBucket):
 
 def build_G(DgmSeries, params):
 	'''
-	@brief
 		Applies the passed featurization function to all diagrams in the series and outputs the feature matrix
-	@param DgmSeries : pd.Series.
-		The structure holding the persistence diagrams.
-	@param params : ParameterBucket.
+	:Parameter DgmSeries:
+		A pd.Series holding the persistence diagrams.
+	:Parameter params: 
 		A parameter bucket used for calculations.
 	'''
 
@@ -643,37 +640,6 @@ def build_G(DgmSeries, params):
 #--------ML on diagrams using featurization ------------------------------
 #-------------------------------------------------------------------------
 #-------------------------------------------------------------------------
-
-## Main function to run ML with featurization on persistence diagrams.
-# Takes data frame DgmsDF and specified persistence diagram column labels,
-# computes the G matrix using build_G.
-# Does classification using labels from labels_col in the data frame.
-# Returns trained model.
-#
-# 	@param DgmsDF
-# 		A pandas data frame containing, at least, a column of
-# 		diagrams and a column of labels
-# 	@param labels_col
-# 		A string.  The label for the column in DgmsDF containing
-# 		the training labels.
-# 	@param dgm_col
-# 		The label(s) for the column containing the diagrams given as a string or list of strings.
-# 	@param params
-# 		A class of type ParameterBucket
-# 		Should store:
-# 			- **d**:
-# 				An integer, the number of elements for griding up
-# 				the x and y axis of the diagram.  Will result in
-# 				d*(d+1) tent functions
-# 			- **delta**, **epsilon**:
-# 				Controls location and width of mesh elements for x and y axis of the
-# 				diagram.
-# 			- **clfClass**:
-# 				The class which will be used for classification.  Currently tested
-#				using `sklearn.RidgeClassifierCV` and `sklearn.RidgeCV`.
-#
-# @return
-# 	The classifier object. Coefficients can be found from clf.coef_
 def ML_via_featurization(DgmsDF,
 			labels_col = 'trainingLabel',
 			dgm_col = 'Dgm1',
@@ -681,7 +647,37 @@ def ML_via_featurization(DgmsDF,
 			normalize = False,
 			verbose = True
 			):
+	'''
+	Main function to run ML with featurization on persistence diagrams.
+	Takes data frame DgmsDF and specified persistence diagram column labels,
+	computes the G matrix using build_G.
+	Does classification using labels from labels_col in the data frame.
+	Returns trained model.
 
+	:Parameter DgmsDF:
+		A pandas data frame containing, at least, a column of diagrams and a column of labels
+	:Parameter labels_col:
+		A string. The label for the column in DgmsDF containing the training labels.
+	:Parameter dgm_col:
+		The label(s) for the column containing the diagrams given as a string or list of strings.
+	:Parameter params:
+		A class of type ParameterBucket
+		Should store:
+			- **d**:
+				An integer, the number of elements for griding up
+				the x and y axis of the diagram.  Will result in
+				d*(d+1) tent functions
+			- **delta**, **epsilon**:
+				Controls location and width of mesh elements for x and y axis of the
+				diagram.
+			- **clfClass**:
+				The class which will be used for classification.  Currently tested
+				using `sklearn.RidgeClassifierCV` and `sklearn.RidgeCV`.
+	
+	:returns:
+		The classifier object. Coefficients can be found from clf.coef_
+
+	'''
 
 	clf = params.clf_model()
 
@@ -736,46 +732,6 @@ def ML_via_featurization(DgmsDF,
 #---------------Get percent score-----------------------------------------
 #-------------------------------------------------------------------------
 #-------------------------------------------------------------------------
-
-
-
-
-## Main testing function for classification or regression methods.
-# Does train/test split, creates classifier, and returns score on test.
-#
-# 	@param DgmsDF
-# 		A pandas data frame containing, at least, a column of
-# 		diagrams and a column of labels
-# 	@param labels_col
-# 		A string.  The label for the column in DgmsDF containing the training labels.
-# 	@param dgm_col
-# 		A string or list of strings giving the label for the column containing the diagrams.
-# 	@param params
-# 		A class of type ParameterBucket.
-# 		Should store at least:
-#			- **featureFunction**:
-#				The function use for featurizing the persistence diagrams. Should take in
-#				a diagram and a ParameterBucket and output a vector of real numbers as features.
-# 			- **clfClass**:
-# 				The model which will be used for classification.  Currently tested
-#				using `sklearn.RidgeClassifierCV` and `sklearn.RidgeCV`.
-#			- **seed**:
-#				None if we don't want to mess with the seed for the train_test_split function. Else, pass integer.
-#			- **test_split**:
-#				The percentage of the data to be reserved for the test part of the train/test split.
-#
-# 	@return
-#		Returned as a dictionary of entries:
-# 		- **score**
-# 			The percent correct when predicting on the test set.
-# 		- **DgmsDF**
-# 			The original data frame passed back with a column labeled
-# 			'Prediction' added with the predictions gotten for the
-# 			test set. Data points in the training set will have an
-# 			entry of NaN
-# 		- **clf**
-# 			The fitted model
-#
 def getPercentScore(DgmsDF,
 					labels_col = 'trainingLabel',
 					dgm_col = 'Dgm1',
@@ -783,7 +739,44 @@ def getPercentScore(DgmsDF,
 					normalize = False,
 					verbose = True
 					):
+	'''
+	Main testing function for classification or regression methods.
+	Does train/test split, creates classifier, and returns score on test.
+	
+	:Parameter DgmsDF:
+		A pandas data frame containing, at least, a column of diagrams and a column of labels
+	:Parameter labels_col:
+		A string.  The label for the column in DgmsDF containing the training labels.
+	:Parameter dgm_col:
+		A string or list of strings giving the label for the column containing the diagrams.
+	:Parameter params:
+		A class of type ParameterBucket.
+		Should store at least:
+			- **featureFunction**:
+				The function use for featurizing the persistence diagrams. Should take in
+				a diagram and a ParameterBucket and output a vector of real numbers as features.
+			- **clfClass**:
+				The model which will be used for classification.  Currently tested
+				using `sklearn.RidgeClassifierCV` and `sklearn.RidgeCV`.
+			- **seed**:
+				None if we don't want to mess with the seed for the train_test_split function. Else, pass integer.
+			- **test_split**:
+				The percentage of the data to be reserved for the test part of the train/test split.
+	
+	:returns:
+		Returned as a dictionary of entries:
+		- **score**
+			The percent correct when predicting on the test set.
+		- **DgmsDF**
+			The original data frame passed back with a column labeled
+			'Prediction' added with the predictions gotten for the
+			test set. Data points in the training set will have an
+			entry of NaN
+		- **clf**
+			The fitted model
+	'''
 
+	
 	if verbose:
 		print('---')
 		print('Beginning experiment.')
