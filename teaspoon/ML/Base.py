@@ -269,14 +269,39 @@ class InterpPolyParameters(ParameterBucket):
 					useAdaptivePart = False,
 					meshingScheme = 'DV',
 					jacobi_poly = 'cheb1',
-				clf_model = RidgeClassifierCV,
-				test_size = .33,
-				seed = None,
-				maxPower = 1,
-				**kwargs
-					):
-		# Set all the necessary parameters for tents function
-		# TODO
+					clf_model = RidgeClassifierCV,
+					test_size = .33,
+					seed = None,
+					maxPower = 1,
+					**kwargs
+						):
+		"""!@brief Creates a new subclass of ParameterBucket specifically for the interpolating polynomials and sets all necessary parameters.
+
+		This object is being used to keep track of all the parameters needed for the interpolating polynomial ML featurization.
+
+		Parameters that are included in the ParameterBucket initially:
+
+		@param d
+			
+		@param useAdaptivePart 
+			Boolean to determine whether you want to adaptively partition the persistence diagrams. By default it is set to False.
+		@param meshingScheme
+			The type of meshing scheme you want to use for the adaptive mesh. Only option currently is 'DV', a method based on this paper (add paper). Any other input here will only use the bounding box of all points in the Dgms in the training set. 
+		@param jacobi_poly
+			The type of interpolating polynomial to use. Options are 'cheb1' and 'legendre'.
+		@param clf_model
+			The choice of tool used for classification or regression, passed as the function.  This code has been tested using `sklearn` functions `RidgeClassiferCV` for classification and `RidgeCV` for regression.
+		@param feature_function
+			The function you want to use for featurization.  This should be a function that takes as inputs a diagram and a ParameterBucket, and returns a vector of features. The default is ML.feature_functions.tents()
+		@param test_size
+			A number in \f$[0,1]\f$.  Gives the percentage of data points to be reserved for the testing set if this is being used for a train/test split experiment.  Otherwise, ignored.
+		@param seed
+			The seed for the pseudo-random number generator.  Pass None if you don't want it fixed; otherwise, pass an integer.
+		@param kwargs
+			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh. If its set, `boundingbox` keeps track of a box which encloses all points in all diagrams in a particular series; see setBoundingBox().
+
+		"""
+
 
 		self.feature_function = fF.interp_polynomial
 		self.partitions = None
@@ -289,6 +314,8 @@ class InterpPolyParameters(ParameterBucket):
 		self.test_size = test_size
 		self.maxPower = maxPower
 		self.__dict__.update(kwargs)
+
+
 
 
 	def check(self):
@@ -311,6 +338,32 @@ class TentParameters(ParameterBucket):
 				seed = None,
 				maxPower = 1,
 				**kwargs):
+
+
+		"""!@brief Creates a new ParameterBucket object.
+
+		This object is being used to keep track of all the parameters needed
+		for the tents ML featurization.
+
+		Parameters that are included in the ParameterBucket initially:
+
+		@param d, delta, epsilon
+		    The bounding box for the persistence diagram in the (birth, lifetime) coordinates is [0,d * delta] x [epsilon, d* delta + epsilon].  In the usual coordinates, this creates a parallelogram.
+		@param clf_model
+			The choice of tool used for classification or regression, passed as the function.  This code has been tested using `sklearn` functions `RidgeClassiferCV` for classification and `RidgeCV` for regression.
+		@param feature_function
+			The function you want to use for featurization.  This should be a function that takes as inputs a diagram and a ParameterBucket, and returns a vector of features. The default is ML.feature_functions.tents()
+		@param test_size
+			A number in \f$[0,1]\f$.  Gives the percentage of data points to be reserved for the testing set if this is being used for a train/test split experiment.  Otherwise, ignored.
+		@param seed
+			The seed for the pseudo-random number generator.  Pass None if you don't want it fixed; otherwise, pass an integer.
+		@param maxPower
+			The maximum degree used for the monomial combinations of the tent functions.  Testing suggests we usually want this to be 1.  Increasing causes large increase in number of features.
+		@param kwargs
+			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh. If its set, `boundingbox` keeps track of a box which encloses all points in all diagrams in a particular series; see setBoundingBox().
+
+		"""
+	
 		# Set all the necessary parameters for tents function
 		self.feature_function = fF.tent
 		self.useAdaptivePart = False
@@ -327,19 +380,19 @@ class TentParameters(ParameterBucket):
 
 	def check(self):
 		# Check for all the parameters required for tents function
-		if not hasattr(self, d):
-			print('d is missing')
+		# if not hasattr(self, d):
+		# 	print('d is missing')
 
-		if not hasattr(self, delta):
-			print('delta is missing')
+		# if not hasattr(self, delta):
+		# 	print('delta is missing')
 
-		if not hasattr(self, epsilon):
-			print('epsilon is missing')
+		# if not hasattr(self, epsilon):
+		# 	print('epsilon is missing')
 
-		# more parameters we need?
+		# # more parameters we need?
 
-		# print("This hasn't been made yet. Ask me later.")
-		# pass
+		print("This hasn't been made yet. Ask me later.")
+		pass
 
 
 
@@ -555,12 +608,16 @@ class TentParameters(ParameterBucket):
 #-------------------------------------------------------------------------
 
 
-## Applies the passed featurization function to all diagrams in the series and outputs the feature matrix
-# @param DgmSeries : pd.Series.
-#	The structure holding the persistence diagrams.
-# @param params : ParameterBucket.
-# 	A parameter bucket used for calculations.
+
 def build_G(DgmSeries, params):
+	'''
+	@brief
+		Applies the passed featurization function to all diagrams in the series and outputs the feature matrix
+	@param DgmSeries : pd.Series.
+		The structure holding the persistence diagrams.
+	@param params : ParameterBucket.
+		A parameter bucket used for calculations.
+	'''
 
 	# if not hasattr(params,'partitions'):
 	# 	print('You have to have a partition bucket set in the')
