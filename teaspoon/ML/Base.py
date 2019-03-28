@@ -75,6 +75,8 @@ class ParameterBucket(object):
 					#
 					# feature_function=None,
 					# boundingBoxMatrix = None):
+
+
 		"""!@brief Creates a new ParameterBucket object.
 
 		This object is being used to keep track of all the parameters needed
@@ -325,9 +327,19 @@ class TentParameters(ParameterBucket):
 
 	def check(self):
 		# Check for all the parameters required for tents function
-		# TODO
-		print("This hasn't been made yet. Ask me later.")
-		pass
+		if not hasattr(self, d):
+			print('d is missing')
+
+		if not hasattr(self, delta):
+			print('delta is missing')
+
+		if not hasattr(self, epsilon):
+			print('epsilon is missing')
+
+		# more parameters we need?
+
+		# print("This hasn't been made yet. Ask me later.")
+		# pass
 
 
 
@@ -414,7 +426,7 @@ class TentParameters(ParameterBucket):
 
 
 
-	def chooseDeltaEpsForPartitions(self, d=3, epsilon=0, pad=0):
+	def chooseDeltaEpsForPartitions(self, pad=0):
 		"""!@brief Sets delta and epsilon for tent function mesh - this is an alternative to chooseDeltaEpsWithPadding.
 		It also assigns d to each partition and adds it to the partition bucket as another dictionary element. 
 		Currently the only option is to use the same d for each partition but this may change in the future.
@@ -429,6 +441,9 @@ class TentParameters(ParameterBucket):
 		@param pad is the additional padding outside of the points in the diagrams (this doesn't work currently don't use it)
 		
 		"""
+
+		d = self.d
+		epsilon = self.epsilon
 		
 		if pad != 0:
 			print("Sorry padding doesn't work right now... Setting pad back to zero and continuing")
@@ -502,6 +517,36 @@ class TentParameters(ParameterBucket):
 
 		# Doesn't show unless we do this
 		plt.axis('tight')
+
+	def calcTentCenters(self):
+		'''!
+		@brief Calculates the points on the mesh where a tent function is centered. Mainly useful for debugging and
+		making figures
+
+		@return a list of '(d+1)*(d+1) \times 2' numpy arrays, one for each partition containing 
+		the centers of the mesh where tents can be centered
+
+		'''
+
+		d = self.d
+
+		tent_centers = []
+
+		for partition in self.partitions:
+			partition_centers = []
+			delta = partition['delta']
+			xmin = partition['supportNodes'][0] +delta
+			ymin = partition['supportNodes'][2] +delta
+			for i in range(d+1):
+				for j in range(d+1):
+					partition_centers.append( [xmin + (i*delta) , ymin + (j*delta)] )
+			tent_centers.append(np.array(partition_centers))
+
+		return tent_centers
+
+
+
+
 
 #-------------------------------------------------------------------------
 #-------------------------------------------------------------------------
