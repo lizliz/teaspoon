@@ -101,8 +101,10 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
         # get subset of points in the diagram that are in the original partition
         Asub = getSubset(A, partition)
 
-        # if len(Asub) != 0:
-        #     print(Asub)
+        # if there are no dgm points in the partition just add a vector of zeros and move on to the next partition
+        if len(Asub) == 0:
+            all_out = np.concatenate((all_out, np.zeros((dx + 1) * (dy + 1))), axis=0)
+            continue
 
         I, J = I,J = np.meshgrid(range(dx + 1), range(dy + 1))
 
