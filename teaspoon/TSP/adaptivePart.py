@@ -262,7 +262,7 @@ class Partitions:
         edges1 = np.concatenate(([Xmin], ai, [Xmax]))
         edges2 = np.concatenate(([Ymin], bj, [Ymax]))
 
-        # first exit criteria: we cannot split inot unique boundaries any more
+        # first exit criteria: we cannot split into unique boundaries any more
         # preallocate the partition list
         partitions = []
         if (len(np.unique(edges1, return_counts=True)[1]) < r + 1 or

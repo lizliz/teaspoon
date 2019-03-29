@@ -163,7 +163,7 @@ class ParameterBucket(object):
 			life = y
 		fullData = np.column_stack((x,life))
 
-		self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme, numParts = numParts)
+		self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme, numParts = numParts, alpha = alpha)
 
 		
 
@@ -506,9 +506,9 @@ class TentParameters(ParameterBucket):
 			partition['supportNodes'] = [xmin - delta, xmax + delta, ymin - delta, ymax + delta]
 			
 			if partition['supportNodes'][2] < 0:
-				if verbose:
-					print('Uh oh your support will cross the diagonal, your bottom boundary is ', partition['supportNodes'][2])
-					print('Shifting the boundary of the partition up by necessary amount...')
+				# if verbose:
+				# 	print('Uh oh your support will cross the diagonal, your bottom boundary is ', partition['supportNodes'][2])
+				# 	print('Shifting the boundary of the partition up by necessary amount...')
 				
 				#Shift top boundary up by however negative you went
 				partition['supportNodes'][3] = partition['supportNodes'][3] - (partition['supportNodes'][2])
@@ -779,7 +779,7 @@ def getPercentScore(DgmsDF,
 
 	if params.useAdaptivePart == True:
 		# Hand the series to the makeAdaptivePartition function
-		params.makeAdaptivePartition(allDgms, meshingScheme = 'DV')
+		params.makeAdaptivePartition(allDgms, meshingScheme = 'DV', alpha=params.alpha)
 	else:
 		# Just use the bounding box as the partition
 		params.makeAdaptivePartition(allDgms, meshingScheme = None)
