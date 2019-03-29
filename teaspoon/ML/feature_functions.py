@@ -57,8 +57,7 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
         dx = params.d
         dy = params.d
     else:
-        print('Uh oh something is wrong with the parameter d...')
-        print('d needs to be an int or a list of 2 ints (one for x direction and one for y direction.) ')
+        print('Parameter d needs to be an int or a list of 2 ints (one for x direction and one for y direction.) ')
         print('Exiting...')
         return
 

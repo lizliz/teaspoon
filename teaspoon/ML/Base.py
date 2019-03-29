@@ -176,49 +176,49 @@ class ParameterBucket(object):
 
 
 		
-	def setBoundingBox(self,DgmsPD,pad = 0):
-		'''
-		Sets `self.boundingBox` to be a dictionary with two keys, 'birthAxis' and 'lifetimeAxis', each outputing
-		a tuple of length 2 so that all points in all diagrams (written in (birth,lifetime) coordinates) in the series are contained in the box `self.birthAxis X self.lifetimeAxis`.
-		If `pad` is non-zero, the boundaries of the bounding box on all sides except the one touching the diagonal are at least `pad` distance away from the closest point.
+	# def setBoundingBox(self,DgmsPD,pad = 0):
+	# 	'''
+	# 	Sets `self.boundingBox` to be a dictionary with two keys, 'birthAxis' and 'lifetimeAxis', each outputing
+	# 	a tuple of length 2 so that all points in all diagrams (written in (birth,lifetime) coordinates) in the series are contained in the box `self.birthAxis X self.lifetimeAxis`.
+	# 	If `pad` is non-zero, the boundaries of the bounding box on all sides except the one touching the diagonal are at least `pad` distance away from the closest point.
 
-		:Parameter DgmsPD:
-			A pd.Series or pd.DataFrame with a persistence diagram in each entry. Must be in BirthDeath coordinates.
-		:Parameter pad:
-			The additional padding desired outside of the points in the diagrams.
+	# 	:Parameter DgmsPD:
+	# 		A pd.Series or pd.DataFrame with a persistence diagram in each entry. Must be in BirthDeath coordinates.
+	# 	:Parameter pad:
+	# 		The additional padding desired outside of the points in the diagrams.
 
-		'''
+	# 	'''
 
-		if isinstance(DgmsPD, pd.Series):
-			topPers = pP.maxPersistenceSeries(DgmsPD)
-			bottomPers = pP.minPersistenceSeries(DgmsPD)
-			topBirth = max(DgmsPD.apply(pP.maxBirth))
-			bottomBirth = min(DgmsPD.apply(pP.minBirth))
-		elif isinstance(DgmsPD, pd.DataFrame): #Assumes that you handed me a dataframe
-			topPers = []
-			bottomPers = []
-			topBirth = []
-			bottomBirth = []
-			for label in DgmsPD.columns:
-				D = DgmsPD[label]
-				topPers.append(pP.maxPersistenceSeries(D))
-				bottomPers.append(pP.minPersistenceSeries(D))
-				topBirth.append(max(D.apply(pP.maxBirth)))
-				bottomBirth.append(min(D.apply(pP.minBirth)))
-			topPers = max(topPers)
-			bottomPers = min(bottomPers)
-			topBirth = max(topBirth)
-			bottomBirth = min(bottomBirth)
-		else:
-			print('You gave me a', type(DgmsPD))
-			print('This function requires a pandas Series or DataFrame full of persistence diagrams.')
+	# 	if isinstance(DgmsPD, pd.Series):
+	# 		topPers = pP.maxPersistenceSeries(DgmsPD)
+	# 		bottomPers = pP.minPersistenceSeries(DgmsPD)
+	# 		topBirth = max(DgmsPD.apply(pP.maxBirth))
+	# 		bottomBirth = min(DgmsPD.apply(pP.minBirth))
+	# 	elif isinstance(DgmsPD, pd.DataFrame): #Assumes that you handed me a dataframe
+	# 		topPers = []
+	# 		bottomPers = []
+	# 		topBirth = []
+	# 		bottomBirth = []
+	# 		for label in DgmsPD.columns:
+	# 			D = DgmsPD[label]
+	# 			topPers.append(pP.maxPersistenceSeries(D))
+	# 			bottomPers.append(pP.minPersistenceSeries(D))
+	# 			topBirth.append(max(D.apply(pP.maxBirth)))
+	# 			bottomBirth.append(min(D.apply(pP.minBirth)))
+	# 		topPers = max(topPers)
+	# 		bottomPers = min(bottomPers)
+	# 		topBirth = max(topBirth)
+	# 		bottomBirth = min(bottomBirth)
+	# 	else:
+	# 		print('You gave me a', type(DgmsPD))
+	# 		print('This function requires a pandas Series or DataFrame full of persistence diagrams.')
 
-		# print(topPers,bottomPers,topBirth,bottomBirth)
+	# 	# print(topPers,bottomPers,topBirth,bottomBirth)
 
 
-		self.boundingBox = {}
-		self.boundingBox['birthAxis'] = (bottomBirth - pad, topBirth + pad)
-		self.boundingBox['lifetimeAxis'] = (bottomPers/2, topPers + pad)
+	# 	self.boundingBox = {}
+	# 	self.boundingBox['birthAxis'] = (bottomBirth - pad, topBirth + pad)
+	# 	self.boundingBox['lifetimeAxis'] = (bottomPers/2, topPers + pad)
 
 
 	def testEnclosesDgms(self, DgmSeries):
@@ -299,7 +299,7 @@ class InterpPolyParameters(ParameterBucket):
 		:Parameter seed:
 			The seed for the pseudo-random number generator.  Pass None if you don't want it fixed; otherwise, pass an integer.
 		:Parameter kwargs:
-			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh. If its set, `boundingbox` keeps track of a box which encloses all points in all diagrams in a particular series; see setBoundingBox().
+			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh. 
 
 		'''
 
@@ -362,7 +362,7 @@ class TentParameters(ParameterBucket):
 		:Parameter maxPower;
 			The maximum degree used for the monomial combinations of the tent functions.  Testing suggests we usually want this to be 1.  Increasing causes large increase in number of features.
 		:Parameter kwargs;
-			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh. If its set, `boundingbox` keeps track of a box which encloses all points in all diagrams in a particular series; see setBoundingBox().
+			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh. 
 
 		'''
 	
