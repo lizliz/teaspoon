@@ -221,43 +221,43 @@ class ParameterBucket(object):
 	# 	self.boundingBox['lifetimeAxis'] = (bottomPers/2, topPers + pad)
 
 
-	def testEnclosesDgms(self, DgmSeries):
-		'''
-		Tests to see if the parameters enclose the persistence diagrams in the DgmSeries
+	# def testEnclosesDgms(self, DgmSeries):
+	# 	'''
+	# 	Tests to see if the parameters enclose the persistence diagrams in the DgmSeries
 
-		:Parameter DgmSeries:
-			pd.Series of persistence diagrams. Must be in BirthDeath coordinates.
+	# 	:Parameter DgmSeries:
+	# 		pd.Series of persistence diagrams. Must be in BirthDeath coordinates.
 
-		:returns: boolean
+	# 	:returns: boolean
 
-		TODO: Change this to work with self.boundingbox instead of d, delta, and epsilon
-		'''
+	# 	TODO: Change this to work with self.boundingbox instead of d, delta, and epsilon
+	# 	'''
 
-		# Height of parallelogram; equivalently maximum lifetime enclosed
-		height = self.d * self.delta + self.epsilon
-		width = self.d * self.delta
+	# 	# Height of parallelogram; equivalently maximum lifetime enclosed
+	# 	height = self.d * self.delta + self.epsilon
+	# 	width = self.d * self.delta
 
-		minBirth = pP.minBirthSeries(DgmSeries)
-		if minBirth <0:
-			print("This code assumes positive birth times.")
-			return False
+	# 	minBirth = pP.minBirthSeries(DgmSeries)
+	# 	if minBirth <0:
+	# 		print("This code assumes positive birth times.")
+	# 		return False
 
-		maxBirth = pP.maxBirthSeries(DgmSeries)
-		if maxBirth > width:
-			print('There are birth times outside the bounding box.')
-			return False
+	# 	maxBirth = pP.maxBirthSeries(DgmSeries)
+	# 	if maxBirth > width:
+	# 		print('There are birth times outside the bounding box.')
+	# 		return False
 
-		minPers = pP.minPersistenceSeries(DgmSeries)
-		if minPers < self.epsilon:
-			print('There are points below the epsilon shift.')
-			return False
+	# 	minPers = pP.minPersistenceSeries(DgmSeries)
+	# 	if minPers < self.epsilon:
+	# 		print('There are points below the epsilon shift.')
+	# 		return False
 
-		maxPers = pP.maxPersistenceSeries(DgmSeries)
-		if maxPers > height:
-			print('There are points above the box.')
-			return False
+	# 	maxPers = pP.maxPersistenceSeries(DgmSeries)
+	# 	if maxPers > height:
+	# 		print('There are points above the box.')
+	# 		return False
 
-		return True
+	# 	return True
 
 
 ## A new type of parameter ParameterBucket
@@ -783,6 +783,8 @@ def getPercentScore(DgmsDF,
 	else:
 		# Just use the bounding box as the partition
 		params.makeAdaptivePartition(allDgms, meshingScheme = None)
+
+	params.chooseDeltaEpsForPartitions(verbose=verbose)
 
 	#--------Training------------#
 	if verbose:
