@@ -96,7 +96,7 @@ class ParameterBucket(object):
 		:Parameter seed:
 			The seed for the pseudo-random number generator.  Pass None if you don't want it fixed; otherwise, pass an integer.
 		:Parameter kwargs:
-			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh. If its set, `boundingbox` keeps track of a box which encloses all points in all diagrams in a particular series; see setBoundingBox().
+			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh. 
 
 		'''
 
@@ -122,7 +122,7 @@ class ParameterBucket(object):
 		return output
 
 
-	def makeAdaptivePartition(self, DgmsPD, type = 'BirthDeath', meshingScheme = 'DV', numParts = 3):
+	def makeAdaptivePartition(self, DgmsPD, dgm_type = 'BirthDeath', meshingScheme = 'DV', numParts = 3, alpha=0.05):
 		'''
 		Combines all persistence diagrams in the series together, then generates an adaptive partition mesh and includes it in the parameter bucket as self.partitions
 
@@ -131,7 +131,7 @@ class ParameterBucket(object):
 		:Parameter DgmsPD:
 			Structure of type pd.Series containing persistence diagrams
 		:Parameter type:
-			String specifying the type of persistence diagrams given, options are 'BirthDeath' or 'BirthLifetime'
+			String specifying the type of persistence diagrams given, options are 'BirthDeath' or 'BirthLifetime'.
 		:Parameter meshingScheme:
 			The type of meshing scheme. Only option currently is 'DV', a method based on this paper (add paper). Any other input here will only use the bounding box of all points in the Dgms in the training set. 
 		:Parameter numParts:
@@ -157,7 +157,7 @@ class ParameterBucket(object):
 
 		x = AllPoints[:,0]
 		y = AllPoints[:,1]
-		if type == 'BirthDeath':
+		if dgm_type == 'BirthDeath':
 			life = y-x
 		else:
 			life = y
@@ -183,7 +183,7 @@ class ParameterBucket(object):
 		If `pad` is non-zero, the boundaries of the bounding box on all sides except the one touching the diagonal are at least `pad` distance away from the closest point.
 
 		:Parameter DgmsPD:
-			A pd.Series or pd.DataFrame with a persistence diagram in each entry.
+			A pd.Series or pd.DataFrame with a persistence diagram in each entry. Must be in BirthDeath coordinates.
 		:Parameter pad:
 			The additional padding desired outside of the points in the diagrams.
 
@@ -224,6 +224,9 @@ class ParameterBucket(object):
 	def testEnclosesDgms(self, DgmSeries):
 		'''
 		Tests to see if the parameters enclose the persistence diagrams in the DgmSeries
+
+		:Parameter DgmSeries:
+			pd.Series of persistence diagrams. Must be in BirthDeath coordinates.
 
 		:returns: boolean
 
@@ -397,91 +400,61 @@ class TentParameters(ParameterBucket):
 
 
 
-	def chooseDeltaEpsWithPadding(self, DgmsPD, pad = 0):
-		'''
-		Sets delta and epsilon for tent function mesh. This code assumes that self.d has been set.
+	# def chooseDeltaEpsWithPadding(self, DgmsPD, pad = 0):
+	# 	'''
+	# 	Sets delta and epsilon for tent function mesh. This code assumes that self.d has been set.
 
-		The result is to set self.delta\f$=\delta\f$ and self.epsilon\f$=\epsilon\f$ so that the bounding box for the persistence diagram in the (birth, lifetime) coordinates is
-		\f[  [0,d \cdot \delta] \, \times \, [\epsilon, d \cdot \delta + \epsilon].  \f]
-		In the usual coordinates, this creates a parallelogram.
+	# 	The result is to set self.delta\f$=\delta\f$ and self.epsilon\f$=\epsilon\f$ so that the bounding box for the persistence diagram in the (birth, lifetime) coordinates is
+	# 	\f[  [0,d \cdot \delta] \, \times \, [\epsilon, d \cdot \delta + \epsilon].  \f]
+	# 	In the usual coordinates, this creates a parallelogram.
 
-		:Parameter DgmsSeries: 
-			A pd.series consisting of persistence diagrams
-		:Parameter pad:
-			The additional padding outside of the points in the diagrams
+	# 	:Parameter DgmsSeries: 
+	# 		A pd.series consisting of persistence diagrams. Diagrams must be in BirthDeath coordinates.
+	# 	:Parameter pad:
+	# 		The additional padding outside of the points in the diagrams
 
-		'''
+	# 	'''
 		
-		if isinstance(DgmsPD, pd.DataFrame):
-			AllDgms = []
-			for label in DgmsPD.columns:
-				DgmsSeries = DgmsPD[label]
-				AllDgms.extend(list(DgmsSeries))
+	# 	if isinstance(DgmsPD, pd.DataFrame):
+	# 		AllDgms = []
+	# 		for label in DgmsPD.columns:
+	# 			DgmsSeries = DgmsPD[label]
+	# 			AllDgms.extend(list(DgmsSeries))
 
-			DgmsSeries = pd.Series(AllDgms)
+	# 		DgmsSeries = pd.Series(AllDgms)
 
-		elif isinstance(DgmsPD, pd.Series):
-			DgmsSeries = DgmsPD
+	# 	elif isinstance(DgmsPD, pd.Series):
+	# 		DgmsSeries = DgmsPD
 
-		else:
-			print('Uh oh, you were supposed to pass a pd.series. \nExiting...')
-			return
-
-
-		topPers = pP.maxPersistenceSeries(DgmsSeries)
-		bottomPers = pP.minPersistenceSeries(DgmsSeries)
-		topBirth = max(DgmsSeries.apply(pP.maxBirth))
-
-		height = max(topPers,topBirth)
-
-		bottomBirth = min(DgmsSeries.apply(pP.minBirth))
+	# 	else:
+	# 		print('Uh oh, you were supposed to pass a pd.series. \nExiting...')
+	# 		return
 
 
-		if bottomBirth < 0:
-			print('This code assumes that birth time is always positive\nbut you have negative birth times....')
-			print('Your minimum birth time was', bottomBirth)
+	# 	topPers = pP.maxPersistenceSeries(DgmsSeries)
+	# 	bottomPers = pP.minPersistenceSeries(DgmsSeries)
+	# 	topBirth = max(DgmsSeries.apply(pP.maxBirth))
 
-		epsilon = bottomPers/2
+	# 	height = max(topPers,topBirth)
 
-		delta = (height + pad - epsilon) / self.d
-
-
-		self.delta = delta
-		self.epsilon = epsilon
+	# 	bottomBirth = min(DgmsSeries.apply(pP.minBirth))
 
 
-	def chooseEpsilon(self, DgmsPD):
-		'''
-		Sets epsilon for tent function to be 1/2*(min(lifetime)). 
+	# 	if bottomBirth < 0:
+	# 		print('This code assumes that birth time is always positive\nbut you have negative birth times....')
+	# 		print('Your minimum birth time was', bottomBirth)
 
-		:Parameter DgmsPD: 
-			A pd.series of persistence diagrams
+	# 	epsilon = bottomPers/2
 
-		'''
+	# 	delta = (height + pad - epsilon) / self.d
 
-		if isinstance(DgmsPD, pd.DataFrame):
-			AllDgms = []
-			for label in DgmsPD.columns:
-				DgmsSeries = DgmsPD[label]
-				AllDgms.extend(list(DgmsSeries))
 
-			DgmsSeries = pd.Series(AllDgms)
-
-		elif isinstance(DgmsPD, pd.Series):
-			DgmsSeries = DgmsPD
-
-		else:
-			print('Uh oh, you were supposed to pass a pd.series. \nExiting...')
-			return
-
-		bottomPers = pP.minPersistenceSeries(DgmsSeries)
-		epsilon = bottomPers/2
-
-		self.epsilon = epsilon
+	# 	self.delta = delta
+	# 	self.epsilon = epsilon
 
 
 
-	def chooseDeltaEpsForPartitions(self, pad=0):
+	def chooseDeltaEpsForPartitions(self, pad=0, verbose=False):
 		'''
 		Sets delta and epsilon for tent function mesh - this is an alternative to chooseDeltaEpsWithPadding.
 		It also assigns d to each partition and adds it to the partition bucket as another dictionary element. 
@@ -491,6 +464,8 @@ class TentParameters(ParameterBucket):
 		:Parameter pad: 
 			The additional padding outside of the points in the diagrams (this doesn't work currently don't use it)
 		
+		:Parameter verbose:
+			Boolean. If true will print additional messages and warnings.
 		'''		
 		
 		if pad != 0:
@@ -531,8 +506,9 @@ class TentParameters(ParameterBucket):
 			partition['supportNodes'] = [xmin - delta, xmax + delta, ymin - delta, ymax + delta]
 			
 			if partition['supportNodes'][2] < 0:
-				print('Uh oh your support will cross the diagonal, your bottom boundary is ', partition['supportNodes'][2])
-				print('Shifting the boundary of the partition up by necessary amount...')
+				if verbose:
+					print('Uh oh your support will cross the diagonal, your bottom boundary is ', partition['supportNodes'][2])
+					print('Shifting the boundary of the partition up by necessary amount...')
 				
 				#Shift top boundary up by however negative you went
 				partition['supportNodes'][3] = partition['supportNodes'][3] - (partition['supportNodes'][2])
@@ -548,7 +524,7 @@ class TentParameters(ParameterBucket):
 			# TO DO: could implement another method here to calculate it
 			partition['epsilon'] = 0
 
-		print('\nPartitions d, delta and epsilon have all been assigned to each partition.\n')
+		print('\nParameters d, delta and epsilon have all been assigned to each partition...\n')
 
 
 	def plotTentSupport(self):
@@ -615,7 +591,7 @@ def build_G(DgmSeries, params):
 	'''
 		Applies the passed featurization function to all diagrams in the series and outputs the feature matrix
 	:Parameter DgmSeries:
-		A pd.Series holding the persistence diagrams.
+		A pd.Series holding the persistence diagrams. Must be in BirthDeath coordinates.
 	:Parameter params: 
 		A parameter bucket used for calculations.
 	'''
@@ -659,13 +635,13 @@ def ML_via_featurization(DgmsDF,
 	Returns trained model.
 
 	:Parameter DgmsDF:
-		A pandas data frame containing, at least, a column of diagrams and a column of labels
+		A pandas data frame containing, at least, a column of diagrams and a column of labels. Diagrams must be in BirthDeath coordinates.
 	:Parameter labels_col:
 		A string. The label for the column in DgmsDF containing the training labels.
 	:Parameter dgm_col:
 		The label(s) for the column containing the diagrams given as a string or list of strings.
 	:Parameter params:
-		A class of type ParameterBucket
+		A class of type TentParameeters (subclass of class ParameterBucket)
 		Should store:
 			- **d**:
 				An integer, the number of elements for griding up
