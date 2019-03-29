@@ -347,7 +347,7 @@ class TentParameters(ParameterBucket):
 		Parameters that are included in the ParameterBucket initially:
 
 		:Parameter d, delta, epsilon;
-		    The bounding box for the persistence diagram in the (birth, lifetime) coordinates is [0,d * delta] x [epsilon, d* delta + epsilon].  In the usual coordinates, this creates a parallelogram.
+			The bounding box for the persistence diagram in the (birth, lifetime) coordinates is [0,d * delta] x [epsilon, d* delta + epsilon].  In the usual coordinates, this creates a parallelogram.
 		:Parameter clf_model;
 			The choice of tool used for classification or regression, passed as the function.  This code has been tested using `sklearn` functions `RidgeClassiferCV` for classification and `RidgeCV` for regression.
 		:Parameter feature_function;
@@ -491,15 +491,13 @@ class TentParameters(ParameterBucket):
 		:Parameter pad: 
 			The additional padding outside of the points in the diagrams (this doesn't work currently don't use it)
 		
-		'''
-
-		d = self.d
-		epsilon = self.epsilon
+		'''		
 		
 		if pad != 0:
 			print("Sorry padding doesn't work right now... Setting pad back to zero and continuing")
 			pad = 0
 
+		epsilon = self.epsilon
 		if epsilon != 0: 
 			print("Sorry only option for epsilon is zero right now... This could be updated later...")
 
@@ -511,15 +509,21 @@ class TentParameters(ParameterBucket):
 			ymin = partition['nodes'][2]
 			ymax = partition['nodes'][3]
 
-			# xmin = partition['nodes'][0]
-			# xmax = partition['nodes'][1]
-			# ymin = partition['nodes'][2]
-			# ymax = partition['nodes'][3]
-
 			xdiff = xmax - xmin
 			ydiff = ymax - ymin
+
+			d = self.d
+			if isinstance(d, list):
+				dx = d[0]
+				dy = d[1]
+			elif isinstance(d, int):
+				dx = d
+				dy = d
 		
-			delta = max(xdiff,ydiff) / d
+			deltax = xdiff / dx
+			deltay = ydiff / dy
+
+			delta = max(deltax, deltay)
 
 			partition['delta'] = delta
 
@@ -544,7 +548,7 @@ class TentParameters(ParameterBucket):
 			# TO DO: could implement another method here to calculate it
 			partition['epsilon'] = 0
 
-		print('\nd, delta and epsilon have all been assigned\n')
+		print('\nPartitions d, delta and epsilon have all been assigned to each partition.\n')
 
 
 	def plotTentSupport(self):
@@ -575,7 +579,7 @@ class TentParameters(ParameterBucket):
 		making figures
 
 		:returns: 
-			A list of '(d+1)*(d+1) \times 2' numpy arrays, one for each partition containing the centers of the mesh where tents can be centered
+			A list of '(dx+1)*(dy+1) \times 2' numpy arrays, one for each partition containing the centers of the mesh where tents can be centered
 
 		'''
 
@@ -588,8 +592,8 @@ class TentParameters(ParameterBucket):
 			delta = partition['delta']
 			xmin = partition['supportNodes'][0] +delta
 			ymin = partition['supportNodes'][2] +delta
-			for i in range(d+1):
-				for j in range(d+1):
+			for i in range(d[0]+1):
+				for j in range(d[1]+1):
 					partition_centers.append( [xmin + (i*delta) , ymin + (j*delta)] )
 			tent_centers.append(np.array(partition_centers))
 
