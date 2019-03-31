@@ -73,7 +73,6 @@ class Partitions:
             self.alpha = alpha
 
 
-
             # If there is data, use the chosen meshing scheme to build the partitions.
             if meshingScheme == 'DV' and self.isOrdinal(data):
                 # Figure out
