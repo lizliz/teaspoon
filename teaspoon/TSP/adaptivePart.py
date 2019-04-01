@@ -15,7 +15,8 @@ class Partitions:
     def __init__(self, data = None,
                  meshingScheme = None,
                  numParts=3,
-                 alpha=0.05):
+                 alpha=0.05,
+                 c=0):
         '''
         A data structure for storing a partition coming from an adapative meshing scheme.
         
@@ -30,6 +31,9 @@ class Partitions:
 
         :Parameter alpha:
             The significance level to test for independence
+
+        :Parameter c:
+            Use this parameter to restrict partition size
 
         TODO: Finish documentation
         '''
@@ -65,6 +69,14 @@ class Partitions:
             ymin = data[:,1].min()
             ymax = data[:,1].max()
 
+            if c != 0:
+                # c is the max partition size you want
+                self.c = max( (self.xFloats[xmax-1]-self.xFloats[xmin-1])/c, (self.yFloats[ymax-1]-self.yFloats[ymin-1])/c )
+            else:
+                self.c = 0
+
+            print(self.c)
+
             # self.borders stores x and y min and max of overall bounding box in 'nodes' and the number of points in the bounding box in 'npts'
             self.borders = {}
             self.borders['nodes'] = np.array([xmin, xmax, ymin, ymax])
@@ -79,7 +91,8 @@ class Partitions:
                 self.partitionBucket = self.return_partition_DV(data = data,
                                         borders = self.borders,
                                         r = self.numParts,
-                                        alpha = self.alpha)
+                                        alpha = self.alpha,
+                                        c = self.c)
             else: # meshingScheme == None
             # Note that right now, this will just do the dumb thing for every other input
                 self.partitionBucket = [self.borders]
@@ -210,7 +223,7 @@ class Partitions:
 
 
 
-    def return_partition_DV(self, data, borders, r=2, alpha=0.05):
+    def return_partition_DV(self, data, borders, r=2, alpha=0.05, c=0):
         '''
         Recursive method that partitions the data based on the DV method. 
 
@@ -243,6 +256,16 @@ class Partitions:
                        & (data[:, 1] >= Ymin)
                        & (data[:, 1] <= Ymax))
 
+        partitions = []
+
+        #exit criteria: if either height or width is less than the max size, return
+        if ( ( c != 0 ) and ( min(self.xFloats[int(Xmax-1)] - self.xFloats[int(Xmin-1)], self.yFloats[int(Ymax-1)] - self.yFloats[int(Ymin-1)]) < c) ):
+            #print('Box getting too small')
+            # reject futher partitions, and return original bin
+            partitions.insert(0, {'nodes': np.array([Xmin, Xmax, Ymin, Ymax]),
+                      'npts': len(idx[0])})
+            return partitions
+
         # extract the points in the bin
         Xsub = data[idx, 0]
         Ysub = data[idx, 1]
@@ -263,7 +286,6 @@ class Partitions:
 
         # first exit criteria: we cannot split into unique boundaries any more
         # preallocate the partition list
-        partitions = []
         if (len(np.unique(edges1, return_counts=True)[1]) < r + 1 or
              len(np.unique(edges2, return_counts=True)[1])< r + 1):
 
@@ -325,9 +347,10 @@ class Partitions:
             for binInfo in bins:
                 if binInfo['npts'] !=0:  # if the bin is not empty:
                     # append entries to the tuple
+                    #print('chi2 test failed... Partitioning further')
                     partitions.extend(self.return_partition_DV(data=data,
                                                             borders=binInfo,
-                                                            r=r, alpha=alpha))
+                                                            r=r, alpha=alpha,c=c))
 
         # Second exit criteria:
         # if the partitions are independent, reject further partitioning and

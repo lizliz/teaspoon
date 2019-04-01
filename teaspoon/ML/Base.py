@@ -122,7 +122,7 @@ class ParameterBucket(object):
 		return output
 
 
-	def makeAdaptivePartition(self, DgmsPD, dgm_type = 'BirthDeath', meshingScheme = 'DV', numParts = 3, alpha=0.05):
+	def makeAdaptivePartition(self, DgmsPD, dgm_type = 'BirthDeath', meshingScheme = 'DV', numParts = 3, alpha=0.05, c=0):
 		'''
 		Combines all persistence diagrams in the series together, then generates an adaptive partition mesh and includes it in the parameter bucket as self.partitions
 
@@ -163,9 +163,7 @@ class ParameterBucket(object):
 			life = y
 		fullData = np.column_stack((x,life))
 
-		self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme, numParts = numParts, alpha = alpha)
-
-		
+		self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme, numParts = numParts, alpha = alpha, c = c)		
 
 		# create new attribute to keep the index of the floats for the partition bucket
 		self.partitions.partitionBucketInd = deepcopy(self.partitions.partitionBucket)
@@ -717,7 +715,7 @@ def getPercentScore(DgmsDF,
 					dgm_col = 'Dgm1',
 					params = TentParameters(),
 					normalize = False,
-					verbose = True
+					verbose = True,
 					):
 	'''
 	Main testing function for classification or regression methods.
@@ -779,7 +777,12 @@ def getPercentScore(DgmsDF,
 
 	if params.useAdaptivePart == True:
 		# Hand the series to the makeAdaptivePartition function
-		params.makeAdaptivePartition(allDgms, meshingScheme = 'DV', alpha=params.alpha)
+		if hasattr(params, 'c'): 
+			c = params.c
+		else:
+			c = 0
+
+		params.makeAdaptivePartition(allDgms, meshingScheme = 'DV', alpha=params.alpha,c=c)
 	else:
 		# Just use the bounding box as the partition
 		params.makeAdaptivePartition(allDgms, meshingScheme = None)
