@@ -470,8 +470,7 @@ class TentParameters(ParameterBucket):
 			print("Sorry padding doesn't work right now... Setting pad back to zero and continuing")
 			pad = 0
 
-		epsilon = self.epsilon
-		if epsilon != 0: 
+		if self.epsilon != 0: 
 			print("Sorry only option for epsilon is zero right now... This could be updated later...")
 
 		# choose delta to be the max of the width or the height of the partition divided by d
@@ -522,7 +521,7 @@ class TentParameters(ParameterBucket):
 			# TO DO: could implement another method here to calculate it
 			partition['epsilon'] = 0
 
-		print('\nParameters d, delta and epsilon have all been assigned to each partition...\n')
+		#print('\nParameters d, delta and epsilon have all been assigned to each partition...\n')
 
 
 	def plotTentSupport(self):
@@ -776,18 +775,20 @@ def getPercentScore(DgmsDF,
 	allDgms = pd.concat((D_train[label] for label in dgm_col))
 
 	if params.useAdaptivePart == True:
-		# Hand the series to the makeAdaptivePartition function
 		if hasattr(params, 'c'): 
 			c = params.c
 		else:
 			c = 0
 
+		# Hand the series to the makeAdaptivePartition function
 		params.makeAdaptivePartition(allDgms, meshingScheme = 'DV', alpha=params.alpha,c=c)
 	else:
 		# Just use the bounding box as the partition
 		params.makeAdaptivePartition(allDgms, meshingScheme = None)
 
-	params.chooseDeltaEpsForPartitions(verbose=verbose)
+	# If using tent functions, calculate delta and epsilon
+	if (params.feature_function.__name__ == 'tent'):
+		params.chooseDeltaEpsForPartitions(verbose=verbose)
 
 	#--------Training------------#
 	if verbose:

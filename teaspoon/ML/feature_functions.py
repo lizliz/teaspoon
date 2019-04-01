@@ -403,8 +403,6 @@ def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
 
         query_Dgm_pts = getSubset(A, partition)
 
-        print(query_Dgm_pts)
-
         # get the number of query points
         num_query_pts = len(query_Dgm_pts)
 

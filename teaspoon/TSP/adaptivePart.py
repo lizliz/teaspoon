@@ -42,7 +42,7 @@ class Partitions:
             # check that the data is in ordinal coordinates
             # data converted to ordinal and stored locally if not already
             if not self.isOrdinal(data):
-                print("Converting the data to ordinal...")
+                #print("Converting the data to ordinal...")
                 # perform ordinal sampling (ranking) transformation
                 xRanked = rankdata(data[:,0], method='ordinal')
                 yRanked = rankdata(data[:,1], method='ordinal')
@@ -74,8 +74,6 @@ class Partitions:
                 self.c = max( (self.xFloats[xmax-1]-self.xFloats[xmin-1])/c, (self.yFloats[ymax-1]-self.yFloats[ymin-1])/c )
             else:
                 self.c = 0
-
-            print(self.c)
 
             # self.borders stores x and y min and max of overall bounding box in 'nodes' and the number of points in the bounding box in 'npts'
             self.borders = {}
