@@ -96,7 +96,7 @@ class ParameterBucket(object):
 		:Parameter seed:
 			The seed for the pseudo-random number generator.  Pass None if you don't want it fixed; otherwise, pass an integer.
 		:Parameter kwargs:
-			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh. 
+			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh.
 
 		'''
 
@@ -122,7 +122,7 @@ class ParameterBucket(object):
 		return output
 
 
-	def makeAdaptivePartition(self, DgmsPD, dgm_type = 'BirthDeath', meshingScheme = 'DV', numParts = 3, alpha=0.05, c=0):
+	def makeAdaptivePartition(self, DgmsPD, dgm_type = 'BirthDeath', meshingScheme = 'DV', numParts = 3, alpha=0.05, c=0, nmin=0):
 		'''
 		Combines all persistence diagrams in the series together, then generates an adaptive partition mesh and includes it in the parameter bucket as self.partitions
 
@@ -133,7 +133,7 @@ class ParameterBucket(object):
 		:Parameter type:
 			String specifying the type of persistence diagrams given, options are 'BirthDeath' or 'BirthLifetime'.
 		:Parameter meshingScheme:
-			The type of meshing scheme. Only option currently is 'DV', a method based on this paper (add paper). Any other input here will only use the bounding box of all points in the Dgms in the training set. 
+			The type of meshing scheme. Only option currently is 'DV', a method based on this paper (add paper). Any other input here will only use the bounding box of all points in the Dgms in the training set.
 		:Parameter numParts:
 			Number of partitions in each direction
 
@@ -163,7 +163,7 @@ class ParameterBucket(object):
 			life = y
 		fullData = np.column_stack((x,life))
 
-		self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme, numParts = numParts, alpha = alpha, c = c)		
+		self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme, numParts = numParts, alpha = alpha, c = c, nmin = nmin)
 
 		# create new attribute to keep the index of the floats for the partition bucket
 		self.partitions.partitionBucketInd = deepcopy(self.partitions.partitionBucket)
@@ -173,7 +173,7 @@ class ParameterBucket(object):
 			self.partitions.convertOrdToFloat(partition)
 
 
-		
+
 	# def setBoundingBox(self,DgmsPD,pad = 0):
 	# 	'''
 	# 	Sets `self.boundingBox` to be a dictionary with two keys, 'birthAxis' and 'lifetimeAxis', each outputing
@@ -281,11 +281,11 @@ class InterpPolyParameters(ParameterBucket):
 		Parameters that are included in the ParameterBucket initially:
 
 		:Parameter d:
-			
-		:Parameter useAdaptivePart: 
+
+		:Parameter useAdaptivePart:
 			Boolean to determine whether you want to adaptively partition the persistence diagrams. By default it is set to False.
 		:Parameter meshingScheme:
-			The type of meshing scheme. Only option currently is 'DV', a method based on this paper (add paper). Any other input here will only use the bounding box of all points in the Dgms in the training set. 
+			The type of meshing scheme. Only option currently is 'DV', a method based on this paper (add paper). Any other input here will only use the bounding box of all points in the Dgms in the training set.
 		:Parameter jacobi_poly:
 			The type of interpolating polynomial to use. Options are 'cheb1' and 'legendre'.
 		:Parameter clf_model:
@@ -297,7 +297,7 @@ class InterpPolyParameters(ParameterBucket):
 		:Parameter seed:
 			The seed for the pseudo-random number generator.  Pass None if you don't want it fixed; otherwise, pass an integer.
 		:Parameter kwargs:
-			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh. 
+			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh.
 
 		'''
 
@@ -339,7 +339,7 @@ class TentParameters(ParameterBucket):
 				**kwargs):
 
 
-		''' 
+		'''
 		Creates a new ParameterBucket object.
 
 		This object is being used to keep track of all the parameters needed
@@ -360,10 +360,10 @@ class TentParameters(ParameterBucket):
 		:Parameter maxPower;
 			The maximum degree used for the monomial combinations of the tent functions.  Testing suggests we usually want this to be 1.  Increasing causes large increase in number of features.
 		:Parameter kwargs;
-			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh. 
+			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh.
 
 		'''
-	
+
 		# Set all the necessary parameters for tents function
 		self.feature_function = fF.tent
 		self.useAdaptivePart = False
@@ -406,13 +406,13 @@ class TentParameters(ParameterBucket):
 	# 	\f[  [0,d \cdot \delta] \, \times \, [\epsilon, d \cdot \delta + \epsilon].  \f]
 	# 	In the usual coordinates, this creates a parallelogram.
 
-	# 	:Parameter DgmsSeries: 
+	# 	:Parameter DgmsSeries:
 	# 		A pd.series consisting of persistence diagrams. Diagrams must be in BirthDeath coordinates.
 	# 	:Parameter pad:
 	# 		The additional padding outside of the points in the diagrams
 
 	# 	'''
-		
+
 	# 	if isinstance(DgmsPD, pd.DataFrame):
 	# 		AllDgms = []
 	# 		for label in DgmsPD.columns:
@@ -455,27 +455,27 @@ class TentParameters(ParameterBucket):
 	def chooseDeltaEpsForPartitions(self, pad=0, verbose=False):
 		'''
 		Sets delta and epsilon for tent function mesh - this is an alternative to chooseDeltaEpsWithPadding.
-		It also assigns d to each partition and adds it to the partition bucket as another dictionary element. 
+		It also assigns d to each partition and adds it to the partition bucket as another dictionary element.
 		Currently the only option is to use the same d for each partition but this may change in the future.
 		You can choose different number of divisions in the mesh for x and y directions.
 
-		:Parameter pad: 
+		:Parameter pad:
 			The additional padding outside of the points in the diagrams (this doesn't work currently don't use it)
-		
+
 		:Parameter verbose:
 			Boolean. If true will print additional messages and warnings.
-		'''		
-		
+		'''
+
 		if pad != 0:
 			print("Sorry padding doesn't work right now... Setting pad back to zero and continuing")
 			pad = 0
 
-		if self.epsilon != 0: 
+		if self.epsilon != 0:
 			print("Sorry only option for epsilon is zero right now... This could be updated later...")
 
 		# choose delta to be the max of the width or the height of the partition divided by d
 		# Note need to iterate over partitionBucket (not just Partitions class) so we can add dictionary elements
-		for partition in self.partitions.partitionBucket:    
+		for partition in self.partitions.partitionBucket:
 			xmin = partition['nodes'][0]
 			xmax = partition['nodes'][1]
 			ymin = partition['nodes'][2]
@@ -491,7 +491,7 @@ class TentParameters(ParameterBucket):
 			elif isinstance(d, int):
 				dx = d
 				dy = d
-		
+
 			deltax = xdiff / dx
 			deltay = ydiff / dy
 
@@ -501,18 +501,18 @@ class TentParameters(ParameterBucket):
 
 			# supportNodes contain the nodes of the bounding box for where tent functions are supported
 			partition['supportNodes'] = [xmin - delta, xmax + delta, ymin - delta, ymax + delta]
-			
+
 			if partition['supportNodes'][2] < 0:
 				# if verbose:
 				# 	print('Uh oh your support will cross the diagonal, your bottom boundary is ', partition['supportNodes'][2])
 				# 	print('Shifting the boundary of the partition up by necessary amount...')
-				
+
 				#Shift top boundary up by however negative you went
 				partition['supportNodes'][3] = partition['supportNodes'][3] - (partition['supportNodes'][2])
 
 				#Shift bottom boundary up to zero
 				partition['supportNodes'][2] = 0
-			
+
 
 			# Assign d as an element in the dictionary for each partition
 			partition['d'] = d
@@ -526,7 +526,7 @@ class TentParameters(ParameterBucket):
 
 	def plotTentSupport(self):
 		'''
-		Plots the bounding box of the support of all the tent functions 
+		Plots the bounding box of the support of all the tent functions
 
 		'''
 
@@ -551,7 +551,7 @@ class TentParameters(ParameterBucket):
 		Calculates the points on the mesh where a tent function is centered. Mainly useful for debugging and
 		making figures
 
-		:returns: 
+		:returns:
 			A list of '(dx+1)*(dy+1) \times 2' numpy arrays, one for each partition containing the centers of the mesh where tents can be centered
 
 		'''
@@ -589,7 +589,7 @@ def build_G(DgmSeries, params):
 		Applies the passed featurization function to all diagrams in the series and outputs the feature matrix
 	:Parameter DgmSeries:
 		A pd.Series holding the persistence diagrams. Must be in BirthDeath coordinates.
-	:Parameter params: 
+	:Parameter params:
 		A parameter bucket used for calculations.
 	'''
 
@@ -650,7 +650,7 @@ def ML_via_featurization(DgmsDF,
 			- **clfClass**:
 				The class which will be used for classification.  Currently tested
 				using `sklearn.RidgeClassifierCV` and `sklearn.RidgeCV`.
-	
+
 	:returns:
 		The classifier object. Coefficients can be found from clf.coef_
 
@@ -719,7 +719,7 @@ def getPercentScore(DgmsDF,
 	'''
 	Main testing function for classification or regression methods.
 	Does train/test split, creates classifier, and returns score on test.
-	
+
 	:Parameter DgmsDF:
 		A pandas data frame containing, at least, a column of diagrams and a column of labels
 	:Parameter labels_col:
@@ -739,7 +739,7 @@ def getPercentScore(DgmsDF,
 				None if we don't want to mess with the seed for the train_test_split function. Else, pass integer.
 			- **test_split**:
 				The percentage of the data to be reserved for the test part of the train/test split.
-	
+
 	:returns:
 		Returned as a dictionary of entries:
 		- **score**
@@ -753,7 +753,7 @@ def getPercentScore(DgmsDF,
 			The fitted model
 	'''
 
-	
+
 	if verbose:
 		print('---')
 		print('Beginning experiment.')
@@ -775,7 +775,7 @@ def getPercentScore(DgmsDF,
 	allDgms = pd.concat((D_train[label] for label in dgm_col))
 
 	if params.useAdaptivePart == True:
-		if hasattr(params, 'c'): 
+		if hasattr(params, 'c'):
 			c = params.c
 		else:
 			c = 0

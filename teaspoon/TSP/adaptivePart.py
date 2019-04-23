@@ -16,24 +16,28 @@ class Partitions:
                  meshingScheme = None,
                  numParts=3,
                  alpha=0.05,
-                 c=0):
+                 c=0,
+                 nmin = 0):
         '''
         A data structure for storing a partition coming from an adapative meshing scheme.
-        
+
         :Parameter data:
             A numpy array of type many by 2
-        
+
         :Parameter meshingScheme:
-            The type of meshing scheme. Only option currently is 'DV', a method based on this paper (add paper). Any other input here will only use the bounding box of all points in the Dgms in the training set.     
-        
+            The type of meshing scheme. Only option currently is 'DV', a method based on this paper (add paper). Any other input here will only use the bounding box of all points in the Dgms in the training set.
+
         :Parameter numParts:
-            Number of partitions in each direction
+            Number of subpartitions in each direction (ie numParts=2 breaks each partition into 2 parts in each direction, thus 4 subpartitions total)
 
         :Parameter alpha:
             The significance level to test for independence
 
         :Parameter c:
-            Use this parameter to restrict partition size
+            Maximum number of total partitions in each direction
+
+        :Parameter nmin:
+            Minimum number of points in each partition to keep recursion going (default is 5 because chisquare test breaks down if you have less than 5 points per partition).
 
         TODO: Finish documentation
         '''
@@ -70,10 +74,12 @@ class Partitions:
             ymax = data[:,1].max()
 
             if c != 0:
-                # c is the max partition size you want
+                # convert c from integer to the corresponding width/height
                 self.c = max( (self.xFloats[xmax-1]-self.xFloats[xmin-1])/c, (self.yFloats[ymax-1]-self.yFloats[ymin-1])/c )
             else:
                 self.c = 0
+
+            self.nmin = nmin
 
             # self.borders stores x and y min and max of overall bounding box in 'nodes' and the number of points in the bounding box in 'npts'
             self.borders = {}
@@ -90,7 +96,8 @@ class Partitions:
                                         borders = self.borders,
                                         r = self.numParts,
                                         alpha = self.alpha,
-                                        c = self.c)
+                                        c = self.c,
+                                        nmin = self.nmin)
             else: # meshingScheme == None
             # Note that right now, this will just do the dumb thing for every other input
                 self.partitionBucket = [self.borders]
@@ -103,7 +110,7 @@ class Partitions:
 
     def convertOrdToFloat(self,partitionEntry):
         '''
-        Converts to nodes of a partition entry from ordinal back to floats. 
+        Converts to nodes of a partition entry from ordinal back to floats.
 
         :Parameter partitionEntry:
             The partition that you want to convert.
@@ -210,7 +217,7 @@ class Partitions:
 
     def isOrdinal(self, dd):
         '''
-        Helper function for error checking. Used to make sure input is in ordinal coordinates. 
+        Helper function for error checking. Used to make sure input is in ordinal coordinates.
         It checks that when the two data columns are sorted they are each equal to an ordered vector with the same number of rows.
         '''
         return np.all(np.equal(np.sort(dd, axis=0),
@@ -219,27 +226,31 @@ class Partitions:
 
 
 
-
-
-    def return_partition_DV(self, data, borders, r=2, alpha=0.05, c=0):
+    def return_partition_DV(self, data, borders, r=2, alpha=0.05, c=0, nmin=5):
         '''
-        Recursive method that partitions the data based on the DV method. 
+        Recursive method that partitions the data based on the DV method.
 
         :Parameter data:
             A manyx2 numpy array that contains all the original data
 
         :Parameter borders:
             A dictionary that contains 'nodes' with a numpy array of Xmin, Xmax, Ymin, Ymax,
-        
+
         :Parameter r:
             The number of partitions
 
         :Parameter alpha:
             The significance level to test for independence
 
+        :Parameter c:
+            Minimum width/height of a partition before recursion stops
+
+        :Parameter nmin:
+            Minimum number of points in each partition to keep recursion going. The default is 5 because chisquare test breaks down with less than 5 points per partition, thus we recommend choosing nmin>=5.
+
         :returns:
             List of dictionaries. Each dictionary corresponds to a partition and contains 'nodes', a numpy array of Xmin, Xmax, Ymin, Ymax of the partition, and 'npts', the number of points in the partition.
-        
+
         '''
         # extract the bin boundaries
         Xmin = borders['nodes'][0]
@@ -256,7 +267,8 @@ class Partitions:
 
         partitions = []
 
-        #exit criteria: if either height or width is less than the max size, return
+        # Exit Criteria:
+        # if either height or width is less than the max size, return
         if ( ( c != 0 ) and ( min(self.xFloats[int(Xmax-1)] - self.xFloats[int(Xmin-1)], self.yFloats[int(Ymax-1)] - self.yFloats[int(Ymin-1)]) < c) ):
             #print('Box getting too small')
             # reject futher partitions, and return original bin
@@ -320,6 +332,15 @@ class Partitions:
         # loop that creates the dictionaries below
         binCounts = binned_data.statistic.flatten('F')
 
+        # Exit Criteria:
+        # check if sum of bin counts is less than threshold nmin
+        # nmin is necessary because chisquare breaks down if you have less than
+        # 5 points in each bin
+        if nmin != 0:
+            if np.sum(binCounts) < nmin * (r**2):
+                partitions.insert(0, {'nodes': np.array([Xmin, Xmax, Ymin, Ymax]),'npts': len(idx[0])})
+                return partitions
+
         # define an empty list to hold the dictionaries of the fresh partitions
         bins = []
         # create dictionaries for each bin
@@ -348,9 +369,10 @@ class Partitions:
                     #print('chi2 test failed... Partitioning further')
                     partitions.extend(self.return_partition_DV(data=data,
                                                             borders=binInfo,
-                                                            r=r, alpha=alpha,c=c))
+                                                            r=r, alpha=alpha,c=c,
+                                                            nmin=nmin))
 
-        # Second exit criteria:
+        # Exit Criteria:
         # if the partitions are independent, reject further partitioning and
         # save the orignal, unpartitioned bin
         elif len(idx[0]) !=0:
