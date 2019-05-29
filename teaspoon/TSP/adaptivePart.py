@@ -34,7 +34,7 @@ class Partitions:
             The significance level to test for independence
 
         :Parameter c:
-            Maximum number of total partitions in each direction
+            Parameter for an exit criteria. Partitioning stops if min(width of partition, height of partition) < max(width of bounding box, height of bounding box)/c.
 
         :Parameter nmin:
             Minimum number of points in each partition to keep recursion going (default is 5 because chisquare test breaks down if you have less than 5 points per partition).
@@ -243,7 +243,7 @@ class Partitions:
             The significance level to test for independence
 
         :Parameter c:
-            Minimum width/height of a partition before recursion stops
+            Parameter for an exit criteria. Partitioning stops if min(width of partition, height of partition) < max(width of bounding box, height of bounding box)/c.
 
         :Parameter nmin:
             Minimum number of points in each partition to keep recursion going. The default is 5 because chisquare test breaks down with less than 5 points per partition, thus we recommend choosing nmin>=5.
@@ -333,7 +333,7 @@ class Partitions:
         binCounts = binned_data.statistic.flatten('F')
 
         # Exit Criteria:
-        # check if sum of bin counts is less than threshold nmin
+        # check if sum of bin counts is less than threshold of nmin per bin
         # nmin is necessary because chisquare breaks down if you have less than
         # 5 points in each bin
         if nmin != 0:
