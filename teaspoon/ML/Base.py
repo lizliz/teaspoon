@@ -96,7 +96,7 @@ class ParameterBucket(object):
 		:Parameter seed:
 			The seed for the pseudo-random number generator.  Pass None if you don't want it fixed; otherwise, pass an integer.
 		:Parameter kwargs:
-			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh.
+			Any leftover inputs are stored as attributes.
 
 		'''
 
@@ -136,6 +136,13 @@ class ParameterBucket(object):
 			The type of meshing scheme. Only option currently is 'DV', a method based on this paper (add paper). Any other input here will only use the bounding box of all points in the Dgms in the training set.
 		:Parameter numParts:
 			Number of partitions in each direction
+		:Parameter alpha:
+			The significance level to test for independence
+		:Parameter c:
+			Parameter for an exit criteria. Partitioning stops if min(width of partition, height of partition) < max(width of bounding box, height of bounding box)/c.
+		:Parameter nmin:
+            Minimum number of points in each partition to keep recursion going. The default is 5 because chisquare test breaks down with less than 5 points per partition, thus we recommend choosing nmin>=5.
+
 
 		TODO: This can't handle infinite points in the diagram yet
 		'''
@@ -152,7 +159,6 @@ class ParameterBucket(object):
 			AllPoints = np.concatenate(list(DgmsPD))
 
 		# Remove inifinite points
-
 		AllPoints = pP.removeInfiniteClasses(AllPoints)
 
 		x = AllPoints[:,0]
@@ -281,7 +287,7 @@ class InterpPolyParameters(ParameterBucket):
 		Parameters that are included in the ParameterBucket initially:
 
 		:Parameter d:
-
+			Number of mesh points in each direction.
 		:Parameter useAdaptivePart:
 			Boolean to determine whether you want to adaptively partition the persistence diagrams. By default it is set to False.
 		:Parameter meshingScheme:
@@ -297,7 +303,7 @@ class InterpPolyParameters(ParameterBucket):
 		:Parameter seed:
 			The seed for the pseudo-random number generator.  Pass None if you don't want it fixed; otherwise, pass an integer.
 		:Parameter kwargs:
-			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh.
+			Any leftover inputs are stored as attributes.
 
 		'''
 
@@ -454,13 +460,14 @@ class TentParameters(ParameterBucket):
 
 	def chooseDeltaEpsForPartitions(self, pad=0, verbose=False):
 		'''
-		Sets delta and epsilon for tent function mesh - this is an alternative to chooseDeltaEpsWithPadding.
+		Sets delta and epsilon for tent function mesh.
 		It also assigns d to each partition and adds it to the partition bucket as another dictionary element.
 		Currently the only option is to use the same d for each partition but this may change in the future.
 		You can choose different number of divisions in the mesh for x and y directions.
+		This works whether you are using adaptive partitions or not.
 
 		:Parameter pad:
-			The additional padding outside of the points in the diagrams (this doesn't work currently don't use it)
+			The additional padding outside of the points in the diagrams (this doesn't work currently)
 
 		:Parameter verbose:
 			Boolean. If true will print additional messages and warnings.
@@ -484,6 +491,8 @@ class TentParameters(ParameterBucket):
 			xdiff = xmax - xmin
 			ydiff = ymax - ymin
 
+			# d can be an integer meaning use same d in all directions,
+			# or a list of d in each direction
 			d = self.d
 			if isinstance(d, list):
 				dx = d[0]
@@ -492,16 +501,19 @@ class TentParameters(ParameterBucket):
 				dx = d
 				dy = d
 
+			# calculate delta in each direction and choose the max
 			deltax = xdiff / dx
 			deltay = ydiff / dy
-
 			delta = max(deltax, deltay)
 
+			# assign this delta to the partition
 			partition['delta'] = delta
 
 			# supportNodes contain the nodes of the bounding box for where tent functions are supported
 			partition['supportNodes'] = [xmin - delta, xmax + delta, ymin - delta, ymax + delta]
 
+			# check if support will cross the diagonal
+			# if it does, shift it up so the bottom of the support lies on zero
 			if partition['supportNodes'][2] < 0:
 				# if verbose:
 				# 	print('Uh oh your support will cross the diagonal, your bottom boundary is ', partition['supportNodes'][2])
@@ -685,6 +697,10 @@ def ML_via_featurization(DgmsDF,
 
 	if verbose:
 		print('Number of features used is', numFeatures,'...')
+		print('Number of nonzero features is ', len(np.where(G.any(axis=0))[0]) )
+
+	params.nnz_features = len(np.where(G.any(axis=0))[0])
+	# nnz_features = len(np.where(G.any(axis=0))[0])
 
 	clf.fit(G,list(DgmsDF[labels_col]))
 
@@ -780,8 +796,13 @@ def getPercentScore(DgmsDF,
 		else:
 			c = 0
 
+		if hasattr(params, 'nmin'):
+			nmin = params.nmin
+		else:
+			nmin = 5
+
 		# Hand the series to the makeAdaptivePartition function
-		params.makeAdaptivePartition(allDgms, meshingScheme = 'DV', alpha=params.alpha,c=c)
+		params.makeAdaptivePartition(allDgms, meshingScheme = 'DV', alpha=params.alpha, c=c, nmin=nmin)
 	else:
 		# Just use the bounding box as the partition
 		params.makeAdaptivePartition(allDgms, meshingScheme = None)
