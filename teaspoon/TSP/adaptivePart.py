@@ -66,28 +66,27 @@ class Partitions:
                 # and return an empty partition bucket
 
             # If there is data, set the bounding box to be the max and min in the data
-
-
             xmin = data[:,0].min()
             xmax = data[:,0].max()
             ymin = data[:,1].min()
             ymax = data[:,1].max()
 
-            if c != 0:
-                # convert c from integer to the corresponding width/height
-                self.c = max( (self.xFloats[xmax-1]-self.xFloats[xmin-1])/c, (self.yFloats[ymax-1]-self.yFloats[ymin-1])/c )
-            else:
-                self.c = 0
-
-            self.nmin = nmin
-
             # self.borders stores x and y min and max of overall bounding box in 'nodes' and the number of points in the bounding box in 'npts'
             self.borders = {}
             self.borders['nodes'] = np.array([xmin, xmax, ymin, ymax])
             self.borders['npts'] = data.shape[0]
+
+            # set parameters for partitioning algorithm
             self.numParts = numParts
             self.alpha = alpha
+            self.nmin = nmin
 
+            if c != 0:
+                # convert c from integer to the corresponding width/height
+                self.c = max( (self.xFloats[xmax-1]-self.xFloats[xmin-1])/c, (self.yFloats[ymax-1]-self.yFloats[ymin-1])/c )
+            else:
+                # c=0 means we don't use this paramter for an exit criteria
+                self.c = 0
 
             # If there is data, use the chosen meshing scheme to build the partitions.
             if meshingScheme == 'DV' and self.isOrdinal(data):
@@ -237,7 +236,7 @@ class Partitions:
             A dictionary that contains 'nodes' with a numpy array of Xmin, Xmax, Ymin, Ymax,
 
         :Parameter r:
-            The number of partitions
+            The number of partitions to split in each direction (i.e. r=2 means each partition is split into a 2 by 2 grid of partitions)
 
         :Parameter alpha:
             The significance level to test for independence
@@ -373,8 +372,8 @@ class Partitions:
                                                             nmin=nmin))
 
         # Exit Criteria:
-        # if the partitions are independent, reject further partitioning and
-        # save the orignal, unpartitioned bin
+        # if the partitions are independent and nonempty, reject further partitioning
+        # and save the orignal, unpartitioned bin
         elif len(idx[0]) !=0:
             partitions.insert(0, {'nodes': np.array([Xmin, Xmax, Ymin, Ymax]),
                       'npts': len(idx[0])})
