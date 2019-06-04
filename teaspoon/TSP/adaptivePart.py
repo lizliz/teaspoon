@@ -268,8 +268,10 @@ class Partitions:
 
         # Exit Criteria:
         # if either height or width is less than the max size, return
-        if ( ( c != 0 ) and ( min(self.xFloats[int(Xmax-1)] - self.xFloats[int(Xmin-1)], self.yFloats[int(Ymax-1)] - self.yFloats[int(Ymin-1)]) < c) ):
-            #print('Box getting too small')
+        width = self.xFloats[int(Xmax-1)] - self.xFloats[int(Xmin-1)]
+        height = self.yFloats[int(Ymax-1)] - self.yFloats[int(Ymin-1)]
+        if ( ( c != 0 ) and ( min(width,height) < c) ):
+            # print('Box getting too small, min(width,height)<', c)
             # reject futher partitions, and return original bin
             partitions.insert(0, {'nodes': np.array([Xmin, Xmax, Ymin, Ymax]),
                       'npts': len(idx[0])})

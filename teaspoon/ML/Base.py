@@ -462,20 +462,16 @@ class TentParameters(ParameterBucket):
 		'''
 		Sets delta and epsilon for tent function mesh.
 		It also assigns d to each partition and adds it to the partition bucket as another dictionary element.
-		Currently the only option is to use the same d for each partition but this may change in the future.
+		Currently the only option is to use the same d for each partition.
 		You can choose different number of divisions in the mesh for x and y directions.
 		This works whether you are using adaptive partitions or not.
 
 		:Parameter pad:
-			The additional padding outside of the points in the diagrams (this doesn't work currently)
+			The additional padding outside of the points in the bounding box/partition
 
 		:Parameter verbose:
 			Boolean. If true will print additional messages and warnings.
 		'''
-
-		if pad != 0:
-			print("Sorry padding doesn't work right now... Setting pad back to zero and continuing")
-			pad = 0
 
 		if self.epsilon != 0:
 			print("Sorry only option for epsilon is zero right now... This could be updated later...")
@@ -483,10 +479,11 @@ class TentParameters(ParameterBucket):
 		# choose delta to be the max of the width or the height of the partition divided by d
 		# Note need to iterate over partitionBucket (not just Partitions class) so we can add dictionary elements
 		for partition in self.partitions.partitionBucket:
-			xmin = partition['nodes'][0]
-			xmax = partition['nodes'][1]
-			ymin = partition['nodes'][2]
-			ymax = partition['nodes'][3]
+			# add or subtract padding if needed
+			xmin = partition['nodes'][0] - pad
+			xmax = partition['nodes'][1] + pad
+			ymin = partition['nodes'][2] - pad
+			ymax = partition['nodes'][3] + pad
 
 			xdiff = xmax - xmin
 			ydiff = ymax - ymin
