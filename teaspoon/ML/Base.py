@@ -122,7 +122,7 @@ class ParameterBucket(object):
 		return output
 
 
-	def makeAdaptivePartition(self, DgmsPD, dgm_type = 'BirthDeath', meshingScheme = 'DV', numParts = 3, alpha=0.05, c=0, nmin=0):
+	def makeAdaptivePartition(self, DgmsPD, convertToOrd = True, dgm_type = 'BirthDeath', meshingScheme = 'DV', numParts = 3, alpha=0.05, c=0, nmin=0, split=False):
 		'''
 		Combines all persistence diagrams in the series together, then generates an adaptive partition mesh and includes it in the parameter bucket as self.partitions
 
@@ -169,14 +169,18 @@ class ParameterBucket(object):
 			life = y
 		fullData = np.column_stack((x,life))
 
-		self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme, numParts = numParts, alpha = alpha, c = c, nmin = nmin)
+		self.partitions = Partitions(data = fullData, convertToOrd = convertToOrd, meshingScheme = meshingScheme, numParts = numParts, alpha = alpha, c = c, nmin = nmin, split=split)
 
-		# create new attribute to keep the index of the floats for the partition bucket
-		self.partitions.partitionBucketInd = deepcopy(self.partitions.partitionBucket)
 
-		# convert nodes in partitions to floats in partition bucket
-		for partition in self.partitions.partitionBucket:
-			self.partitions.convertOrdToFloat(partition)
+		# If we used ordinals to begin with, save the ordinal partitions and
+		# convert them back to floats
+		if hasattr(self.partitions,'xFloats'):
+			# create new attribute to keep the index of the floats for the partition bucket
+			self.partitions.partitionBucketInd = deepcopy(self.partitions.partitionBucket)
+
+			# convert nodes in partitions to floats in partition bucket
+			for partition in self.partitions.partitionBucket:
+				self.partitions.convertOrdToFloat(partition)
 
 
 
@@ -407,54 +411,66 @@ class TentParameters(ParameterBucket):
 	# def chooseDeltaEpsWithPadding(self, DgmsPD, pad = 0):
 	# 	'''
 	# 	Sets delta and epsilon for tent function mesh. This code assumes that self.d has been set.
-
+	#
 	# 	The result is to set self.delta\f$=\delta\f$ and self.epsilon\f$=\epsilon\f$ so that the bounding box for the persistence diagram in the (birth, lifetime) coordinates is
 	# 	\f[  [0,d \cdot \delta] \, \times \, [\epsilon, d \cdot \delta + \epsilon].  \f]
 	# 	In the usual coordinates, this creates a parallelogram.
-
+	#
 	# 	:Parameter DgmsSeries:
 	# 		A pd.series consisting of persistence diagrams. Diagrams must be in BirthDeath coordinates.
 	# 	:Parameter pad:
 	# 		The additional padding outside of the points in the diagrams
-
+	#
 	# 	'''
-
+	#
 	# 	if isinstance(DgmsPD, pd.DataFrame):
 	# 		AllDgms = []
 	# 		for label in DgmsPD.columns:
 	# 			DgmsSeries = DgmsPD[label]
 	# 			AllDgms.extend(list(DgmsSeries))
-
+	#
 	# 		DgmsSeries = pd.Series(AllDgms)
-
+	#
 	# 	elif isinstance(DgmsPD, pd.Series):
 	# 		DgmsSeries = DgmsPD
-
+	#
 	# 	else:
 	# 		print('Uh oh, you were supposed to pass a pd.series. \nExiting...')
 	# 		return
-
-
+	#
+	#
 	# 	topPers = pP.maxPersistenceSeries(DgmsSeries)
 	# 	bottomPers = pP.minPersistenceSeries(DgmsSeries)
 	# 	topBirth = max(DgmsSeries.apply(pP.maxBirth))
-
+	#
 	# 	height = max(topPers,topBirth)
-
+	#
 	# 	bottomBirth = min(DgmsSeries.apply(pP.minBirth))
-
-
+	#
+	#
 	# 	if bottomBirth < 0:
 	# 		print('This code assumes that birth time is always positive\nbut you have negative birth times....')
 	# 		print('Your minimum birth time was', bottomBirth)
-
+	#
 	# 	epsilon = bottomPers/2
-
+	#
 	# 	delta = (height + pad - epsilon) / self.d
-
-
+	#
+	#
 	# 	self.delta = delta
 	# 	self.epsilon = epsilon
+	#
+	# 	for partition in self.partitions.partitionBucket:
+	# 		partition['delta'] = delta
+	# 		partition['epsilon'] = epsilon
+	#
+	# 		xmin = partition['nodes'][0]
+	# 		xmax = partition['nodes'][1]
+	# 		ymin = partition['nodes'][2]
+	# 		ymax = partition['nodes'][3]
+	#
+	# 		partition['supportNodes'] = [xmin - delta, xmax + delta, ymin - delta, ymax + delta]
+
 
 
 
@@ -777,6 +793,7 @@ def getPercentScore(DgmsDF,
 	if type(dgm_col) == str:
 		dgm_col = [dgm_col]
 
+	# time1 = time.time()
 	# Run actual train/test experiment using sklearn
 	D_train, D_test, L_train,L_test = train_test_split(DgmsDF,
 													DgmsDF[labels_col],
@@ -784,10 +801,13 @@ def getPercentScore(DgmsDF,
 													random_state = params.seed
 													)
 
+	# time2 = time.time()
+	# print('train test split time: ', time2 - time1)
+
 	# Get the portions of the test data frame with diagrams and concatenate into giant series:
 	allDgms = pd.concat((D_train[label] for label in dgm_col))
-
-	if params.useAdaptivePart == True:
+	# time3 = time.time()
+	if (params.useAdaptivePart == True) and (params.meshingScheme == 'DV'):
 		if hasattr(params, 'c'):
 			c = params.c
 		else:
@@ -798,16 +818,48 @@ def getPercentScore(DgmsDF,
 		else:
 			nmin = 5
 
+		if hasattr(params, 'alpha'):
+			alpha = params.alpha
+		else:
+			alpha = 0.05
+
 		# Hand the series to the makeAdaptivePartition function
-		params.makeAdaptivePartition(allDgms, meshingScheme = 'DV', alpha=params.alpha, c=c, nmin=nmin)
+		params.makeAdaptivePartition(allDgms, convertToOrd = True, meshingScheme = 'DV', alpha=alpha, c=c, nmin=nmin)
+
+	elif params.useAdaptivePart == True:
+
+		# if len(dgm_col) == 1:
+		if hasattr(params, 'numClusters'):
+			numClusters = params.numClusters
+		else:
+			numClusters = 10
+
+		# if hasattr(params, 'splitData'):
+		# 	split = params.splitData
+		# else:
+		# 	if hasattr(params, 'numClusters'):
+		# 		numClusters = np.ceil(params.numClusters/2)
+		# 	else:
+		# 		numClusters = 5
+
+		params.makeAdaptivePartition(allDgms, convertToOrd = False, meshingScheme = 'kmeans', numParts = numClusters, split=split)
+
+
+
 	else:
 		# Just use the bounding box as the partition
 		params.makeAdaptivePartition(allDgms, meshingScheme = None)
+
+	# time4 = time.time()
+	# print('adaptive partitioning time: ', time4 - time3)
+
 
 	# If using tent functions, calculate delta and epsilon
 	if (params.feature_function.__name__ == 'tent'):
 		params.chooseDeltaEpsForPartitions(verbose=verbose)
 
+	# time5 = time.time()
+	# print('choose delta eps time: ', time5-time4)
 	#--------Training------------#
 	if verbose:
 		print('Using ' + str(len(L_train)) + '/' + str(len(DgmsDF)) + ' to train...')
@@ -817,6 +869,9 @@ def getPercentScore(DgmsDF,
 					params = params,
 					normalize = normalize,
 					verbose = verbose)
+
+	# time6 = time.time()
+	# print('training time: ', time6 - time5)
 
 	#--------Testing-------------#
 	if verbose:
@@ -832,7 +887,6 @@ def getPercentScore(DgmsDF,
 	if normalize:
 		G = scale(G)
 
-
 	# Compute predictions and add to DgmsDF data frame
 	L_predict = pd.Series(clf.predict(G),index = L_test.index)
 	DgmsDF['Prediction'] = L_predict
@@ -843,6 +897,11 @@ def getPercentScore(DgmsDF,
 		print('Score on testing set: ' + str(score) +"...\n")
 
 		print('Finished with train/test experiment.')
+
+	# time7 = time.time()
+	# print('testing time: ', time7 - time6)
+
+
 
 	output = {}
 	output['score'] = score
