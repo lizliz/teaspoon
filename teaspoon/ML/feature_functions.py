@@ -395,8 +395,8 @@ def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
     else:
         print('Your choices for type are "BirthDeath" or "BirthLifetime".')
         print('Exiting...')
-        
-    
+
+
     all_weights = []
     # first, get the entries in Dgm that are within each partition
     for partition in params.partitions:
@@ -494,10 +494,10 @@ def getSubset(querySet, baseRectangle):
     '''
 
     # get the rectangle corners
-    xmin = baseRectangle['nodes'][0];
-    xmax = baseRectangle['nodes'][1];
-    ymin = baseRectangle['nodes'][2];
-    ymax = baseRectangle['nodes'][3];
+    xmin = baseRectangle['supportNodes'][0];
+    xmax = baseRectangle['supportNodes'][1];
+    ymin = baseRectangle['supportNodes'][2];
+    ymax = baseRectangle['supportNodes'][3];
 
     # subset
     return querySet[(querySet[:, 0] >= xmin) &
