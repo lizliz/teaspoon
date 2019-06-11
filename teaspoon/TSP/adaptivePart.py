@@ -17,53 +17,52 @@ class Partitions:
     def __init__(self, data = None,
                  convertToOrd = True,
                  meshingScheme = None,
-                 numParts=3,
-                 alpha=0.05,
-                 c=0,
-                 nmin = 0,
+                 partitionParams = {},
                  **kwargs):
+
         '''
         A data structure for storing a partition coming from an adapative meshing scheme.
 
         :Parameter data:
             A numpy array of type many by 2
 
+        :Parameter convertToOrd:
+            Boolean variable to decide if we want to use ordinals for partitioning. It makes things faster but less accurate.
+
         :Parameter meshingScheme:
             The type of meshing scheme. Only option currently is 'DV', a method based on this paper (add paper). Any other input here will only use the bounding box of all points in the Dgms in the training set.
 
-        :Parameter numParts:
-            Number of subpartitions in each direction (ie numParts=2 breaks each partition into 2 parts in each direction, thus 4 subpartitions total)
+        :Parameter partitionParams:
+            Dictionary of parameters for the particular meshing scheme selected.
+            For 'DV' the adjustable parameters are 'alpha', 'c', 'nmin', 'numParts'.
+            For 'clustering' the adjustable parameters are 'numClusters', 'clusterAlg', 'weights', 'boxOption', 'boxWidth'.
 
-        :Parameter alpha:
-            The significance level to test for independence
-
-        :Parameter c:
-            Parameter for an exit criteria. Partitioning stops if min(width of partition, height of partition) < max(width of bounding box, height of bounding box)/c.
-
-        :Parameter nmin:
-            Minimum number of points in each partition to keep recursion going (default is 5 because chisquare test breaks down if you have less than 5 points per partition).
-
-        TODO: Finish documentation
+        :Parameter kwargs;
+			Any leftover inputs are stored as attributes.
         '''
+
+        self.meshingScheme = meshingScheme
+        self.__dict__.update(kwargs)
 
         if data is not None:
 
-            if not hasattr(self,'weights'):
-                self.weights = None
-
-            if meshingScheme == 'kmeans':
+            # if using kmeans, we dont want to convert to ordinals
+            if meshingScheme == 'clustering':
                 convertToOrd = False
 
-            # check that the data is in ordinal coordinates
-            # data converted to ordinal and stored locally if not already
+            # check if we want to convert to ordinals
+            # may not want to for certain partitioning schemes
             if convertToOrd:
+                # check that the data is in ordinal coordinates
+                # data converted to ordinal and stored locally if not already
                 if not self.isOrdinal(data):
                     # print("Converting the data to ordinal...")
+
                     # perform ordinal sampling (ranking) transformation
                     xRanked = rankdata(data[:,0], method='ordinal')
                     yRanked = rankdata(data[:,1], method='ordinal')
 
-
+                    # copy original data and save
                     xFloats = np.copy(data[:,0])
                     xFloats.sort()
                     yFloats = np.copy(data[:,1])
@@ -88,13 +87,50 @@ class Partitions:
             self.borders['nodes'] = np.array([xmin, xmax, ymin, ymax])
             self.borders['npts'] = data.shape[0]
 
-            # set parameters for partitioning algorithm
-            self.numParts = numParts
+            # # set parameters for partitioning algorithm
+            # self.numParts = numParts
+
+            self.setParameters(partitionParams=partitionParams)
 
             # If there is data, use the chosen meshing scheme to build the partitions.
             if meshingScheme == 'DV':
-                self.alpha = alpha
-                self.nmin = nmin
+
+                self.partitionBucket = self.return_partition_DV(data = data,
+                                        borders = self.borders,
+                                        r = self.numParts,
+                                        alpha = self.alpha,
+                                        c = self.c,
+                                        nmin = self.nmin)
+
+            elif meshingScheme == 'clustering':
+
+                self.partitionBucket = self.return_partition_clustering(data = data,
+                                        clusterAlg = self.clusterAlg,
+                                        num_clusters = self.numClusters,
+                                        weights= self.weights,
+                                        boxOption = self.boxOption,
+                                        boxSize = self.boxSize)
+
+            else: # meshingScheme == None
+            # Note that right now, this will just do the dumb thing for every other input
+                self.partitionBucket = [self.borders]
+                #  set the partitions to just be the bounding box
+
+        else:
+            self.partitionBucket = []
+
+    def setParameters(self, partitionParams):
+        '''
+        Helper function to set the parameteres depending on the meshing scheme
+
+        :Parameter partitionParams:
+            Dictionary containing parameters needed for the partitioning algorithm.
+            If dictionary is missing a parameter, this function just sets it to a defalt.
+        '''
+
+        if self.meshingScheme == 'DV':
+            if 'c' in partitionParams:
+                c = partitionParams['c']
 
                 if c != 0:
                     # convert c from integer to the corresponding width/height
@@ -104,26 +140,52 @@ class Partitions:
                 else:
                     # c=0 means we don't use this paramter for an exit criteria
                     self.c = 0
+            else:
+                self.c = 10
 
-                self.partitionBucket = self.return_partition_DV(data = data,
-                                        borders = self.borders,
-                                        r = self.numParts,
-                                        alpha = self.alpha,
-                                        c = self.c,
-                                        nmin = self.nmin)
+            if 'alpha' in partitionParams:
+                self.alpha = partitionParams['alpha']
+            else:
+                self.alpha = 0.05
 
-            elif meshingScheme == 'kmeans':
-                self.partitionBucket = self.return_partition_kmeans(data = data,
-                                            num_clusters = self.numParts, weights= self.weights)
+            if 'nmin' in partitionParams:
+                self.nmin = partitionParams['nmin']
+            else:
+                self.nmin = 5
 
-            else: # meshingScheme == None
-            # Note that right now, this will just do the dumb thing for every other input
-                self.partitionBucket = [self.borders]
-                #  set the partitions to just be the bounding box
+            if 'numParts' in partitionParams:
+                self.numParts = partitionParams['numParts']
+            else:
+                self.numParts = 2
 
+        elif self.meshingScheme == 'clustering':
+            if 'clusterAlg' in partitionParams:
+                self.clusterAlg = partitionParams['clusterAlg']
+            else:
+                self.clusterAlg = KMeans
 
+            if 'numClusters' in partitionParams:
+                self.numClusters = partitionParams['numClusters']
+            else:
+                self.numClusters = 10
+
+            if 'weights' in partitionParams:
+                self.weights = partitionParams['weights']
+            else:
+                self.weights = None
+
+            if 'boxOption' in partitionParams:
+                self.boxOption = partitionParams['boxOption']
+            else:
+                self.boxOption = "boundPoints"
+
+            if 'boxSize' in partitionParams:
+                self.boxSize = partitionParams['boxSize']
+            else:
+                self.boxSize = 2
         else:
-            self.partitionBucket = []
+            print("Just using bounding box, no parameters to set up.")
+
 
 
     def convertOrdToFloat(self,partitionEntry):
@@ -402,186 +464,70 @@ class Partitions:
 
 
 
-    ###############################################################################
-    ###############################################################################
-    ###############################################################################
-    ###############################################################################
-    ## PROBABLY BROKEN, SARAH MESSSING WITH IT
-    def return_partition_kmeans(self, data, num_clusters=10,weights = None):
+
+    def return_partition_clustering(self, data, clusterAlg = KMeans, num_clusters=10, weights = None, boxOption="boundPoints", boxSize=2):
         '''
-        Recursive method that partitions the data based on the DV method.
+        Partitioning method based on clustering algorithms. First cluster the data, then using the cluster centers and labels determine the partitions.
 
         :Parameter data:
             A manyx2 numpy array that contains all the original data
 
-        :Parameter borders:
-            A dictionary that contains 'nodes' with a numpy array of Xmin, Xmax, Ymin, Ymax,
+        :Parameter cluster_algorithm:
+            Clustering algorithm you want to use. Only options right now are KMeans and MiniBatchKMeans from scikit learn.
 
-        :Parameter r:
-            The number of partitions to split in each direction (i.e. r=2 means each partition is split into a 2 by 2 grid of partitions)
+        :Parameter num_clusters:
+            The number of clusters you want. This is the number of partitions you want to divide your space into.
 
-        :Parameter alpha:
-            The significance level to test for independence
+        :Parameter weights:
+            An array of the same length as data containing weights of points to use weighted clustering
 
-        :Parameter c:
-            Parameter for an exit criteria. Partitioning stops if min(width of partition, height of partition) < max(width of bounding box, height of bounding box)/c.
+        :Parameter boxOption:
+            Specifies how to choose the boxes based on cluster centers. Options are "boundPoints" which takes the bounding box of all data points assigned to that cluster center,
+            or "equalSize" which puts boxes of size boxSize centered at the cluster center.
 
-        :Parameter nmin:
-            Minimum number of points in each partition to keep recursion going. The default is 5 because chisquare test breaks down with less than 5 points per partition, thus we recommend choosing nmin>=5.
+        :Parameter boxSize:
+            If you are using option "equalSize" to pick the partition boxes, then boxSize specifies the width & height of the box centered at the cluster center.
+            Can enter an integer for a square box, or a list [width,height] for rectangular boxes.
 
         :returns:
-            List of dictionaries. Each dictionary corresponds to a partition and contains 'nodes', a numpy array of Xmin, Xmax, Ymin, Ymax of the partition, and 'npts', the number of points in the partition.
+            List of dictionaries. Each dictionary corresponds to a partition and contains 'nodes', a numpy array of Xmin, Xmax, Ymin, Ymax of the partition, and 'center', the center of the cluster for that partition.
 
         '''
 
-        kmeans = MiniBatchKMeans(n_clusters=num_clusters).fit(data,sample_weight = weights)
+        kmeans = clusterAlg(n_clusters=num_clusters).fit(data,sample_weight = weights)
         centers = kmeans.cluster_centers_
         labels = kmeans.labels_
 
         bins = []
-        for l in np.unique(labels):
-            cluster = data[labels == l]
+        if boxOption == "boundPoints":
 
-            xmin = min(cluster[:,0])
-            xmax = max(cluster[:,0])
+            for l in np.unique(labels):
+                cluster = data[labels == l]
 
-            ymin = min(cluster[:,1])
-            ymax = max(cluster[:,1])
+                xmin = min(cluster[:,0])
+                xmax = max(cluster[:,0])
 
-            bins.insert(0,{'nodes': [xmin,xmax,ymin,ymax], 'npts': len(cluster), 'center': centers[l]})
+                ymin = min(cluster[:,1])
+                ymax = max(cluster[:,1])
+
+                bins.insert(0,{'nodes': [xmin,xmax,ymin,ymax], 'center': centers[l]})
+
+        elif boxOption == "equalSize":
+            if isinstance(boxSize, int):
+                boxSize = list([boxSize,boxSize])
+
+            for l in np.unique(labels):
+                center = centers[l]
+
+                xmin = center[0] - boxSize[0]/2
+                xmax = center[0] + boxSize[0]/2
+                ymin = center[1] - boxSize[1]/2
+                ymax = center[1] + boxSize[1]/2
+
+                bins.insert(0,{'nodes': [xmin,xmax,ymin,ymax], 'center': centers[l]})
 
         return bins
 
-    #     # extract the bin boundaries
-    #     Xmin = borders['nodes'][0]
-    #     Xmax = borders['nodes'][1]
-    #     Ymin = borders['nodes'][2]
-    #     Ymax = borders['nodes'][3]
-    #
-    #     # find the number of bins
-    # #    numBins = r ** 2
-    #     idx = np.where((data[:, 0] >= Xmin)
-    #                    & (data[:, 0] <= Xmax )
-    #                    & (data[:, 1] >= Ymin)
-    #                    & (data[:, 1] <= Ymax))
-
-
-
-    #     # Exit Criteria:
-    #     # if either height or width is less than the max size, return
-    #     width = self.xFloats[int(Xmax-1)] - self.xFloats[int(Xmin-1)]
-    #     height = self.yFloats[int(Ymax-1)] - self.yFloats[int(Ymin-1)]
-    #     if ( ( c != 0 ) and ( min(width,height) < c) ):
-    #         # print('Box getting too small, min(width,height)<', c)
-    #         # reject futher partitions, and return original bin
-    #         partitions.insert(0, {'nodes': np.array([Xmin, Xmax, Ymin, Ymax]),
-    #                   'npts': len(idx[0])})
-    #         return partitions
-    #
-    #     # extract the points in the bin
-    #     Xsub = data[idx, 0]
-    #     Ysub = data[idx, 1]
-    #
-    # #    print(Xsub.shape, '\t', Ysub.shape)
-    #
-    #     # find the indices of the points in the x- and y-patches
-    #     idx_x = np.where((data[:, 0] >= Xmin) & (data[:, 0] <= Xmax))
-    #     idx_y = np.where((data[:, 1] >= Ymin) & (data[:, 1] <= Ymax))
-    #
-    #     # get the subpartitions
-    #     ai = np.floor(np.percentile(data[idx_x, 0], 1/r * np.arange(1, r) * 100))
-    #     bj = np.floor(np.percentile(data[idx_y, 1], 1/r * np.arange(1, r) * 100))
-    #
-    #     # get the bin edges
-    #     edges1 = np.concatenate(([Xmin], ai, [Xmax]))
-    #     edges2 = np.concatenate(([Ymin], bj, [Ymax]))
-    #
-    #     # first exit criteria: we cannot split into unique boundaries any more
-    #     # preallocate the partition list
-    #     if (len(np.unique(edges1, return_counts=True)[1]) < r + 1 or
-    #          len(np.unique(edges2, return_counts=True)[1])< r + 1):
-    #
-    #         # reject futher partitions, and return original bin
-    #         partitions.insert(0, {'nodes': np.array([Xmin, Xmax, Ymin, Ymax]),
-    #                   'npts': len(idx[0])})
-    #         return partitions
-    #
-    #     # figure out the shift in the edges so that boundaries do not overlap
-    #     xShift = np.zeros( (2 * r, 2 * r))
-    #     yShift = xShift
-    #     xShift[:, 1:-1] = np.tile(np.array([[-1, 0]]), (2 * r, r - 1))
-    #     yShift = xShift.T
-    #
-    #     # find the boundaries for each bin
-    #     # duplicate inner nodes for x mesh
-    #     dupMidNodesX = np.append(np.insert(np.repeat((edges1[1:-1]), 2, axis=0),
-    #                                       0, edges1[0]), edges1[-1])
-    #
-    #     # duplicate inner nodes for y mesh
-    #     dupMidNodesY = np.append(np.insert(np.repeat((edges2[1:-1]), 2, axis=0),
-    #                                       0, edges2[0]), edges2[-1])
-    #     # reshape
-    #     dupMidNodesY = np.reshape(dupMidNodesY, (-1, 1))
-    #
-    #     # now find the nodes for each bin
-    #     xBinBound = dupMidNodesX + xShift
-    #     yBinBound = dupMidNodesY + yShift
-    #
-    #     # find the number of points in each bin, and put this info into array
-    #     binned_data = binned_statistic_2d(Xsub.flatten(), Ysub.flatten(), None, 'count',
-    #                                       bins=[edges1, edges2])
-    #     # get the counts. Flatten columnwise to match the bin definition in the
-    #     # loop that creates the dictionaries below
-    #     binCounts = binned_data.statistic.flatten('F')
-    #
-    #     # Exit Criteria:
-    #     # check if sum of bin counts is less than threshold of nmin per bin
-    #     # nmin is necessary because chisquare breaks down if you have less than
-    #     # 5 points in each bin
-    #     if nmin != 0:
-    #         if np.sum(binCounts) < nmin * (r**2):
-    #             partitions.insert(0, {'nodes': np.array([Xmin, Xmax, Ymin, Ymax]),'npts': len(idx[0])})
-    #             return partitions
-    #
-    #     # define an empty list to hold the dictionaries of the fresh partitions
-    #     bins = []
-    #     # create dictionaries for each bin
-    #     # start with the loop over y
-    #     # note how the loop counts were obtained above to match the convention
-    #     # here
-    #     for yInd in np.arange(r):
-    #         # this is the loop over x
-    #         for xInd in np.arange(r):
-    #             # get the bin number
-    #             binNo = yInd * r  + xInd
-    #             xLow, xHigh = xBinBound[yInd, 2*xInd + np.arange(2)]
-    #             yLow, yHigh = yBinBound[2*yInd + np.arange(2), xInd]
-    #             bins.append({'nodes': np.array([xLow, xHigh, yLow, yHigh]),
-    #                 'npts': binCounts[binNo] })
-    #
-    #     # calculate the chi square statistic
-    #     chi2 = chisquare(binCounts)
-    #
-    #     # check for independence and start recursion
-    #     # if the chi2 test fails, do further partitioning:
-    #     if (chi2.pvalue < alpha and Xmax!=Xmin and Ymax!=Ymin).all():
-    #         for binInfo in bins:
-    #             if binInfo['npts'] !=0:  # if the bin is not empty:
-    #                 # append entries to the tuple
-    #                 #print('chi2 test failed... Partitioning further')
-    #                 partitions.extend(self.return_partition_DV(data=data,
-    #                                                         borders=binInfo,
-    #                                                         r=r, alpha=alpha,c=c,
-    #                                                         nmin=nmin))
-    #
-    #     # Exit Criteria:
-    #     # if the partitions are independent and nonempty, reject further partitioning
-    #     # and save the orignal, unpartitioned bin
-    #     elif len(idx[0]) !=0:
-    #         partitions.insert(0, {'nodes': np.array([Xmin, Xmax, Ymin, Ymax]),
-    #                   'npts': len(idx[0])})
-    #
-    #     return partitions
 
 # #--------------------------------------------------
 

@@ -107,6 +107,7 @@ class ParameterBucket(object):
 		self.feature_function = feature_function
 		self.__dict__.update(kwargs)
 
+
 	def __str__(self):
 		'''
 		Nicely prints all currently set values in the ParameterBucket.
@@ -122,7 +123,7 @@ class ParameterBucket(object):
 		return output
 
 
-	def makeAdaptivePartition(self, DgmsPD, dgm_type = 'BirthDeath', meshingScheme = 'DV', numParts = 3, alpha=0.05, c=0, nmin=0):
+	def makeAdaptivePartition(self, DgmsPD, dgm_type = 'BirthDeath', meshingScheme = 'DV', partitionParams = {}):
 		'''
 		Combines all persistence diagrams in the series together, then generates an adaptive partition mesh and includes it in the parameter bucket as self.partitions
 
@@ -169,9 +170,33 @@ class ParameterBucket(object):
 			life = y
 		fullData = np.column_stack((x,life))
 
+		# if meshingScheme == 'DV':
+		# 	if not hasattr(self,'numParts'):
+		# 		self.numParts = 2
+		# 	if not hasattr(self,'c'):
+		# 		self.c = 0
+		# 	if not hasattr(self,'alpha'):
+		# 		self.alpha = 0.05
+		# 	if not hasattr(self,'nmin'):
+		# 		self.nmin = 5
+		#
+		# 	self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme,
+		# 								 numParts = self.numParts, alpha = self.alpha,
+		# 								 c = self.c, nmin = self.nmin)
+		#
+		# elif meshingScheme == 'clustering':
+		# 	if not hasattr(self,'clusterAlg'):
+		# 		self.clusterAlg = KMeans
+		# 	if not hasattr(self,'numParts'):
+		# 		self.numParts = 10
+		# 	if not hasattr(self,'weights'):
+		# 		self.weights = None
+		#
+		# 	self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme,
+		# 								 clusterAlg = self.clusterAlg, numParts = self.numParts,
+		# 								 weights= self.weights)
 
-		self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme, numParts = numParts, alpha = alpha, c = c, nmin = nmin)
-
+		self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme, partitionParams = partitionParams)
 
 		# If we used ordinals to begin with, save the ordinal partitions and
 		# convert them back to floats
@@ -343,6 +368,8 @@ class InterpPolyParameters(ParameterBucket):
 class TentParameters(ParameterBucket):
 
 	def __init__(self, d = 10, delta = 1, epsilon = 0,
+				useAdaptivePart = False,
+				meshingScheme = 'DV',
 				clf_model = RidgeClassifierCV,
 				test_size = .33,
 				seed = None,
@@ -377,7 +404,8 @@ class TentParameters(ParameterBucket):
 
 		# Set all the necessary parameters for tents function
 		self.feature_function = fF.tent
-		self.useAdaptivePart = False
+		self.useAdaptivePart = useAdaptivePart #This should be boolean
+		self.meshingScheme = meshingScheme
 
 		self.d = d
 		self.delta = delta
@@ -560,6 +588,9 @@ class TentParameters(ParameterBucket):
 
 		'''
 
+		c = ['r','b','g','m','y','o','k']
+		cInd = 0
+
 		# plot the partitions
 		for binNode in self.partitions:
 			suppXmin = binNode['supportNodes'][0]
@@ -570,8 +601,10 @@ class TentParameters(ParameterBucket):
 			# plt.xlim([suppXmin - 1, suppXmax+1])
 			# plt.ylim([suppYmin - 1, suppYmax+1])
 
-			plt.hlines([suppYmin, suppYmax], suppXmin, suppXmax, color='b', linestyles='dashed')
-			plt.vlines([suppXmin, suppXmax], suppYmin, suppYmax, color='b', linestyles='dashed')
+			plt.hlines([suppYmin, suppYmax], suppXmin, suppXmax, color=c[cInd], linestyles='dashed')
+			plt.vlines([suppXmin, suppXmax], suppYmin, suppYmax, color=c[cInd], linestyles='dashed')
+
+			cInd = cInd + 1
 
 		# Doesn't show unless we do this
 		plt.axis('tight')
@@ -814,46 +847,24 @@ def getPercentScore(DgmsDF,
 	# Get the portions of the test data frame with diagrams and concatenate into giant series:
 	allDgms = pd.concat((D_train[label] for label in dgm_col))
 	# time3 = time.time()
-	if (params.useAdaptivePart == True) and (params.meshingScheme == 'DV'):
-		if hasattr(params, 'c'):
-			c = params.c
+
+	if params.useAdaptivePart == True:
+		if hasattr(params, 'partitionParams'):
+			partitionParams = params.partitionParams
 		else:
-			c = 0
+			partitionParams = {}
 
-		if hasattr(params, 'nmin'):
-			nmin = params.nmin
-		else:
-			nmin = 5
+		params.makeAdaptivePartition(allDgms, meshingScheme = params.meshingScheme, partitionParams=partitionParams)
 
-		if hasattr(params, 'alpha'):
-			alpha = params.alpha
-		else:
-			alpha = 0.05
-
-		# Hand the series to the makeAdaptivePartition function
-		params.makeAdaptivePartition(allDgms, meshingScheme = 'DV', alpha=alpha, c=c, nmin=nmin)
-
-	elif params.useAdaptivePart == True:
-
-		# if len(dgm_col) == 1:
-		if hasattr(params, 'numClusters'):
-			numClusters = params.numClusters
-		else:
-			numClusters = 10
-
-		params.makeAdaptivePartition(allDgms, meshingScheme = 'kmeans', numParts = numClusters)
-
-
-
+	# if not using adaptive partitions, just get the bounding box
 	else:
-		# Just use the bounding box as the partition
 		params.makeAdaptivePartition(allDgms, meshingScheme = None)
 
 	# time4 = time.time()
 	# print('adaptive partitioning time: ', time4 - time3)
 
 
-	# If using tent functions, calculate delta and epsilon
+	# If using tent functions, calculate delta parameter
 	if (params.feature_function.__name__ == 'tent'):
 		params.chooseDeltaEpsForPartitions(verbose=verbose)
 
