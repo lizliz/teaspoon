@@ -21,7 +21,7 @@ class Partitions:
                  alpha=0.05,
                  c=0,
                  nmin = 0,
-                 split = False):
+                 **kwargs):
         '''
         A data structure for storing a partition coming from an adapative meshing scheme.
 
@@ -48,12 +48,11 @@ class Partitions:
 
         if data is not None:
 
-            # if isinstance(data,list):
-            #     data_split = np.copy(data)
-            #     data = np.concatenate(data)
-
             if not hasattr(self,'weights'):
                 self.weights = None
+
+            if meshingScheme == 'kmeans':
+                convertToOrd = False
 
             # check that the data is in ordinal coordinates
             # data converted to ordinal and stored locally if not already
@@ -91,49 +90,31 @@ class Partitions:
 
             # set parameters for partitioning algorithm
             self.numParts = numParts
-            self.split = split
 
             # If there is data, use the chosen meshing scheme to build the partitions.
             if meshingScheme == 'DV':
-                if self.isOrdinal(data):
-                    self.alpha = alpha
-                    self.nmin = nmin
+                self.alpha = alpha
+                self.nmin = nmin
 
-                    if c != 0:
-                        # convert c from integer to the corresponding width/height
-                        self.c = max( (self.xFloats[xmax-1]-self.xFloats[xmin-1])/c, (self.yFloats[ymax-1]-self.yFloats[ymin-1])/c )
-                    else:
-                        # c=0 means we don't use this paramter for an exit criteria
-                        self.c = 0
-
-                    self.partitionBucket = self.return_partition_DV(data = data,
-                                            borders = self.borders,
-                                            r = self.numParts,
-                                            alpha = self.alpha,
-                                            c = self.c,
-                                            nmin = self.nmin)
-
+                if c != 0:
+                    # convert c from integer to the corresponding width/height
+                    width = (self.xFloats[xmax-1]-self.xFloats[xmin-1]) / c
+                    height = (self.yFloats[ymax-1]-self.yFloats[ymin-1]) / c
+                    self.c = max( width, height )
                 else:
-                    print("Oops to use the DV partitioning algorithm")
-                    print("you need ordinal data. Try again setting the")
-                    print("convertToOrd flag to False...")
+                    # c=0 means we don't use this paramter for an exit criteria
+                    self.c = 0
+
+                self.partitionBucket = self.return_partition_DV(data = data,
+                                        borders = self.borders,
+                                        r = self.numParts,
+                                        alpha = self.alpha,
+                                        c = self.c,
+                                        nmin = self.nmin)
 
             elif meshingScheme == 'kmeans':
-                if not self.isOrdinal(data):
-                    # if split and isinstance(data,list):
-                    #     numClusters = np.ceil(self.numParts / len(data_split))
-                    #
-                    #     self.partitionBucket = []
-                    #     for somedata in data_split:
-                    #         self.partitionBucket.extend(self.return_partition_kmeans(data = somedata,
-                    #                                 num_clusters = numClusters, weights = self.weights))
-                    # else:
-                    self.partitionBucket = self.return_partition_kmeans(data = data,
-                                                num_clusters = self.numParts, weights= self.weights)
-                else:
-                    print("Oops to use the kmeans partitioning algorithm")
-                    print("you can't use ordinal data. Try again setting the")
-                    print("convertToOrd flag to False...")
+                self.partitionBucket = self.return_partition_kmeans(data = data,
+                                            num_clusters = self.numParts, weights= self.weights)
 
             else: # meshingScheme == None
             # Note that right now, this will just do the dumb thing for every other input

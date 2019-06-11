@@ -122,7 +122,7 @@ class ParameterBucket(object):
 		return output
 
 
-	def makeAdaptivePartition(self, DgmsPD, convertToOrd = True, dgm_type = 'BirthDeath', meshingScheme = 'DV', numParts = 3, alpha=0.05, c=0, nmin=0, split=False):
+	def makeAdaptivePartition(self, DgmsPD, dgm_type = 'BirthDeath', meshingScheme = 'DV', numParts = 3, alpha=0.05, c=0, nmin=0):
 		'''
 		Combines all persistence diagrams in the series together, then generates an adaptive partition mesh and includes it in the parameter bucket as self.partitions
 
@@ -169,7 +169,8 @@ class ParameterBucket(object):
 			life = y
 		fullData = np.column_stack((x,life))
 
-		self.partitions = Partitions(data = fullData, convertToOrd = convertToOrd, meshingScheme = meshingScheme, numParts = numParts, alpha = alpha, c = c, nmin = nmin, split=split)
+
+		self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme, numParts = numParts, alpha = alpha, c = c, nmin = nmin)
 
 
 		# If we used ordinals to begin with, save the ordinal partitions and
@@ -491,15 +492,18 @@ class TentParameters(ParameterBucket):
 
 		if self.epsilon != 0:
 			print("Sorry only option for epsilon is zero right now... This could be updated later...")
+		if pad != 0:
+			print("Sorry only option for pad is zero right now... This could be updated later...")
+			pad = 0
 
 		# choose delta to be the max of the width or the height of the partition divided by d
 		# Note need to iterate over partitionBucket (not just Partitions class) so we can add dictionary elements
 		for partition in self.partitions.partitionBucket:
 			# add or subtract padding if needed
-			xmin = partition['nodes'][0] - pad
-			xmax = partition['nodes'][1] + pad
-			ymin = partition['nodes'][2] - pad
-			ymax = partition['nodes'][3] + pad
+			xmin = partition['nodes'][0] #- pad
+			xmax = partition['nodes'][1] #+ pad
+			ymin = partition['nodes'][2] #- pad
+			ymax = partition['nodes'][3] #+ pad
 
 			xdiff = xmax - xmin
 			ydiff = ymax - ymin
@@ -523,21 +527,22 @@ class TentParameters(ParameterBucket):
 			partition['delta'] = delta
 
 			# supportNodes contain the nodes of the bounding box for where tent functions are supported
-			partition['supportNodes'] = [xmin - delta, xmax + delta, ymin - delta, ymax + delta]
+			tempSuppNodes = [xmin - delta, xmin + ( (dx+1) * delta ), ymin - delta, ymin + ( (dy+1) * delta )]
 
 			# check if support will cross the diagonal
 			# if it does, shift it up so the bottom of the support lies on zero
-			if partition['supportNodes'][2] < 0:
+			if tempSuppNodes[2] < 0:
 				# if verbose:
 				# 	print('Uh oh your support will cross the diagonal, your bottom boundary is ', partition['supportNodes'][2])
 				# 	print('Shifting the boundary of the partition up by necessary amount...')
 
 				#Shift top boundary up by however negative you went
-				partition['supportNodes'][3] = partition['supportNodes'][3] - (partition['supportNodes'][2])
+				tempSuppNodes[3] = tempSuppNodes[3] + abs(tempSuppNodes[2])
 
 				#Shift bottom boundary up to zero
-				partition['supportNodes'][2] = 0
+				tempSuppNodes[2] = 0
 
+			partition['supportNodes'] = tempSuppNodes
 
 			# Assign d as an element in the dictionary for each partition
 			partition['d'] = d
@@ -562,8 +567,8 @@ class TentParameters(ParameterBucket):
 			suppYmin = binNode['supportNodes'][2]
 			suppYmax = binNode['supportNodes'][3]
 
-			plt.xlim([suppXmin - 1, suppXmax+1])
-			plt.ylim([suppYmin - 1, suppYmax+1])
+			# plt.xlim([suppXmin - 1, suppXmax+1])
+			# plt.ylim([suppYmin - 1, suppYmax+1])
 
 			plt.hlines([suppYmin, suppYmax], suppXmin, suppXmax, color='b', linestyles='dashed')
 			plt.vlines([suppXmin, suppXmax], suppYmin, suppYmax, color='b', linestyles='dashed')
@@ -582,6 +587,8 @@ class TentParameters(ParameterBucket):
 		'''
 
 		d = self.d
+		if isinstance(d, int):
+			d = list([d,d])
 
 		tent_centers = []
 
@@ -824,7 +831,7 @@ def getPercentScore(DgmsDF,
 			alpha = 0.05
 
 		# Hand the series to the makeAdaptivePartition function
-		params.makeAdaptivePartition(allDgms, convertToOrd = True, meshingScheme = 'DV', alpha=alpha, c=c, nmin=nmin)
+		params.makeAdaptivePartition(allDgms, meshingScheme = 'DV', alpha=alpha, c=c, nmin=nmin)
 
 	elif params.useAdaptivePart == True:
 
@@ -834,15 +841,7 @@ def getPercentScore(DgmsDF,
 		else:
 			numClusters = 10
 
-		# if hasattr(params, 'splitData'):
-		# 	split = params.splitData
-		# else:
-		# 	if hasattr(params, 'numClusters'):
-		# 		numClusters = np.ceil(params.numClusters/2)
-		# 	else:
-		# 		numClusters = 5
-
-		params.makeAdaptivePartition(allDgms, convertToOrd = False, meshingScheme = 'kmeans', numParts = numClusters, split=split)
+		params.makeAdaptivePartition(allDgms, meshingScheme = 'kmeans', numParts = numClusters)
 
 
 
