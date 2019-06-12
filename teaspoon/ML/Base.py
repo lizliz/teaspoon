@@ -726,7 +726,7 @@ def ML_via_featurization(DgmsDF,
 		print('Number of features used is', numFeatures,'...')
 		print('Number of nonzero features is ', len(np.where(G.any(axis=0))[0]) )
 
-	pramas.num_features = numFeatures
+	params.num_features = numFeatures
 	params.nnz_features = len(np.where(G.any(axis=0))[0])
 	# nnz_features = len(np.where(G.any(axis=0))[0])
 
