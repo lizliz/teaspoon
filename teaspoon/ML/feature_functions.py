@@ -91,14 +91,19 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
         # get the nodes of the support
         xmin, xmax, ymin, ymax = partition['supportNodes']
 
-        # get nodes of the bounding box for the mesh so everything stays within the support
-        xmin = xmin + delta
-        xmax = xmax - delta
-        ymin = ymin + delta
-        ymax = ymax - delta
+        # # get nodes of the bounding box for the mesh so everything stays within the support
+        # xmin = xmin + delta
+        # xmax = xmax - delta
+        # ymin = ymin + delta
+        # ymax = ymax - delta
 
         # get subset of points in the diagram that are in the original partition
-        Asub = getSubset(A, partition)
+        Asub = A[(A[:, 0] >= xmin) &
+                (A[:, 0] <= xmax) &
+                (A[:, 1] >= ymin) &
+                (A[:, 1] <= ymax), :]
+
+        #getSubset(A, partition)
 
         # if there are no dgm points in the partition just add a vector of zeros and move on to the next partition
         if len(Asub) == 0:
@@ -130,27 +135,6 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
 
         out = out.reshape((dx + 1, dy + 1)).T.flatten()
         out = out / delta
-
-        # TO BE REMOVED.... THIS HAS BEEN MOVED TO build_G()
-        # if params.maxPower >1:
-
-        # 	BigOuts = [out]
-        # 	# Make 2 using np.triu_indices
-        # 	indices = np.array(np.triu_indices(len(out)))
-        # 	C = out[indices.T]
-        # 	C = np.prod(C,1)
-        # 	BigOuts.append(C)
-        # 	# Make 3 or above using itertools
-        # 	# NOTE: This is incredibly slow and should be improved.
-        # 	for i in range(3,params.maxPower + 1):
-        # 		C = [a for a in itertools.combinations_with_replacement(out,i)]
-        # 		C = np.array(C)
-        # 		C = np.prod(C,1)
-        # 		BigOuts.append(C)
-        # 	# turn all of them into one long vector
-        # 	out = np.concatenate(BigOuts)
-
-        #
 
         all_out = np.concatenate((all_out, out), axis=0)
 
@@ -494,10 +478,10 @@ def getSubset(querySet, baseRectangle):
     '''
 
     # get the rectangle corners
-    xmin = baseRectangle['supportNodes'][0];
-    xmax = baseRectangle['supportNodes'][1];
-    ymin = baseRectangle['supportNodes'][2];
-    ymax = baseRectangle['supportNodes'][3];
+    xmin = baseRectangle['nodes'][0];
+    xmax = baseRectangle['nodes'][1];
+    ymin = baseRectangle['nodes'][2];
+    ymax = baseRectangle['nodes'][3];
 
     # subset
     return querySet[(querySet[:, 0] >= xmin) &

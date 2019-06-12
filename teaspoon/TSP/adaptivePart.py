@@ -121,7 +121,7 @@ class Partitions:
 
     def setParameters(self, partitionParams):
         '''
-        Helper function to set the parameteres depending on the meshing scheme
+        Helper function to set the parameters depending on the meshing scheme
 
         :Parameter partitionParams:
             Dictionary containing parameters needed for the partitioning algorithm.
@@ -183,8 +183,8 @@ class Partitions:
                 self.boxSize = partitionParams['boxSize']
             else:
                 self.boxSize = 2
-        else:
-            print("Just using bounding box, no parameters to set up.")
+        # else:
+        #     print("Just using bounding box, no parameters to set up.")
 
 
 

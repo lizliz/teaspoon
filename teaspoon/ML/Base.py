@@ -170,32 +170,6 @@ class ParameterBucket(object):
 			life = y
 		fullData = np.column_stack((x,life))
 
-		# if meshingScheme == 'DV':
-		# 	if not hasattr(self,'numParts'):
-		# 		self.numParts = 2
-		# 	if not hasattr(self,'c'):
-		# 		self.c = 0
-		# 	if not hasattr(self,'alpha'):
-		# 		self.alpha = 0.05
-		# 	if not hasattr(self,'nmin'):
-		# 		self.nmin = 5
-		#
-		# 	self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme,
-		# 								 numParts = self.numParts, alpha = self.alpha,
-		# 								 c = self.c, nmin = self.nmin)
-		#
-		# elif meshingScheme == 'clustering':
-		# 	if not hasattr(self,'clusterAlg'):
-		# 		self.clusterAlg = KMeans
-		# 	if not hasattr(self,'numParts'):
-		# 		self.numParts = 10
-		# 	if not hasattr(self,'weights'):
-		# 		self.weights = None
-		#
-		# 	self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme,
-		# 								 clusterAlg = self.clusterAlg, numParts = self.numParts,
-		# 								 weights= self.weights)
-
 		self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme, partitionParams = partitionParams)
 
 		# If we used ordinals to begin with, save the ordinal partitions and
@@ -752,6 +726,7 @@ def ML_via_featurization(DgmsDF,
 		print('Number of features used is', numFeatures,'...')
 		print('Number of nonzero features is ', len(np.where(G.any(axis=0))[0]) )
 
+	pramas.num_features = numFeatures
 	params.nnz_features = len(np.where(G.any(axis=0))[0])
 	# nnz_features = len(np.where(G.any(axis=0))[0])
 
