@@ -183,6 +183,11 @@ class Partitions:
                 self.boxSize = partitionParams['boxSize']
             else:
                 self.boxSize = 2
+
+            # if 'split' in partitionParams:
+            #     self.split = partitionParams['split']
+            # else:
+            #     self.split = False
         # else:
         #     print("Just using bounding box, no parameters to set up.")
 
@@ -465,7 +470,7 @@ class Partitions:
 
 
 
-    def return_partition_clustering(self, data, clusterAlg = KMeans, num_clusters=10, weights = None, boxOption="boundPoints", boxSize=2):
+    def return_partition_clustering(self, data, clusterAlg = KMeans, num_clusters=10, weights = None, pad=0.5, boxOption="boundPoints", boxSize=2):
         '''
         Partitioning method based on clustering algorithms. First cluster the data, then using the cluster centers and labels determine the partitions.
 
@@ -506,6 +511,11 @@ class Partitions:
 
                 xmin = min(cluster[:,0])
                 xmax = max(cluster[:,0])
+
+                # Ensure boxes aren't just a line, need to have some thickness 
+                if xmin == xmax:
+                    xmin = xmin - pad
+                    xmax = xmax + pad
 
                 ymin = min(cluster[:,1])
                 ymax = max(cluster[:,1])
