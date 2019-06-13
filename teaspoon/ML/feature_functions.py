@@ -50,17 +50,6 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
 
     '''
 
-    if isinstance(params.d, list):
-        dx = params.d[0]
-        dy = params.d[1]
-    elif isinstance(params.d,int):
-        dx = params.d
-        dy = params.d
-    else:
-        print('Parameter d needs to be an int or a list of 2 ints (one for x direction and one for y direction.) ')
-        print('Exiting...')
-        return
-
 
     # delta = params.delta
     #epsilon = params.epsilon
@@ -81,7 +70,17 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
     all_out = []
     # first, get the entries in Dgm that are within each partition
     for partition in params.partitions:
-        # print(partition)
+
+        if isinstance(partition['d'], list):
+            dx = partition['d'][0]
+            dy = partition['d'][1]
+        elif isinstance(partition['d'],int):
+            dx = partition['d']
+            dy = partition['d']
+        else:
+            print('Parameter d needs to be an int or a list of 2 ints (one for x direction and one for y direction.) ')
+            print('Exiting...')
+            return
 
         # Get delta and epsilon from partition bucket
         delta = partition['delta']
@@ -359,16 +358,16 @@ def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
     '''
     #	jacobi_func = params.jacobi_func
 
-    # check if we asked for a square mesh or not
-    if isinstance(params.d, int):
-        nx = params.d
-        ny = params.d
-    else:
-        nx, ny = params.d
-
-    # check if the Dgm is empty. If it is, pass back zeros
-    if Dgm.size == 0:
-        return  np.zeros((nx + 1) * (ny + 1))
+    # # check if we asked for a square mesh or not
+    # if isinstance(params.d, int):
+    #     nx = params.d
+    #     ny = params.d
+    # else:
+    #     nx, ny = params.d
+    #
+    # # check if the Dgm is empty. If it is, pass back zeros
+    # if Dgm.size == 0:
+    #     return  np.zeros((nx + 1) * (ny + 1))
 
     # Move to birth,lifetime plane
     if dgm_type == 'BirthDeath':
@@ -384,6 +383,17 @@ def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
     all_weights = []
     # first, get the entries in Dgm that are within each partition
     for partition in params.partitions:
+
+        if isinstance(partition['d'], list):
+            nx = partition['d'][0]
+            ny = partition['d'][1]
+        elif isinstance(partition['d'],int):
+            nx = partition['d']
+            ny = partition['d']
+        else:
+            print('Parameter d needs to be an int or a list of 2 ints (one for x direction and one for y direction.) ')
+            print('Exiting...')
+            return
 
         query_Dgm_pts = getSubset(A, partition)
 

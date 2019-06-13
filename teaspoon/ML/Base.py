@@ -148,39 +148,64 @@ class ParameterBucket(object):
 		TODO: This can't handle infinite points in the diagram yet
 		'''
 
-		# TODO Deal with infinite points???
-		try:
-			AllDgms = []
-			for label in DgmsPD.columns:
-				DgmsSeries = DgmsPD[label]
-				AllDgms.extend(list(DgmsSeries))
-			AllPoints = np.concatenate(AllDgms)
-		except:
-			# you had a series to start with
-			AllPoints = np.concatenate(list(DgmsPD))
-
-		# Remove inifinite points
-		AllPoints = pP.removeInfiniteClasses(AllPoints)
-
-		x = AllPoints[:,0]
-		y = AllPoints[:,1]
-		if dgm_type == 'BirthDeath':
-			life = y-x
+		if ('split' in partitionParams) and (isinstance(DgmsPD, pd.DataFrame)):
+		    self.split = partitionParams['split']
 		else:
-			life = y
-		fullData = np.column_stack((x,life))
+		    self.split = False
 
-		self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme, partitionParams = partitionParams)
+		# if split:
+		# 	self.partitions = {}
+		# 	for label in DgmsPD.columns:
+		# 		AllPoints = np.concatenate(list(DgmsPD[label]))
+		#
+		# 		# Remove inifinite points
+		# 		AllPoints = pP.removeInfiniteClasses(AllPoints)
+		#
+		# 		x = AllPoints[:,0]
+		# 		y = AllPoints[:,1]
+		# 		if dgm_type == 'BirthDeath':
+		# 			life = y-x
+		# 		else:
+		# 			life = y
+		# 		fullData = np.column_stack((x,life))
+		#
+		# 		self.partitions.update({col: Partitions(data = fullData, meshingScheme = 'clustering', partitionParams = partparams)})
 
-		# If we used ordinals to begin with, save the ordinal partitions and
-		# convert them back to floats
-		if hasattr(self.partitions,'xFloats'):
-			# create new attribute to keep the index of the floats for the partition bucket
-			self.partitions.partitionBucketInd = deepcopy(self.partitions.partitionBucket)
+		if True:
+		#else:
+			# TODO Deal with infinite points???
+			try:
+				AllDgms = []
+				for label in DgmsPD.columns:
+					DgmsSeries = DgmsPD[label]
+					AllDgms.extend(list(DgmsSeries))
+				AllPoints = np.concatenate(AllDgms)
+			except:
+				# you had a series to start with
+				AllPoints = np.concatenate(list(DgmsPD))
 
-			# convert nodes in partitions to floats in partition bucket
-			for partition in self.partitions.partitionBucket:
-				self.partitions.convertOrdToFloat(partition)
+			# Remove inifinite points
+			AllPoints = pP.removeInfiniteClasses(AllPoints)
+
+			x = AllPoints[:,0]
+			y = AllPoints[:,1]
+			if dgm_type == 'BirthDeath':
+				life = y-x
+			else:
+				life = y
+			fullData = np.column_stack((x,life))
+
+			self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme, partitionParams = partitionParams)
+
+			# If we used ordinals to begin with, save the ordinal partitions and
+			# convert them back to floats
+			if hasattr(self.partitions,'xFloats'):
+				# create new attribute to keep the index of the floats for the partition bucket
+				self.partitions.partitionBucketInd = deepcopy(self.partitions.partitionBucket)
+
+				# convert nodes in partitions to floats in partition bucket
+				for partition in self.partitions.partitionBucket:
+					self.partitions.convertOrdToFloat(partition)
 
 
 
@@ -492,7 +517,10 @@ class TentParameters(ParameterBucket):
 			Boolean. If true will print additional messages and warnings.
 		'''
 
-		if self.epsilon != 0:
+		epsilon = self.epsilon
+		if epsilon != 0:
+			epsilon = 0
+			self.epsilon = 0
 			print("Sorry only option for epsilon is zero right now... This could be updated later...")
 		if pad != 0:
 			print("Sorry only option for pad is zero right now... This could be updated later...")
@@ -507,9 +535,6 @@ class TentParameters(ParameterBucket):
 			ymin = partition['nodes'][2] #- pad
 			ymax = partition['nodes'][3] #+ pad
 
-			xdiff = xmax - xmin
-			ydiff = ymax - ymin
-
 			# d can be an integer meaning use same d in all directions,
 			# or a list of d in each direction
 			d = self.d
@@ -520,38 +545,94 @@ class TentParameters(ParameterBucket):
 				dx = d
 				dy = d
 
+			xdiff = xmax - xmin
+			ydiff = ymax - ymin
+
 			# calculate delta in each direction and choose the max
 			deltax = xdiff / dx
 			deltay = ydiff / dy
-			delta = max(deltax, deltay)
+			# delta = max(deltax, deltay)
 
+			delta = min(deltax, deltay)
+			if deltax > deltay:
+				delta = deltay
+
+				dx = round(xdiff / delta)
+			elif deltay > deltax:
+				delta = deltax
+
+				dy = round(ydiff / delta)
+			else:
+				delta = deltax
+
+
+
+			# check if support will cross the diagonal
+			# if it does, crop the bottom of the partition and recalculate d
+
+			if partition['nodes'][2] - delta < 0:
+				partition['nodes'][2] = delta + epsilon
+				ymin = partition['nodes'][2]
+
+				if isinstance(d, list):
+					dx = d[0]
+					dy = d[1]
+				elif isinstance(d, int):
+					dx = d
+					dy = d
+
+				xdiff = xmax - xmin
+				ydiff = ymax - ymin
+
+				# calculate delta in each direction and choose the max
+				deltax = xdiff / dx
+				deltay = ydiff / dy
+				# delta = max(deltax, deltay)
+
+				delta = min(deltax, deltay)
+				if deltax > deltay:
+					delta = deltay
+
+					dx = round(xdiff / delta)
+				elif deltay > deltax:
+					delta = deltax
+
+					dy = round(ydiff / delta)
+				else:
+					delta = deltax
+
+			if partition['nodes'][2] - delta < 0:
+				print('uh oh still a problem....')
 			# assign this delta to the partition
 			partition['delta'] = delta
 
 			# supportNodes contain the nodes of the bounding box for where tent functions are supported
 			tempSuppNodes = [xmin - delta, xmin + ( (dx+1) * delta ), ymin - delta, ymin + ( (dy+1) * delta )]
 
-			# check if support will cross the diagonal
-			# if it does, shift it up so the bottom of the support lies on zero
-			if tempSuppNodes[2] < 0:
-				# if verbose:
-				# 	print('Uh oh your support will cross the diagonal, your bottom boundary is ', partition['supportNodes'][2])
-				# 	print('Shifting the boundary of the partition up by necessary amount...')
 
-				#Shift top boundary up by however negative you went
-				tempSuppNodes[3] = tempSuppNodes[3] + abs(tempSuppNodes[2])
+				# tempSuppNodes[2] = 0 + epsilon
 
-				#Shift bottom boundary up to zero
-				tempSuppNodes[2] = 0
+			# if tempSuppNodes[2] < 0:
+			# 	# if verbose:
+			# 	# 	print('Uh oh your support will cross the diagonal, your bottom boundary is ', partition['supportNodes'][2])
+			# 	# 	print('Shifting the boundary of the partition up by necessary amount...')
+			#
+			# 	#Shift top boundary up by however negative you went
+			# 	#tempSuppNodes[3] = tempSuppNodes[3] + abs(tempSuppNodes[2])
+			#
+			# 	#Shift bottom boundary up to zero
+			# 	tempSuppNodes[2] = 0
+
 
 			partition['supportNodes'] = tempSuppNodes
 
 			# Assign d as an element in the dictionary for each partition
+			d = [int(dx),int(dy)]
 			partition['d'] = d
 
 			# Just assigns epsilon based on what you want it to be
 			# TO DO: could implement another method here to calculate it
-			partition['epsilon'] = 0
+			partition['epsilon'] = epsilon
 
 		#print('\nParameters d, delta and epsilon have all been assigned to each partition...\n')
 
@@ -593,14 +674,13 @@ class TentParameters(ParameterBucket):
 
 		'''
 
-		d = self.d
-		if isinstance(d, int):
-			d = list([d,d])
-
 		tent_centers = []
 
 		for partition in self.partitions:
 			partition_centers = []
+			d = partition['d']
+			if isinstance(d, int):
+				d = list([d,d])
 			delta = partition['delta']
 			xmin = partition['supportNodes'][0] +delta
 			ymin = partition['supportNodes'][2] +delta
@@ -824,6 +904,9 @@ def getPercentScore(DgmsDF,
 	# time3 = time.time()
 
 	if params.useAdaptivePart == True:
+
+		# if you passed parameters for the partitions, pass them through
+		# else use the defaults
 		if hasattr(params, 'partitionParams'):
 			partitionParams = params.partitionParams
 		else:
