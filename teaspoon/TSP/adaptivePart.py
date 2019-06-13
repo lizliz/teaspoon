@@ -501,6 +501,7 @@ class Partitions:
         :Parameter boxSize:
             If you are using option "equalSize" to pick the partition boxes, then boxSize specifies the width & height of the box centered at the cluster center.
             Can enter an integer for a square box, or a list [width,height] for rectangular boxes.
+            NOTE: This option has not been debugged! Don't use it, it doesn't work correctly!
 
         :returns:
             List of dictionaries. Each dictionary corresponds to a partition and contains 'nodes', a numpy array of Xmin, Xmax, Ymin, Ymax of the partition, and 'center', the center of the cluster for that partition.
@@ -512,6 +513,9 @@ class Partitions:
         labels = kmeans.labels_
 
         bins = []
+
+        # Using this optin, take the bounding box of points closest to each cluster center
+        # These will be the partitions
         if boxOption == "boundPoints":
 
             for l in np.unique(labels):
@@ -519,11 +523,12 @@ class Partitions:
 
                 xmin = min(cluster[:,0])
                 xmax = max(cluster[:,0])
-
                 ymin = min(cluster[:,1])
+                ymax = max(cluster[:,1])
+
+                # issues if bounding box touches x-axis so print a warning if it does
                 if ymin == 0:
                     print("Uh oh can't have points with zero lifetime!")
-                ymax = max(cluster[:,1])
 
                 # Ensure boxes aren't just a line, need to have some thickness
                 if xmin == xmax:
@@ -533,20 +538,30 @@ class Partitions:
 
                 bins.insert(0,{'nodes': [xmin,xmax,ymin,ymax], 'center': centers[l]})
 
+        # Using this option, put the equal size box centered at each cluster center
+        # These are then the partitions and we ignore anything outside them
         elif boxOption == "equalSize":
-            if isinstance(boxSize, int):
-                boxSize = list([boxSize,boxSize])
+            print("STOP: this option has not been debugged. It may be available later.")
 
-            for l in np.unique(labels):
-                center = centers[l]
-
-                xmin = center[0] - boxSize[0]/2
-                xmax = center[0] + boxSize[0]/2
-                ymin = center[1] - boxSize[1]/2
-                ymax = center[1] + boxSize[1]/2
-
-                bins.insert(0,{'nodes': [xmin,xmax,ymin,ymax], 'center': centers[l]})
-
+            ######################################################################
+            ### DON'T DELETE
+            ### This is a starting point but commented out because it doesn't work
+            ### properly. There is no error checking so boxes could cross x axis
+            ### which we can't have so needs more before it is usable
+            ######################################################################
+            # if isinstance(boxSize, int):
+            #     boxSize = list([boxSize,boxSize])
+            #
+            # for l in np.unique(labels):
+            #     center = centers[l]
+            #
+            #     xmin = center[0] - boxSize[0]/2
+            #     xmax = center[0] + boxSize[0]/2
+            #     ymin = center[1] - boxSize[1]/2
+            #     ymax = center[1] + boxSize[1]/2
+            #
+            #     bins.insert(0,{'nodes': [xmin,xmax,ymin,ymax], 'center': centers[l]})
+            ######################################################################
         return bins
 
 
