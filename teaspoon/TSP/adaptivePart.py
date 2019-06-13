@@ -174,6 +174,11 @@ class Partitions:
             else:
                 self.weights = None
 
+            if 'pad' in partitionParams:
+                self.pad = partitionParams['pad']
+            else:
+                self.pad = 0.1
+
             if 'boxOption' in partitionParams:
                 self.boxOption = partitionParams['boxOption']
             else:
@@ -470,7 +475,7 @@ class Partitions:
 
 
 
-    def return_partition_clustering(self, data, clusterAlg = KMeans, num_clusters=10, weights = None, pad=0.5, boxOption="boundPoints", boxSize=2):
+    def return_partition_clustering(self, data, clusterAlg = KMeans, num_clusters=10, weights = None, pad=0.1, boxOption="boundPoints", boxSize=2):
         '''
         Partitioning method based on clustering algorithms. First cluster the data, then using the cluster centers and labels determine the partitions.
 
@@ -485,6 +490,9 @@ class Partitions:
 
         :Parameter weights:
             An array of the same length as data containing weights of points to use weighted clustering
+
+        :Parameter pad:
+            If a partition consists of just a line, add (pad) * (ymax - ymin) on either side to ensure it is a rectangle. Default is 0.1, so it should be 10\% as wide as it is tall.
 
         :Parameter boxOption:
             Specifies how to choose the boxes based on cluster centers. Options are "boundPoints" which takes the bounding box of all data points assigned to that cluster center,
@@ -512,13 +520,16 @@ class Partitions:
                 xmin = min(cluster[:,0])
                 xmax = max(cluster[:,0])
 
-                # Ensure boxes aren't just a line, need to have some thickness 
-                if xmin == xmax:
-                    xmin = xmin - pad
-                    xmax = xmax + pad
-
                 ymin = min(cluster[:,1])
+                if ymin == 0:
+                    print("Uh oh can't have points with zero lifetime!")
                 ymax = max(cluster[:,1])
+
+                # Ensure boxes aren't just a line, need to have some thickness
+                if xmin == xmax:
+                    pad = 0.5 * (ymax - ymin)
+                    xmin = xmin - pad/2
+                    xmax = xmax + pad/2
 
                 bins.insert(0,{'nodes': [xmin,xmax,ymin,ymax], 'center': centers[l]})
 

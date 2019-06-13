@@ -571,38 +571,15 @@ class TentParameters(ParameterBucket):
 			# if it does, crop the bottom of the partition and recalculate d
 
 			if partition['nodes'][2] - delta < 0:
-				partition['nodes'][2] = delta + epsilon
-				ymin = partition['nodes'][2]
+				# partition['nodes'][2] =
+				ymin = delta + epsilon
 
-				if isinstance(d, list):
-					dx = d[0]
-					dy = d[1]
-				elif isinstance(d, int):
-					dx = d
-					dy = d
+				if ( ( ymin + (dy * delta) ) > ( ymax + (0.95*delta) ) ) and (dy > 1):
+					dy = dy-1
 
-				xdiff = xmax - xmin
-				ydiff = ymax - ymin
+				if ( ( xmin + (dx * delta) ) > ( xmax + (0.95*delta) ) ) and (dx > 1):
+					dx = dx-1
 
-				# calculate delta in each direction and choose the max
-				deltax = xdiff / dx
-				deltay = ydiff / dy
-				# delta = max(deltax, deltay)
-
-				delta = min(deltax, deltay)
-				if deltax > deltay:
-					delta = deltay
-
-					dx = round(xdiff / delta)
-				elif deltay > deltax:
-					delta = deltax
-
-					dy = round(ydiff / delta)
-				else:
-					delta = deltax
-
-			if partition['nodes'][2] - delta < 0:
-				print('uh oh still a problem....')
 			# assign this delta to the partition
 			partition['delta'] = delta
 
@@ -788,14 +765,20 @@ def ML_via_featurization(DgmsDF,
 	if verbose:
 		print('Making G...')
 
+	numFeatures = {}
+	nnzFeatures = {}
 	listOfG = []
 	for dgmColLabel in dgm_col:
 		G = build_G(DgmsDF[dgmColLabel],params)
 		listOfG.append(G)
 
+		numFeatures[dgmColLabel] = np.shape(G)[1]
+		nnzFeatures[dgmColLabel] = len(np.where(G.any(axis=0))[0])
+
 	G = np.concatenate(listOfG,axis = 1)
 
-	numFeatures = np.shape(G)[1]
+	numFeatures['Total'] = np.shape(G)[1]
+	nnzFeatures['Total'] = len(np.where(G.any(axis=0))[0])
 
 	# Normalize G
 	if normalize:
@@ -803,12 +786,11 @@ def ML_via_featurization(DgmsDF,
 
 
 	if verbose:
-		print('Number of features used is', numFeatures,'...')
-		print('Number of nonzero features is ', len(np.where(G.any(axis=0))[0]) )
+		print('Number of features: ', numFeatures,'...')
+		print('Number of nonzero features: ', nnzFeatures )
 
 	params.num_features = numFeatures
-	params.nnz_features = len(np.where(G.any(axis=0))[0])
-	# nnz_features = len(np.where(G.any(axis=0))[0])
+	params.nnz_features = nnzFeatures
 
 	clf.fit(G,list(DgmsDF[labels_col]))
 
