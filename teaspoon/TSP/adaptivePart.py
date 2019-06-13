@@ -541,27 +541,32 @@ class Partitions:
         # Using this option, put the equal size box centered at each cluster center
         # These are then the partitions and we ignore anything outside them
         elif boxOption == "equalSize":
-            print("STOP: this option has not been debugged. It may be available later.")
+                elif boxOption == "equalSize":
+                    print("STOP: the 'equalSize' option has not been debugged. It may be available later.")
+                    print("If you used this option, I'm just giving you back the bounding box.")
 
-            ######################################################################
-            ### DON'T DELETE
-            ### This is a starting point but commented out because it doesn't work
-            ### properly. There is no error checking so boxes could cross x axis
-            ### which we can't have so needs more before it is usable
-            ######################################################################
-            # if isinstance(boxSize, int):
-            #     boxSize = list([boxSize,boxSize])
-            #
-            # for l in np.unique(labels):
-            #     center = centers[l]
-            #
-            #     xmin = center[0] - boxSize[0]/2
-            #     xmax = center[0] + boxSize[0]/2
-            #     ymin = center[1] - boxSize[1]/2
-            #     ymax = center[1] + boxSize[1]/2
-            #
-            #     bins.insert(0,{'nodes': [xmin,xmax,ymin,ymax], 'center': centers[l]})
-            ######################################################################
+                    bins.insert(0, {'nodes':[ min(data[:,0]), max(data[:,0]), min(data[:,1]), max(data[:,1]) ]})
+
+                    ######################################################################
+                    ### DON'T DELETE
+                    ### This is a starting point but commented out because it doesn't work
+                    ### properly. There is no error checking so boxes could cross x axis
+                    ### which we can't have so needs more before it is usable
+                    ######################################################################
+                    # if isinstance(boxSize, int):
+                    #     boxSize = list([boxSize,boxSize])
+                    #
+                    # for l in np.unique(labels):
+                    #     center = centers[l]
+                    #
+                    #     xmin = center[0] - boxSize[0]/2
+                    #     xmax = center[0] + boxSize[0]/2
+                    #     ymin = center[1] - boxSize[1]/2
+                    #     ymax = center[1] + boxSize[1]/2
+                    #
+                    #     bins.insert(0,{'nodes': [xmin,xmax,ymin,ymax], 'center': centers[l]})
+                    ######################################################################
+
         return bins
 
 
