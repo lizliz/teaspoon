@@ -87,31 +87,30 @@ def tent(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
         delta = partition['delta']
         epsilon = partition['epsilon']
 
-
-        # get the nodes of the support
-        xmin, xmax, ymin, ymax = partition['supportNodes']
-
-        # # get nodes of the bounding box for the mesh so everything stays within the support
-        # xmin = xmin + delta
-        # xmax = xmax - delta
-        # ymin = ymin + delta
-        # ymax = ymax - delta
-
-        # get subset of points in the diagram that are in the original partition
-        Asub = A[(A[:, 0] >= xmin) &
-                (A[:, 0] <= xmax) &
-                (A[:, 1] >= ymin) &
-                (A[:, 1] <= ymax), :]
-
-        #getSubset(A, partition)
+        # get subset of points in the diagram that are in the
+        # support of all tents in the partition
+        Supp_xmin, Supp_xmax, Supp_ymin, Supp_ymax = partition['supportNodes']
+        Asub = A[(A[:, 0] >= Supp_xmin) &
+                (A[:, 0] <= Supp_xmax) &
+                (A[:, 1] >= Supp_ymin) &
+                (A[:, 1] <= Supp_ymax), :]
 
         # if there are no dgm points in the partition just add a vector of zeros and move on to the next partition
         if len(Asub) == 0:
-            # print('Dgm: ', A)
-            # print('supportNodes: ', partition['supportNodes'])
-            # print('\n')
             all_out = np.concatenate((all_out, np.zeros((dx + 1) * (dy + 1))), axis=0)
             continue
+
+        # get bounding box of the tent tent centers
+        # ie. the mesh of tent centers stays within this range, including on the boundary
+        # ie. tent centers are at (xmin, ymin), (xmin + delta, ymin), ... , (xmin + dx*delta, ymin)=(xmax,ymin)
+        #                         (xmin, ymin + delta), ... , (xmin + dx*delta, ymin + delta)
+        #                         ...
+        #                         (xmin, ymin + dy*delta)=(xmin,ymax), ... , (xmin + dx*delta, ymin+dy*delta)=(xmax,ymax)
+        # BUT support extends outside that by delta on all sides (unless ymin is zero)
+        xmin = Supp_xmin + delta #+ epsilon
+        xmax = Supp_xmax - delta
+        ymin = Supp_ymin + delta
+        ymax = Supp_ymax - delta
 
         I,J = np.meshgrid(range(dx + 1), range(dy + 1))
 
@@ -142,7 +141,9 @@ def tent(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
         if np.count_nonzero(out) == 0:
             print('All zero but it shouldnt be...')
             print('Dgm: ', A)
+            print('Nodes: ', partition['nodes'])
             print('Support Nodes: ', partition['supportNodes'])
+            print(' ')
 
         all_out = np.concatenate((all_out, out), axis=0)
 
