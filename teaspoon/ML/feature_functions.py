@@ -21,7 +21,7 @@ import matplotlib.pyplot as plt
 .. module::feature_functions
 """
 
-def tent(Dgm, params, dgm_type='BirthDeath'):
+def tent(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
     '''
     Applies the tent function to a diagram.
 
@@ -68,8 +68,9 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
         return
 
     all_out = []
+
     # first, get the entries in Dgm that are within each partition
-    for partition in params.partitions:
+    for partition in params.partitions[dgmColLabel]:
 
         if isinstance(partition['d'], list):
             dx = partition['d'][0]
@@ -106,10 +107,13 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
 
         # if there are no dgm points in the partition just add a vector of zeros and move on to the next partition
         if len(Asub) == 0:
+            # print('Dgm: ', A)
+            # print('supportNodes: ', partition['supportNodes'])
+            # print('\n')
             all_out = np.concatenate((all_out, np.zeros((dx + 1) * (dy + 1))), axis=0)
             continue
 
-        I, J = I,J = np.meshgrid(range(dx + 1), range(dy + 1))
+        I,J = np.meshgrid(range(dx + 1), range(dy + 1))
 
         # Iflat = delta * I.reshape(np.prod(I.shape))
         # Jflat = delta * J.reshape(np.prod(I.shape)) + epsilon
@@ -135,7 +139,13 @@ def tent(Dgm, params, dgm_type='BirthDeath'):
         out = out.reshape((dx + 1, dy + 1)).T.flatten()
         out = out / delta
 
+        if np.count_nonzero(out) == 0:
+            print('All zero but it shouldnt be...')
+            print('Dgm: ', A)
+            print('Support Nodes: ', partition['supportNodes'])
+
         all_out = np.concatenate((all_out, out), axis=0)
+
 
     return all_out
 
@@ -334,7 +344,7 @@ def bary_diff_matrix(xnew, xbase, w=None):
     return M
 
 
-def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
+def interp_polynomial(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
     '''
     Extracts the weights on the interpolation mesh using barycentric Lagrange interpolation.
 
@@ -382,7 +392,7 @@ def interp_polynomial(Dgm, params, dgm_type='BirthDeath'):
 
     all_weights = []
     # first, get the entries in Dgm that are within each partition
-    for partition in params.partitions:
+    for partition in params.partitions[dgmColLabel]:
 
         if isinstance(partition['d'], list):
             nx = partition['d'][0]
