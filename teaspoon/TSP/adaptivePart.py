@@ -189,6 +189,11 @@ class Partitions:
             else:
                 self.boxSize = 2
 
+        if 'split' in partitionParams:
+            self.split = partitionParams['split']
+        else:
+            self.split = False
+
             # if 'split' in partitionParams:
             #     self.split = partitionParams['split']
             # else:
@@ -287,20 +292,30 @@ class Partitions:
         Plot the partitions. Can plot in ordinal or float, whichever is in the partition bucket when it's called.
         '''
 
-        fig1, ax1 = plt.subplots()
+        # #fig1, ax1 = plt.subplots()
+        # for binNode in self:
+        #     # print(binNode)
+        #     # get the bottom left corner
+        #     corner = (binNode['nodes'][0], binNode['nodes'][2])
+        #
+        #     # get the width and height
+        #     width = binNode['nodes'][1] - binNode['nodes'][0]
+        #     height = binNode['nodes'][3] - binNode['nodes'][2]
+        #
+        #     # add the corresponding rectangle
+        #     ax1.add_patch(patches.Rectangle(corner, width, height, fill=False))
+        #
+        # # Doesn't show unless we do this
+        #
+
         for binNode in self:
-            # print(binNode)
-            # get the bottom left corner
-            corner = (binNode['nodes'][0], binNode['nodes'][2])
+            Xmin = binNode['nodes'][0]
+            Xmax = binNode['nodes'][1]
+            Ymin = binNode['nodes'][2]
+            Ymax = binNode['nodes'][3]
 
-            # get the width and height
-            width = binNode['nodes'][1] - binNode['nodes'][0]
-            height = binNode['nodes'][3] - binNode['nodes'][2]
-
-            # add the corresponding rectangle
-            ax1.add_patch(patches.Rectangle(corner, width, height, fill=False))
-
-        # Doesn't show unless we do this
+            plt.hlines([Ymin, Ymax], Xmin, Xmax, color='k',linewidth=1)
+            plt.vlines([Xmin, Xmax], Ymin, Ymax, color='k',linewidth=1)
         plt.axis('tight')
 
 
@@ -532,40 +547,39 @@ class Partitions:
 
                 # Ensure boxes aren't just a line, need to have some thickness
                 if xmin == xmax:
-                    pad = 0.5 * (ymax - ymin)
-                    xmin = xmin - pad/2
-                    xmax = xmax + pad/2
+                    cushion = pad * (ymax - ymin)
+                    xmin = xmin - (cushion)
+                    xmax = xmax + (cushion)
 
                 bins.insert(0,{'nodes': [xmin,xmax,ymin,ymax], 'center': centers[l]})
 
         # Using this option, put the equal size box centered at each cluster center
         # These are then the partitions and we ignore anything outside them
         elif boxOption == "equalSize":
-                elif boxOption == "equalSize":
-                    print("STOP: the 'equalSize' option has not been debugged. It may be available later.")
-                    print("If you used this option, I'm just giving you back the bounding box.")
+            print("STOP: the 'equalSize' option has not been debugged. It may be available later.")
+            print("If you used this option, I'm just giving you back the bounding box.")
 
-                    bins.insert(0, {'nodes':[ min(data[:,0]), max(data[:,0]), min(data[:,1]), max(data[:,1]) ]})
+            bins.insert(0, {'nodes':[ min(data[:,0]), max(data[:,0]), min(data[:,1]), max(data[:,1]) ]})
 
-                    ######################################################################
-                    ### DON'T DELETE
-                    ### This is a starting point but commented out because it doesn't work
-                    ### properly. There is no error checking so boxes could cross x axis
-                    ### which we can't have so needs more before it is usable
-                    ######################################################################
-                    # if isinstance(boxSize, int):
-                    #     boxSize = list([boxSize,boxSize])
-                    #
-                    # for l in np.unique(labels):
-                    #     center = centers[l]
-                    #
-                    #     xmin = center[0] - boxSize[0]/2
-                    #     xmax = center[0] + boxSize[0]/2
-                    #     ymin = center[1] - boxSize[1]/2
-                    #     ymax = center[1] + boxSize[1]/2
-                    #
-                    #     bins.insert(0,{'nodes': [xmin,xmax,ymin,ymax], 'center': centers[l]})
-                    ######################################################################
+            ######################################################################
+            ### DON'T DELETE
+            ### This is a starting point but commented out because it doesn't work
+            ### properly. There is no error checking so boxes could cross x axis
+            ### which we can't have so needs more before it is usable
+            ######################################################################
+            # if isinstance(boxSize, int):
+            #     boxSize = list([boxSize,boxSize])
+            #
+            # for l in np.unique(labels):
+            #     center = centers[l]
+            #
+            #     xmin = center[0] - boxSize[0]/2
+            #     xmax = center[0] + boxSize[0]/2
+            #     ymin = center[1] - boxSize[1]/2
+            #     ymax = center[1] + boxSize[1]/2
+            #
+            #     bins.insert(0,{'nodes': [xmin,xmax,ymin,ymax], 'center': centers[l]})
+            ######################################################################
 
         return bins
 

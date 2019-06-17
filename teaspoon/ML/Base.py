@@ -148,32 +148,39 @@ class ParameterBucket(object):
 		TODO: This can't handle infinite points in the diagram yet
 		'''
 
-		if ('split' in partitionParams) and (isinstance(DgmsPD, pd.DataFrame)):
-		    self.split = partitionParams['split']
+		if hasattr(self, 'split'):
+		    partitionParams['split'] = self.split
 		else:
-		    self.split = False
+		    partitionParams['split'] = False
 
-		# if split:
-		# 	self.partitions = {}
-		# 	for label in DgmsPD.columns:
-		# 		AllPoints = np.concatenate(list(DgmsPD[label]))
-		#
-		# 		# Remove inifinite points
-		# 		AllPoints = pP.removeInfiniteClasses(AllPoints)
-		#
-		# 		x = AllPoints[:,0]
-		# 		y = AllPoints[:,1]
-		# 		if dgm_type == 'BirthDeath':
-		# 			life = y-x
-		# 		else:
-		# 			life = y
-		# 		fullData = np.column_stack((x,life))
-		#
-		# 		self.partitions.update({col: Partitions(data = fullData, meshingScheme = 'clustering', partitionParams = partparams)})
+		self.partitions = {}
 
-		if True:
-		#else:
-			# TODO Deal with infinite points???
+		if self.split and isinstance(DgmsPD, pd.DataFrame):
+			for col in DgmsPD.columns:
+				AllPoints = np.concatenate(list(DgmsPD[col]))
+
+				# Remove inifinite points
+				AllPoints = pP.removeInfiniteClasses(AllPoints)
+
+				x = AllPoints[:,0]
+				y = AllPoints[:,1]
+				if dgm_type == 'BirthDeath':
+					life = y-x
+				else:
+					life = y
+				fullData = np.column_stack((x,life))
+
+				self.partitions.update({col: Partitions(data = fullData, meshingScheme =  meshingScheme, partitionParams = partitionParams)})
+
+				if hasattr(self.partitions[col],'xFloats'):
+					# create new attribute to keep the index of the floats for the partition bucket
+					self.partitions[col].partitionBucketInd = deepcopy(self.partitions[col].partitionBucket)
+
+					# convert nodes in partitions to floats in partition bucket
+					for partition in self.partitions[col].partitionBucket:
+						self.partitions[col].convertOrdToFloat(partition)
+		else:
+
 			try:
 				AllDgms = []
 				for label in DgmsPD.columns:
@@ -183,6 +190,8 @@ class ParameterBucket(object):
 			except:
 				# you had a series to start with
 				AllPoints = np.concatenate(list(DgmsPD))
+
+			col = 'All'
 
 			# Remove inifinite points
 			AllPoints = pP.removeInfiniteClasses(AllPoints)
@@ -195,17 +204,17 @@ class ParameterBucket(object):
 				life = y
 			fullData = np.column_stack((x,life))
 
-			self.partitions = Partitions(data = fullData, meshingScheme = meshingScheme, partitionParams = partitionParams)
+			self.partitions.update({col: Partitions(data = fullData, meshingScheme = meshingScheme, partitionParams = partitionParams)})
 
 			# If we used ordinals to begin with, save the ordinal partitions and
 			# convert them back to floats
-			if hasattr(self.partitions,'xFloats'):
+			if hasattr(self.partitions[col],'xFloats'):
 				# create new attribute to keep the index of the floats for the partition bucket
-				self.partitions.partitionBucketInd = deepcopy(self.partitions.partitionBucket)
+				self.partitions[col].partitionBucketInd = deepcopy(self.partitions[col].partitionBucket)
 
 				# convert nodes in partitions to floats in partition bucket
-				for partition in self.partitions.partitionBucket:
-					self.partitions.convertOrdToFloat(partition)
+				for partition in self.partitions[col].partitionBucket:
+					self.partitions[col].convertOrdToFloat(partition)
 
 
 
@@ -306,6 +315,7 @@ class InterpPolyParameters(ParameterBucket):
 					test_size = .33,
 					seed = None,
 					maxPower = 1,
+					split = False,
 					**kwargs
 						):
 		'''
@@ -343,6 +353,7 @@ class InterpPolyParameters(ParameterBucket):
 		self.d = d
 		self.useAdaptivePart = useAdaptivePart #This should be boolean
 		self.meshingScheme = meshingScheme
+		self.split = split
 		self.clf_model = clf_model
 		self.seed = seed
 		self.test_size = test_size
@@ -373,6 +384,7 @@ class TentParameters(ParameterBucket):
 				test_size = .33,
 				seed = None,
 				maxPower = 1,
+				split = False,
 				**kwargs):
 
 
@@ -405,6 +417,7 @@ class TentParameters(ParameterBucket):
 		self.feature_function = fF.tent
 		self.useAdaptivePart = useAdaptivePart #This should be boolean
 		self.meshingScheme = meshingScheme
+		self.split = split
 
 		self.d = d
 		self.delta = delta
@@ -436,7 +449,7 @@ class TentParameters(ParameterBucket):
 
 
 
-	# def chooseDeltaEpsWithPadding(self, DgmsPD, pad = 0):
+	# def taEpsWithPadding(self, DgmsPD, pad = 0):
 	# 	'''
 	# 	Sets delta and epsilon for tent function mesh. This code assumes that self.d has been set.
 	#
@@ -528,120 +541,131 @@ class TentParameters(ParameterBucket):
 
 		# choose delta to be the max of the width or the height of the partition divided by d
 		# Note need to iterate over partitionBucket (not just Partitions class) so we can add dictionary elements
-		for partition in self.partitions.partitionBucket:
-			# add or subtract padding if needed
-			xmin = partition['nodes'][0] #- pad
-			xmax = partition['nodes'][1] #+ pad
-			ymin = partition['nodes'][2] #- pad
-			ymax = partition['nodes'][3] #+ pad
+		for key in self.partitions:
+			for partition in self.partitions[key].partitionBucket:
+				# add or subtract padding if needed
+				xmin = partition['nodes'][0] #- pad
+				xmax = partition['nodes'][1] #+ pad
+				ymin = partition['nodes'][2] #- pad
+				ymax = partition['nodes'][3] #+ pad
 
-			# d can be an integer meaning use same d in all directions,
-			# or a list of d in each direction
-			d = self.d
-			if isinstance(d, list):
-				dx = d[0]
-				dy = d[1]
-			elif isinstance(d, int):
-				dx = d
-				dy = d
+				# d can be an integer meaning use same d in all directions,
+				# or a list of d in each direction
+				d = self.d
+				if isinstance(d, list):
+					dx = d[0]
+					dy = d[1]
+				elif isinstance(d, int):
+					dx = d
+					dy = d
 
-			xdiff = xmax - xmin
-			ydiff = ymax - ymin
+				xdiff = xmax - xmin
+				ydiff = ymax - ymin
 
-			# calculate delta in each direction and choose the max
-			deltax = xdiff / dx
-			deltay = ydiff / dy
-			# delta = max(deltax, deltay)
+				# calculate delta in each direction and choose the max
+				deltax = xdiff / dx
+				deltay = ydiff / dy
+				# delta = max(deltax, deltay)
 
-			delta = min(deltax, deltay)
-			if deltax > deltay:
-				delta = deltay
+				if deltax == 0:
+					deltax = np.inf
+				if deltay == 0:
+					deltay == np.inf
+				if (deltax == 0) and (deltay == 0):
+					print('Uh oh the partition consists of a single point...')
+					print('Something is wrong with the paritioning scheme...')
+					print('Exiting...')
+					return
 
-				dx = round(xdiff / delta)
-			elif deltay > deltax:
-				delta = deltax
+				delta = min(deltax, deltay)
+				if deltax > deltay:
+					delta = deltay
 
-				dy = round(ydiff / delta)
-			else:
-				delta = deltax
+					dx = round(xdiff / delta)
+				elif deltay > deltax:
+					delta = deltax
 
+					dy = round(ydiff / delta)
+				else:
+					delta = deltax
 
+				# check if support will cross the diagonal
+				# if it does, crop the bottom of the partition and recalculate d
 
-			# check if support will cross the diagonal
-			# if it does, crop the bottom of the partition and recalculate d
+				if partition['nodes'][2] - delta < 0:
+					# partition['nodes'][2] =
+					ymin = delta + epsilon
 
-			if partition['nodes'][2] - delta < 0:
-				# partition['nodes'][2] =
-				ymin = delta + epsilon
+					if ( ( ymin + (dy * delta) ) > ( ymax + (0.95*delta) ) ) and (dy > 1):
+						dy = dy-1
 
-				if ( ( ymin + (dy * delta) ) > ( ymax + (0.95*delta) ) ) and (dy > 1):
-					dy = dy-1
+					if ( ( xmin + (dx * delta) ) > ( xmax + (0.95*delta) ) ) and (dx > 1):
+						dx = dx-1
 
-				if ( ( xmin + (dx * delta) ) > ( xmax + (0.95*delta) ) ) and (dx > 1):
-					dx = dx-1
+				# assign this delta to the partition
+				partition['delta'] = delta
 
-			# assign this delta to the partition
-			partition['delta'] = delta
-
-			# supportNodes contain the nodes of the bounding box for where tent functions are supported
-			tempSuppNodes = [xmin - delta, xmin + ( (dx+1) * delta ), ymin - delta, ymin + ( (dy+1) * delta )]
-
-
-				# tempSuppNodes[2] = 0 + epsilon
-
-			# if tempSuppNodes[2] < 0:
-			# 	# if verbose:
-			# 	# 	print('Uh oh your support will cross the diagonal, your bottom boundary is ', partition['supportNodes'][2])
-			# 	# 	print('Shifting the boundary of the partition up by necessary amount...')
-			#
-			# 	#Shift top boundary up by however negative you went
-			# 	#tempSuppNodes[3] = tempSuppNodes[3] + abs(tempSuppNodes[2])
-			#
-			# 	#Shift bottom boundary up to zero
-			# 	tempSuppNodes[2] = 0
+				# supportNodes contain the nodes of the bounding box for where tent functions are supported
+				tempSuppNodes = [xmin - delta, xmin + ( (dx+1) * delta ), ymin - delta, ymin + ( (dy+1) * delta )]
 
 
-			partition['supportNodes'] = tempSuppNodes
+					# tempSuppNodes[2] = 0 + epsilon
 
-			# Assign d as an element in the dictionary for each partition
-			d = [int(dx),int(dy)]
-			partition['d'] = d
+				# if tempSuppNodes[2] < 0:
+				# 	# if verbose:
+				# 	# 	print('Uh oh your support will cross the diagonal, your bottom boundary is ', partition['supportNodes'][2])
+				# 	# 	print('Shifting the boundary of the partition up by necessary amount...')
+				#
+				# 	#Shift top boundary up by however negative you went
+				# 	#tempSuppNodes[3] = tempSuppNodes[3] + abs(tempSuppNodes[2])
+				#
+				# 	#Shift bottom boundary up to zero
+				# 	tempSuppNodes[2] = 0
 
-			# Just assigns epsilon based on what you want it to be
-			# TO DO: could implement another method here to calculate it
-			partition['epsilon'] = epsilon
+
+				partition['supportNodes'] = tempSuppNodes
+
+				# Assign d as an element in the dictionary for each partition
+				d = [int(dx),int(dy)]
+				partition['d'] = d
+
+				# Just assigns epsilon based on what you want it to be
+				# TO DO: could implement another method here to calculate it
+				partition['epsilon'] = epsilon
 
 		#print('\nParameters d, delta and epsilon have all been assigned to each partition...\n')
 
 
-	def plotTentSupport(self):
+	def plotTentSupport(self, cols ,c = ['r','b','g','m','y','k','c','orange','springgreen','darkred']):
 		'''
 		Plots the bounding box of the support of all the tent functions
 
 		'''
 
-		c = ['r','b','g','m','y','o','k']
 		cInd = 0
 
-		# plot the partitions
-		for binNode in self.partitions:
-			suppXmin = binNode['supportNodes'][0]
-			suppXmax = binNode['supportNodes'][1]
-			suppYmin = binNode['supportNodes'][2]
-			suppYmax = binNode['supportNodes'][3]
+		if isinstance(cols,str):
+			cols = [cols]
 
-			# plt.xlim([suppXmin - 1, suppXmax+1])
-			# plt.ylim([suppYmin - 1, suppYmax+1])
+		for col in cols:
+			# plot the partitions
+			for binNode in self.partitions[col]:
+				suppXmin = binNode['supportNodes'][0]
+				suppXmax = binNode['supportNodes'][1]
+				suppYmin = binNode['supportNodes'][2]
+				suppYmax = binNode['supportNodes'][3]
 
-			plt.hlines([suppYmin, suppYmax], suppXmin, suppXmax, color=c[cInd], linestyles='dashed')
-			plt.vlines([suppXmin, suppXmax], suppYmin, suppYmax, color=c[cInd], linestyles='dashed')
+				# plt.xlim([suppXmin - 1, suppXmax+1])
+				# plt.ylim([suppYmin - 1, suppYmax+1])
 
-			cInd = cInd + 1
+				plt.hlines([suppYmin, suppYmax], suppXmin, suppXmax, color=c[cInd], linestyles='dashed')
+				plt.vlines([suppXmin, suppXmax], suppYmin, suppYmax, color=c[cInd], linestyles='dashed')
 
-		# Doesn't show unless we do this
-		plt.axis('tight')
+				cInd = cInd+1
 
-	def calcTentCenters(self):
+
+
+	def calcTentCenters(self, col):
 		'''
 		Calculates the points on the mesh where a tent function is centered. Mainly useful for debugging and
 		making figures
@@ -653,7 +677,7 @@ class TentParameters(ParameterBucket):
 
 		tent_centers = []
 
-		for partition in self.partitions:
+		for partition in self.partitions[col]:
 			partition_centers = []
 			d = partition['d']
 			if isinstance(d, int):
@@ -680,7 +704,7 @@ class TentParameters(ParameterBucket):
 
 
 
-def build_G(DgmSeries, params):
+def build_G(DgmSeries, params, dgmColLabel):
 	'''
 		Applies the passed featurization function to all diagrams in the series and outputs the feature matrix
 	:Parameter DgmSeries:
@@ -695,7 +719,10 @@ def build_G(DgmSeries, params):
 	# 	print('this here.  Exiting...')
 	# 	return
 
-	applyFeaturization = lambda x: params.feature_function(x,params = params)
+	if params.split == False:
+		dgmColLabel = 'All'
+
+	applyFeaturization = lambda x: params.feature_function(x,params = params, dgmColLabel = dgmColLabel)
 
 	G = np.array(list(DgmSeries.apply(applyFeaturization )))
 	# Include powers if necessary
@@ -769,7 +796,7 @@ def ML_via_featurization(DgmsDF,
 	nnzFeatures = {}
 	listOfG = []
 	for dgmColLabel in dgm_col:
-		G = build_G(DgmsDF[dgmColLabel],params)
+		G = build_G(DgmsDF[dgmColLabel],params,dgmColLabel)
 		listOfG.append(G)
 
 		numFeatures[dgmColLabel] = np.shape(G)[1]
@@ -882,7 +909,10 @@ def getPercentScore(DgmsDF,
 	# print('train test split time: ', time2 - time1)
 
 	# Get the portions of the test data frame with diagrams and concatenate into giant series:
-	allDgms = pd.concat((D_train[label] for label in dgm_col))
+	if not params.split:
+		allDgms = pd.concat((D_train[label] for label in dgm_col))
+	else:
+		allDgms = pd.concat((D_train[label] for label in dgm_col), axis =1, sort=False)
 	# time3 = time.time()
 
 	if params.useAdaptivePart == True:
@@ -928,7 +958,7 @@ def getPercentScore(DgmsDF,
 		print('Using ' + str(len(L_test)) + '/' + str(len(DgmsDF)) + ' to test...')
 	listOfG = []
 	for dgmColLabel in dgm_col:
-		G = build_G(D_test[dgmColLabel],params)
+		G = build_G(D_test[dgmColLabel],params,dgmColLabel)
 		listOfG.append(G)
 
 	G = np.concatenate(listOfG,axis = 1)
