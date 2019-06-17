@@ -545,11 +545,11 @@ class Partitions:
                 if ymin == 0:
                     print("Uh oh can't have points with zero lifetime!")
 
-                # Ensure boxes aren't just a line, need to have some thickness
-                if xmin == xmax:
-                    cushion = pad * (ymax - ymin)
-                    xmin = xmin - (cushion)
-                    xmax = xmax + (cushion)
+                # # Ensure boxes aren't just a line, need to have some thickness
+                # if xmin == xmax:
+                #     cushion = pad * (ymax - ymin)
+                #     xmin = xmin - (cushion)
+                #     xmax = xmax + (cushion)
 
                 bins.insert(0,{'nodes': [xmin,xmax,ymin,ymax], 'center': centers[l]})
 
