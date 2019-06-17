@@ -119,13 +119,14 @@ class Partitions:
         else:
             self.partitionBucket = []
 
+
     def setParameters(self, partitionParams):
         '''
         Helper function to set the parameters depending on the meshing scheme
 
         :Parameter partitionParams:
             Dictionary containing parameters needed for the partitioning algorithm.
-            If dictionary is missing a parameter, this function just sets it to a defalt.
+            If dictionary is missing a parameter, this function just sets it to a default.
         '''
 
         if self.meshingScheme == 'DV':
@@ -167,7 +168,7 @@ class Partitions:
             if 'numClusters' in partitionParams:
                 self.numClusters = partitionParams['numClusters']
             else:
-                self.numClusters = 10
+                self.numClusters = 5
 
             if 'weights' in partitionParams:
                 self.weights = partitionParams['weights']
@@ -193,14 +194,7 @@ class Partitions:
             self.split = partitionParams['split']
         else:
             self.split = False
-
-            # if 'split' in partitionParams:
-            #     self.split = partitionParams['split']
-            # else:
-            #     self.split = False
-        # else:
-        #     print("Just using bounding box, no parameters to set up.")
-
+            
 
 
     def convertOrdToFloat(self,partitionEntry):
@@ -490,7 +484,7 @@ class Partitions:
 
 
 
-    def return_partition_clustering(self, data, clusterAlg = KMeans, num_clusters=10, weights = None, pad=0.1, boxOption="boundPoints", boxSize=2):
+    def return_partition_clustering(self, data, clusterAlg = KMeans, num_clusters=5, weights = None, pad=0.1, boxOption="boundPoints", boxSize=2):
         '''
         Partitioning method based on clustering algorithms. First cluster the data, then using the cluster centers and labels determine the partitions.
 
@@ -506,12 +500,10 @@ class Partitions:
         :Parameter weights:
             An array of the same length as data containing weights of points to use weighted clustering
 
-        :Parameter pad:
-            If a partition consists of just a line, add (pad) * (ymax - ymin) on either side to ensure it is a rectangle. Default is 0.1, so it should be 10\% as wide as it is tall.
-
         :Parameter boxOption:
             Specifies how to choose the boxes based on cluster centers. Options are "boundPoints" which takes the bounding box of all data points assigned to that cluster center,
             or "equalSize" which puts boxes of size boxSize centered at the cluster center.
+            NOTE: option "equalSize" has not been debugged! Don't use it, it doesn't work correctly!
 
         :Parameter boxSize:
             If you are using option "equalSize" to pick the partition boxes, then boxSize specifies the width & height of the box centered at the cluster center.
@@ -523,7 +515,10 @@ class Partitions:
 
         '''
 
+        # Fit using whatever the chosen cluster algorithm is
         kmeans = clusterAlg(n_clusters=num_clusters).fit(data,sample_weight = weights)
+
+        # Get the centers of each cluster and the labels for the data points
         centers = kmeans.cluster_centers_
         labels = kmeans.labels_
 
@@ -545,11 +540,6 @@ class Partitions:
                 if ymin == 0:
                     print("Uh oh can't have points with zero lifetime!")
 
-                # # Ensure boxes aren't just a line, need to have some thickness
-                # if xmin == xmax:
-                #     cushion = pad * (ymax - ymin)
-                #     xmin = xmin - (cushion)
-                #     xmax = xmax + (cushion)
 
                 bins.insert(0,{'nodes': [xmin,xmax,ymin,ymax], 'center': centers[l]})
 

@@ -408,6 +408,8 @@ class TentParameters(ParameterBucket):
 			The seed for the pseudo-random number generator.  Pass None if you don't want it fixed; otherwise, pass an integer.
 		:Parameter maxPower;
 			The maximum degree used for the monomial combinations of the tent functions.  Testing suggests we usually want this to be 1.  Increasing causes large increase in number of features.
+		:Parameter split;
+			Boolean to decide if you want to partition different dimensional diagrams separately. If True, it partitions separately. If False it combines them all and then partitions.
 		:Parameter kwargs;
 			Any leftover inputs are stored as attributes. Some common attributes used elsewhere are `d`, `delta`, and `epsilon` to describe the mesh.
 
@@ -430,17 +432,6 @@ class TentParameters(ParameterBucket):
 
 
 	def check(self):
-		# Check for all the parameters required for tents function
-		# if not hasattr(self, d):
-		# 	print('d is missing')
-
-		# if not hasattr(self, delta):
-		# 	print('delta is missing')
-
-		# if not hasattr(self, epsilon):
-		# 	print('epsilon is missing')
-
-		# # more parameters we need?
 
 		print("This hasn't been made yet. Ask me later.")
 		pass
@@ -935,8 +926,10 @@ def getPercentScore(DgmsDF,
 
 
 	# If using tent functions, calculate delta parameter
-	if (params.feature_function.__name__ == 'tent'):
+	if params.feature_function.__name__ == 'tent':
 		params.chooseDeltaEpsForPartitions(verbose=verbose)
+	# elif params.feature_function.__name__ == 'interp_polynomial':
+	# 	params.assignD(verbose=verbose)
 
 	# time5 = time.time()
 	# print('choose delta eps time: ', time5-time4)
