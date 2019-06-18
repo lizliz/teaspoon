@@ -25,14 +25,12 @@ def tent(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
     '''
     Applies the tent function to a diagram.
 
-    Parameters:
+    :param Dgm:	A persistence diagram, given as a :math:`K \times 2` numpy array
 
-    :Parameter Dgm:
-     	A persistence diagram, given as a :math:`K \times 2` numpy array
-    :Parameter params:
-     	An tents.ParameterBucket object.  Really, we need d, delta, epsilon, and the partitions from that.
-    :Parameter type:
-    	This code accepts diagrams either
+    :param params: An tents.ParameterBucket object.  Really, we need d, delta, epsilon, and the partitions from that.
+
+    :param type: This code accepts diagrams either
+
             1. in (birth, death) coordinates, in which case `type = 'BirthDeath'`, or
             2. in (birth, lifetime) = (birth, death-birth) coordinates, in which case `type = 'BirthLifetime'`
 
@@ -254,8 +252,7 @@ def bary_weights(x):
     '''
     Find the barycentric interplation weights
 
-    :Parameter x:
-        Basepoints for Barycentric weights
+    :param x: Basepoints for Barycentric weights
 
     .. note:: this algorithm may be numerically unstable for high degree
 
@@ -284,14 +281,9 @@ def bary_diff_matrix(xnew, xbase, w=None):
     Calculate both the derivative and plain Lagrange interpolation matrix
     using Barycentric formulae from Berrut and Trefethen, SIAM Review, 2004.
 
-    Parameters:
-
-    :Parameter xnew:
-        Interpolation points
-    :Parameter xbase:
-        Base points for interpolation
-    :Parameter w:
-        Weights calculated for base points (optional)
+    :param xnew: Interpolation points
+    :param xbase: Base points for interpolation
+    :param w: Weights calculated for base points (optional)
 
     '''
 
@@ -349,22 +341,14 @@ def interp_polynomial(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
     '''
     Extracts the weights on the interpolation mesh using barycentric Lagrange interpolation.
 
-    Parameters:
+    :param Dgm: A persistence diagram, given as a :math:`K \times 2` numpy array
+    :param params: An tents.ParameterBucket object.  Really, we need d, delta, and epsilon from that.
+    :param type: This code accepts diagrams either
 
-    :Parameter Dgm:
-     	A persistence diagram, given as a :math:`K \times 2` numpy array
-    :Parameter params:
-     	An tents.ParameterBucket object.  Really, we need d, delta, and epsilon from that.
-    :Parameter type:
-    	This code accepts diagrams either
     	1. in (birth, death) coordinates, in which case `type = 'BirthDeath'`, or
     	2. in (birth, lifetime) = (birth, death-birth) coordinates, in which case `dgm_type = 'BirthLifetime'`
 
-    :returns:
-
-    interp_weight-
-        a matrix with each entry representiting the weight of an interpolation
-    	function on the base mesh. This matrix assumes that on a 2D mesh the functions are ordered row-wise.
+    :returns: **interp_weight** - a matrix with each entry representiting the weight of an interpolation function on the base mesh. This matrix assumes that on a 2D mesh the functions are ordered row-wise.
 
     '''
     #	jacobi_func = params.jacobi_func
@@ -444,7 +428,7 @@ def interp_polynomial(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
         # shift the base mesh points to the interval of interpolation [ax, bx], and
         # [ay, by]
         ax, bx, ay, by = partition['nodes']
-        
+
         xmesh = (bx - ax) / 2 * xmesh + (bx + ax) / 2
 
         ymesh = (by - ay) / 2 * ymesh + (by + ay) / 2

@@ -14,7 +14,10 @@
 #
 # import os
 import sys
-sys.path.insert(0, "C:\\Users\\makel\\teaspoon")
+import os
+#sys.path.insert(0, "C:\\Users\\makel\\teaspoon")
+
+
 
 
 # -- Project information -----------------------------------------------------
@@ -45,6 +48,9 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.mathjax'
 ]
+
+# need this for some reason, otherwise you get errors when it can't import these
+autodoc_mock_imports = ['numpy', 'matplotlib','scipy','pandas','ripser','sklearn']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']

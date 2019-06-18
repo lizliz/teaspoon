@@ -5,6 +5,11 @@ Created on Tue Aug 14 09:35:30 2018
 @author: khasawn3
 """
 
+
+"""
+.. module: adaptivePart
+"""
+
 import numpy as np
 from scipy.stats import binned_statistic_2d, chisquare, rankdata
 import matplotlib.pyplot as plt
@@ -23,22 +28,24 @@ class Partitions:
         '''
         A data structure for storing a partition coming from an adapative meshing scheme.
 
-        :Parameter data:
+        :param data:
             A numpy array of type many by 2
 
-        :Parameter convertToOrd:
+        :param convertToOrd:
             Boolean variable to decide if we want to use ordinals for partitioning. It makes things faster but less accurate.
 
-        :Parameter meshingScheme:
+        :param meshingScheme:
             The type of meshing scheme. Only option currently is 'DV', a method based on this paper (add paper). Any other input here will only use the bounding box of all points in the Dgms in the training set.
 
-        :Parameter partitionParams:
+        :param partitionParams:
             Dictionary of parameters for the particular meshing scheme selected.
-            For 'DV' the adjustable parameters are 'alpha', 'c', 'nmin', 'numParts'.
-            For 'clustering' the adjustable parameters are 'numClusters', 'clusterAlg', 'weights', 'boxOption', 'boxWidth'.
 
-        :Parameter kwargs;
+                - For 'DV' the adjustable parameters are 'alpha', 'c', 'nmin', 'numParts'.
+                - For 'clustering' the adjustable parameters are 'numClusters', 'clusterAlg', 'weights', 'boxOption', 'boxWidth'.
+
+        :param kwargs:
 			Any leftover inputs are stored as attributes.
+
         '''
 
         self.meshingScheme = meshingScheme
@@ -124,9 +131,8 @@ class Partitions:
         '''
         Helper function to set the parameters depending on the meshing scheme
 
-        :Parameter partitionParams:
-            Dictionary containing parameters needed for the partitioning algorithm.
-            If dictionary is missing a parameter, this function just sets it to a default.
+        :param partitionParams: Dictionary containing parameters needed for the partitioning algorithm. If dictionary is missing a parameter, this function just sets it to a default.
+
         '''
 
         if self.meshingScheme == 'DV':
@@ -194,18 +200,19 @@ class Partitions:
             self.split = partitionParams['split']
         else:
             self.split = False
-            
+
 
 
     def convertOrdToFloat(self,partitionEntry):
         '''
         Converts to nodes of a partition entry from ordinal back to floats.
 
-        :Parameter partitionEntry:
+        :param partitionEntry:
             The partition that you want to convert.
 
         :returns:
             Partition entry with converted nodes. Also sets dictionary element to the converted version.
+
         '''
         bdyList = partitionEntry['nodes'].copy()
         # Need to subtract one to deal with counting from
@@ -246,6 +253,7 @@ class Partitions:
         '''
         Overrides the builtin magic method in the case where you had non-ordinal data but still want the ordinal stuff back.
         If the data wasn't ordinal, this has the exact same effect as self[key].
+
         '''
 
         return self.partitionBucket[key]
@@ -253,6 +261,7 @@ class Partitions:
     def __iter__(self):
         '''
         Iterates over the converted entries in the parameter bucket
+
         '''
 
         # if hasattr(self,'xFloats'):
@@ -263,12 +272,14 @@ class Partitions:
     def iterOrdinal(self):
         '''
         Functions just like iter magic method without converting each entry back to its float
+
         '''
         return iter(self.partitionBucketInd)
 
     def __str__(self):
         '''
         Nicely prints all currently set values in the bucket.
+
         '''
         attrs = vars(self)
         output = ''
@@ -284,23 +295,8 @@ class Partitions:
     def plot(self):
         '''
         Plot the partitions. Can plot in ordinal or float, whichever is in the partition bucket when it's called.
-        '''
 
-        # #fig1, ax1 = plt.subplots()
-        # for binNode in self:
-        #     # print(binNode)
-        #     # get the bottom left corner
-        #     corner = (binNode['nodes'][0], binNode['nodes'][2])
-        #
-        #     # get the width and height
-        #     width = binNode['nodes'][1] - binNode['nodes'][0]
-        #     height = binNode['nodes'][3] - binNode['nodes'][2]
-        #
-        #     # add the corresponding rectangle
-        #     ax1.add_patch(patches.Rectangle(corner, width, height, fill=False))
-        #
-        # # Doesn't show unless we do this
-        #
+        '''
 
         for binNode in self:
             Xmin = binNode['nodes'][0]
@@ -317,6 +313,7 @@ class Partitions:
         '''
         Helper function for error checking. Used to make sure input is in ordinal coordinates.
         It checks that when the two data columns are sorted they are each equal to an ordered vector with the same number of rows.
+
         '''
         return np.all(np.equal(np.sort(dd, axis=0),
                         np.reshape(np.repeat(np.arange(start=1,stop=dd.shape[0]+1),
@@ -328,22 +325,22 @@ class Partitions:
         '''
         Recursive method that partitions the data based on the DV method.
 
-        :Parameter data:
+        :param data:
             A manyx2 numpy array that contains all the original data
 
-        :Parameter borders:
+        :param borders:
             A dictionary that contains 'nodes' with a numpy array of Xmin, Xmax, Ymin, Ymax,
 
-        :Parameter r:
+        :param r:
             The number of partitions to split in each direction (i.e. r=2 means each partition is split into a 2 by 2 grid of partitions)
 
-        :Parameter alpha:
+        :param alpha:
             The significance level to test for independence
 
-        :Parameter c:
+        :param c:
             Parameter for an exit criteria. Partitioning stops if min(width of partition, height of partition) < max(width of bounding box, height of bounding box)/c.
 
-        :Parameter nmin:
+        :param nmin:
             Minimum number of points in each partition to keep recursion going. The default is 5 because chisquare test breaks down with less than 5 points per partition, thus we recommend choosing nmin>=5.
 
         :returns:
@@ -488,24 +485,24 @@ class Partitions:
         '''
         Partitioning method based on clustering algorithms. First cluster the data, then using the cluster centers and labels determine the partitions.
 
-        :Parameter data:
+        :param data:
             A manyx2 numpy array that contains all the original data
 
-        :Parameter cluster_algorithm:
+        :param cluster_algorithm:
             Clustering algorithm you want to use. Only options right now are KMeans and MiniBatchKMeans from scikit learn.
 
-        :Parameter num_clusters:
+        :param num_clusters:
             The number of clusters you want. This is the number of partitions you want to divide your space into.
 
-        :Parameter weights:
+        :param weights:
             An array of the same length as data containing weights of points to use weighted clustering
 
-        :Parameter boxOption:
+        :param boxOption:
             Specifies how to choose the boxes based on cluster centers. Options are "boundPoints" which takes the bounding box of all data points assigned to that cluster center,
             or "equalSize" which puts boxes of size boxSize centered at the cluster center.
             NOTE: option "equalSize" has not been debugged! Don't use it, it doesn't work correctly!
 
-        :Parameter boxSize:
+        :param boxSize:
             If you are using option "equalSize" to pick the partition boxes, then boxSize specifies the width & height of the box centered at the cluster center.
             Can enter an integer for a square box, or a list [width,height] for rectangular boxes.
             NOTE: This option has not been debugged! Don't use it, it doesn't work correctly!
