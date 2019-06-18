@@ -375,10 +375,10 @@ def interp_polynomial(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
     #     ny = params.d
     # else:
     #     nx, ny = params.d
-    #
-    # # check if the Dgm is empty. If it is, pass back zeros
-    # if Dgm.size == 0:
-    #     return  np.zeros((nx + 1) * (ny + 1))
+
+    # check if the Dgm is empty. If it is, pass back zeros
+    if Dgm.size == 0:
+        return  np.zeros((nx + 1) * (ny + 1))
 
     # Move to birth,lifetime plane
     if dgm_type == 'BirthDeath':
@@ -395,6 +395,17 @@ def interp_polynomial(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
     # first, get the entries in Dgm that are within each partition
     for partition in params.partitions[dgmColLabel]:
 
+        ##### Might want this back at some point...
+        ##### Use the same d for every partition
+        # # check if we asked for a square mesh or not
+        # if isinstance(params.d, int):
+        #     nx = params.d
+        #     ny = params.d
+        # else:
+        #     nx, ny = params.d
+
+
+        # use different d depending on the partititon
         if isinstance(partition['d'], list):
             nx = partition['d'][0]
             ny = partition['d'][1]
@@ -433,12 +444,9 @@ def interp_polynomial(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
         # shift the base mesh points to the interval of interpolation [ax, bx], and
         # [ay, by]
         ax, bx, ay, by = partition['nodes']
-        # ax = 5
-        # bx = 6
+        
         xmesh = (bx - ax) / 2 * xmesh + (bx + ax) / 2
 
-        # ay = 5
-        # by = 6
         ymesh = (by - ay) / 2 * ymesh + (by + ay) / 2
 
         # define a mesh on the base points
