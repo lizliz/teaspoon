@@ -369,6 +369,74 @@ class InterpPolyParameters(ParameterBucket):
 		print("This hasn't been made yet. Ask me later.")
 		pass
 
+	def calcD(self, verbose=False):
+		'''
+		Sets delta and epsilon for tent function mesh.
+		It also assigns d to each partition and adds it to the partition bucket as another dictionary element.
+		Currently the only option is to use the same d for each partition.
+		You can choose different number of divisions in the mesh for x and y directions.
+		This works whether you are using adaptive partitions or not.
+
+		:Parameter pad:
+			The additional padding outside of the points in the bounding box/partition
+
+		:Parameter verbose:
+			Boolean. If true will print additional messages and warnings.
+		'''
+
+		# choose delta to be the max of the width or the height of the partition divided by d
+		# Note need to iterate over partitionBucket (not just Partitions class) so we can add dictionary elements
+		for key in self.partitions:
+			for partition in self.partitions[key].partitionBucket:
+				# add or subtract padding if needed
+				xmin = partition['nodes'][0] #- pad
+				xmax = partition['nodes'][1] #+ pad
+				ymin = partition['nodes'][2] #- pad
+				ymax = partition['nodes'][3] #+ pad
+
+				# d can be an integer meaning use same d in all directions,
+				# or a list of d in each direction
+				d = self.d
+				if isinstance(d, list):
+					dx = d[0]
+					dy = d[1]
+				elif isinstance(d, int):
+					dx = d
+					dy = d
+
+				xdiff = xmax - xmin
+				ydiff = ymax - ymin
+
+				# calculate delta in each direction and choose the max
+				deltax = xdiff / dx
+				deltay = ydiff / dy
+				# delta = max(deltax, deltay)
+
+				if deltax == 0:
+					deltax = np.inf
+				if deltay == 0:
+					deltay == np.inf
+				if (deltax == 0) and (deltay == 0):
+					print('Uh oh the partition consists of a single point...')
+					print('Something is wrong with the paritioning scheme...')
+					print('Exiting...')
+					return
+
+				delta = min(deltax, deltay)
+				if deltax > deltay:
+					delta = deltay
+
+					dx = round(xdiff / delta)
+				elif deltay > deltax:
+					delta = deltax
+
+					dy = round(ydiff / delta)
+				else:
+					delta = deltax
+
+				# Assign d as an element in the dictionary for each partition
+				d = [int(dx),int(dy)]
+				partition['d'] = d
 
 
 
@@ -385,6 +453,7 @@ class TentParameters(ParameterBucket):
 				seed = None,
 				maxPower = 1,
 				split = False,
+				dgm_col = [],
 				**kwargs):
 
 
@@ -420,6 +489,7 @@ class TentParameters(ParameterBucket):
 		self.useAdaptivePart = useAdaptivePart #This should be boolean
 		self.meshingScheme = meshingScheme
 		self.split = split
+		self.dgm_col = dgm_col
 
 		self.d = d
 		self.delta = delta
@@ -435,6 +505,51 @@ class TentParameters(ParameterBucket):
 
 		print("This hasn't been made yet. Ask me later.")
 		pass
+
+
+	def check_params(self):
+		d = self.d
+
+		# If d is a dictionary, check to make sure it contains the proper keys
+		# If split is False, it needs the key 'All'
+		# If split is True, the keys need to match the entries in dgm_col
+		# All other entries in the dictionary will be ignored
+		if isinstance(d,dict):
+			if self.split:
+				dgm_col = self.dgm_col
+			else:
+				dgm_col = ['All']
+			dgm_col.sort()
+			d_keys = list(d.keys())
+			d_keys.sort()
+			if set(dgm_col).issubset(set(d_keys)):
+				print("Error: There's a problem with the dictionary used for")
+				print("parameter d. Fix it before continuing or the code will not work.")
+				return
+
+		# If you have specified partition parameters and are using the clustering algorithm
+		# and numClusters is dictionary, check to make sure it contains the proper keys
+		# If split is False, it needs the key 'All'
+		# If split is True, the keys need to match the entries in dgm_col
+		# All other entries in the dictionary will be ignored
+		if hasattr(self, 'partitionParams'):
+			partitionParams = self.partitionParams
+			if 'numClusters' in partitionParams.keys():
+				if isinstance(partitionParams['numClusters'], dict):
+					if self.split:
+						dgm_col = self.dgm_col
+					else:
+						dgm_col = ['All']
+					dgm_col.sort()
+					numCluster_keys = list(partitionParams['numClusters'].keys())
+					numCluster_keys.sort()
+					if set(dgm_col).issubset(set(numCluster_keys)):
+						print('Error: The dictionary you used for partition parameter')
+						print('numClusters does not match the diagram dimensions used.')
+						print('Fix these to match before continuing.')
+						return
+
+		print('Parameters checked.')
 
 
 
@@ -540,18 +655,37 @@ class TentParameters(ParameterBucket):
 				ymin = partition['nodes'][2] #- pad
 				ymax = partition['nodes'][3] #+ pad
 
-				# d can be an integer meaning use same d in all directions,
-				# or a list of d in each direction
+				# d can be:
+				#  - an integer meaning use same d in all directions,
+				#  - a list of d in each direction
+				#  - a dictionary with an integer/list for each key
 				d = self.d
+				if isinstance(d, dict):
+					d = d[key]
+
 				if isinstance(d, list):
 					dx = d[0]
 					dy = d[1]
 				elif isinstance(d, int):
 					dx = d
 					dy = d
+				else:
+					print("There's a problem with the parameter d...")
+					print("Exiting...")
+					return
+
 
 				xdiff = xmax - xmin
 				ydiff = ymax - ymin
+
+
+				# if dx == 0 and dy == 0:
+				# 	delta = max(xdiff/2, ydiff/2)
+				#
+				# 	partition['delta'] = delta
+				# 	partition['d'] = [int(dx), int(dy)]
+				#
+				# 	continue
 
 				# calculate delta in each direction and choose the max
 				deltax = xdiff / dx
@@ -928,8 +1062,8 @@ def getPercentScore(DgmsDF,
 	# If using tent functions, calculate delta parameter
 	if params.feature_function.__name__ == 'tent':
 		params.chooseDeltaEpsForPartitions(verbose=verbose)
-	# elif params.feature_function.__name__ == 'interp_polynomial':
-	# 	params.assignD(verbose=verbose)
+	elif params.feature_function.__name__ == 'interp_polynomial':
+	 	params.calcD(verbose=verbose)
 
 	# time5 = time.time()
 	# print('choose delta eps time: ', time5-time4)
