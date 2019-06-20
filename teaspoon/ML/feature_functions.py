@@ -2,7 +2,8 @@
 '''
 Machine learning featurization method
 
-If you make use of this code, please cite the following paper:<br/>
+If you make use of this code, please cite the following paper:
+
 J.A. Perea, E. Munch, and F. Khasawneh.  "Approximating Continuous Functions On Persistence Diagrams." Preprint, 2017.
 '''
 
@@ -25,24 +26,26 @@ def tent(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
     '''
     Applies the tent function to a diagram.
 
-    :param Dgm:	A persistence diagram, given as a :math:`K \times 2` numpy array
+    Parameters:
+        Dgm (np.array):	A persistence diagram, given as a :math:`K \times 2` numpy array
 
-    :param params: An tents.ParameterBucket object.  Really, we need d, delta, epsilon, and the partitions from that.
+        params (ParameterBucket):
+            A Base.ParameterBucket object. Really, we need d, delta, epsilon, and the partitions from that.
 
-    :param type: This code accepts diagrams either
+        type (str): This code accepts diagrams either
 
             1. in (birth, death) coordinates, in which case `type = 'BirthDeath'`, or
             2. in (birth, lifetime) = (birth, death-birth) coordinates, in which case `type = 'BirthLifetime'`
 
-    :returns:
+    Returns:
 
-    :math:`\sum_{x,y \in \text{Dgm}}g_{i,j}(x,y)` where
+        :math:`\sum_{x,y \in \text{Dgm}}g_{i,j}(x,y)` where
 
-    .. math::
+        .. math::
 
-        \\bigg| 1- \\max\\left\\{ \\left|\\frac{x}{\\delta} - i\\right|, \\left|\\frac{y-x}{\\delta} - j\\right|\\right\\} \\bigg|_+]
+            g_{i,j}(x,y) = \\bigg| 1- \\max\\left\\{ \\left|\\frac{x}{\\delta} - i\\right|, \\left|\\frac{y-x}{\\delta} - j\\right|\\right\\} \\bigg|_+]
 
-    where :math:`| * |_+` is positive part; equivalently, min of * and 0.
+        where :math:`| * |_+` is positive part; equivalently, min of * and 0.
 
     .. note:: This code does not take care of the maxPower polynomial stuff.  The build_G() function does it after all the rows have been calculated.
 
@@ -252,7 +255,8 @@ def bary_weights(x):
     '''
     Find the barycentric interplation weights
 
-    :param x: Basepoints for Barycentric weights
+    Parameters:
+        x: Basepoints for Barycentric weights
 
     .. note:: this algorithm may be numerically unstable for high degree
 
@@ -281,9 +285,10 @@ def bary_diff_matrix(xnew, xbase, w=None):
     Calculate both the derivative and plain Lagrange interpolation matrix
     using Barycentric formulae from Berrut and Trefethen, SIAM Review, 2004.
 
-    :param xnew: Interpolation points
-    :param xbase: Base points for interpolation
-    :param w: Weights calculated for base points (optional)
+    Parameters:
+        xnew: Interpolation points
+        xbase: Base points for interpolation
+        w: Weights calculated for base points (optional)
 
     '''
 
@@ -341,14 +346,20 @@ def interp_polynomial(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
     '''
     Extracts the weights on the interpolation mesh using barycentric Lagrange interpolation.
 
-    :param Dgm: A persistence diagram, given as a :math:`K \times 2` numpy array
-    :param params: An tents.ParameterBucket object.  Really, we need d, delta, and epsilon from that.
-    :param type: This code accepts diagrams either
+    Parameters:
+        Dgm (np.array):
+            A persistence diagram, given as a :math:`K \times 2` numpy array
+        params (ParameterBucket):
+            A Base.ParameterBucket object.  Really, we need d and the partitions from that.
+        type (str): This code accepts diagrams either
 
-    	1. in (birth, death) coordinates, in which case `type = 'BirthDeath'`, or
-    	2. in (birth, lifetime) = (birth, death-birth) coordinates, in which case `dgm_type = 'BirthLifetime'`
+        	1. in (birth, death) coordinates, in which case `type = 'BirthDeath'`, or
+        	2. in (birth, lifetime) = (birth, death-birth) coordinates, in which case `dgm_type = 'BirthLifetime'`
 
-    :returns: **interp_weight** - a matrix with each entry representiting the weight of an interpolation function on the base mesh. This matrix assumes that on a 2D mesh the functions are ordered row-wise.
+    Returns:
+        **interp_weight** *(np.array)* - a matrix with each entry representiting the weight of an interpolation
+        function on the base mesh. This matrix assumes that on a 2D mesh the functions
+        are ordered row-wise.
 
     '''
     #	jacobi_func = params.jacobi_func

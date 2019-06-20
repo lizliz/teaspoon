@@ -3,6 +3,8 @@
 Created on Tue Aug 14 09:35:30 2018
 
 @author: khasawn3
+
+Updated by Sarah Tymochko
 """
 
 
@@ -28,32 +30,40 @@ class Partitions:
         '''
         A data structure for storing a partition coming from an adapative meshing scheme.
 
-        :param data:
-            A numpy array of type many by 2
+        Parameters:
+            data (np.array):
+                A numpy array of type many by 2
 
-        :param convertToOrd:
-            Boolean variable to decide if we want to use ordinals for partitioning. It makes things faster but less accurate.
+            convertToOrd (bool):
+                Boolean variable to decide if you want to use ordinals for
+                partitioning. Ordinals make things faster but not as nice partitions.
 
-        :param meshingScheme:
-            The type of meshing scheme. Only option currently is 'DV', a method based on this paper (add paper). Any other input here will only use the bounding box of all points in the Dgms in the training set.
+            meshingScheme (str):
+                The type of meshing scheme you want to use. Options include:
 
-        :param partitionParams:
-            Dictionary of parameters for the particular meshing scheme selected.
+                    - 'DV' method is based on (mention paper here). For more details see function return_partition_DV.
+                    - 'clustering' uses a clustering algorithm to find clusters in the data, then takes the bounding box of all points assigned to each cluster. For more details see the function return_partition_clustering.
 
-                - For 'DV' the adjustable parameters are 'alpha', 'c', 'nmin', 'numParts'.
-                - For 'clustering' the adjustable parameters are 'numClusters', 'clusterAlg', 'weights', 'boxOption', 'boxWidth'.
+            partitionParams (dict):
+                Dictionary of parameters needed for the particular meshing scheme selected.
+                For the explanation of the parameters see the function for the specific meshingScheme
+                (i.e. return_partition_DV or return_partition_clustering)
 
-        :param kwargs:
-			Any leftover inputs are stored as attributes.
+                    - For 'DV' the adjustable parameters are 'alpha', 'c', 'nmin', 'numParts', 'split'.
+                    - For 'clustering' the adjustable parameters are 'numClusters', 'clusterAlg', 'weights', 'boxOption', 'boxWidth', 'split'.
+
+            kwargs:
+                Any leftover inputs are stored as attributes.
 
         '''
 
+        self.convertToOrd = convertToOrd
         self.meshingScheme = meshingScheme
         self.__dict__.update(kwargs)
 
         if data is not None:
 
-            # if using kmeans, we dont want to convert to ordinals
+            # # if using kmeans, we dont want to convert to ordinals
             if meshingScheme == 'clustering':
                 convertToOrd = False
 
@@ -94,9 +104,7 @@ class Partitions:
             self.borders['nodes'] = np.array([xmin, xmax, ymin, ymax])
             self.borders['npts'] = data.shape[0]
 
-            # # set parameters for partitioning algorithm
-            # self.numParts = numParts
-
+            # set parameters for partitioning algorithm
             self.setParameters(partitionParams=partitionParams)
 
             # If there is data, use the chosen meshing scheme to build the partitions.
@@ -129,13 +137,18 @@ class Partitions:
 
     def setParameters(self, partitionParams):
         '''
-        Helper function to set the parameters depending on the meshing scheme
+        Helper function to set the parameters depending on the meshing scheme.
+        If any are not specified, it is set to a default value.
 
-        :param partitionParams: Dictionary containing parameters needed for the partitioning algorithm. If dictionary is missing a parameter, this function just sets it to a default.
+        Parameters:
+            partitionParams:
+                Dictionary containing parameters needed for the partitioning algorithm.
 
-        '''
+    '''
 
         if self.meshingScheme == 'DV':
+
+            # c det
             if 'c' in partitionParams:
                 c = partitionParams['c']
 
@@ -148,7 +161,11 @@ class Partitions:
                     # c=0 means we don't use this paramter for an exit criteria
                     self.c = 0
             else:
-                self.c = 10
+                c = 10
+                # convert c from integer to the corresponding width/height
+                width = (self.xFloats[xmax-1]-self.xFloats[xmin-1]) / c
+                height = (self.yFloats[ymax-1]-self.yFloats[ymin-1]) / c
+                self.c = max( width, height )
 
             if 'alpha' in partitionParams:
                 self.alpha = partitionParams['alpha']
@@ -164,6 +181,9 @@ class Partitions:
                 self.numParts = partitionParams['numParts']
             else:
                 self.numParts = 2
+
+            if self.convertToOrd == False:
+                self.convertToOrd = True
 
         elif self.meshingScheme == 'clustering':
             if 'clusterAlg' in partitionParams:
@@ -196,6 +216,9 @@ class Partitions:
             else:
                 self.boxSize = 2
 
+            if self.convertToOrd == True:
+                self.convertToOrd = False
+
         if 'split' in partitionParams:
             self.split = partitionParams['split']
         else:
@@ -207,10 +230,11 @@ class Partitions:
         '''
         Converts to nodes of a partition entry from ordinal back to floats.
 
-        :param partitionEntry:
-            The partition that you want to convert.
+        Parameters:
+            partitionEntry (dict):
+                The partition that you want to convert.
 
-        :returns:
+        Returns:
             Partition entry with converted nodes. Also sets dictionary element to the converted version.
 
         '''
@@ -237,10 +261,18 @@ class Partitions:
 
     # magic method to get number of partitions
     def __len__(self):
+        '''
+        Magic method to get number of partitions.
+
+        '''
         return len(self.partitionBucket)
 
     # magic method ot extract partitions
     def __getitem__(self,key):
+        '''
+        Magic method to extract partitions.
+
+        '''
         if hasattr(self,'xFloats'): #if the data wasn't ordinal
             entry = self.partitionBucket[key].copy()
             entry = self.convertOrdToFloat(entry)
@@ -325,26 +357,35 @@ class Partitions:
         '''
         Recursive method that partitions the data based on the DV method.
 
-        :param data:
-            A manyx2 numpy array that contains all the original data
+        Parameters:
+            data (np.array):
+                A manyx2 numpy array that contains all the data in ordinal format.
 
-        :param borders:
-            A dictionary that contains 'nodes' with a numpy array of Xmin, Xmax, Ymin, Ymax,
+            borders (dict):
+                A dictionary that contains 'nodes' with a numpy array of Xmin, Xmax, Ymin, Ymax.
 
-        :param r:
-            The number of partitions to split in each direction (i.e. r=2 means each partition is split into a 2 by 2 grid of partitions)
+            r (int):
+                The number of partitions to split in each direction
+                (i.e. r=2 means each partition is recursively split into a
+                2 by 2 grid of partitions)
 
-        :param alpha:
-            The significance level to test for independence
+            alpha (float):
+                The required significance level for independence to stop partitioning
 
-        :param c:
-            Parameter for an exit criteria. Partitioning stops if min(width of partition, height of partition) < max(width of bounding box, height of bounding box)/c.
+            c (int):
+                Parameter for an exit criteria. Partitioning stops if min(width of
+                partition, height of partition) < max(width of bounding box, height
+                of bounding box)/c.
 
-        :param nmin:
-            Minimum number of points in each partition to keep recursion going. The default is 5 because chisquare test breaks down with less than 5 points per partition, thus we recommend choosing nmin>=5.
+            nmin (int):
+                Minimum average number of points in each partition to keep recursion going.
+                The default is 5 because chisquare test breaks down with less than 5 points
+                per partition, thus we recommend choosing nmin >= 5.
 
-        :returns:
-            List of dictionaries. Each dictionary corresponds to a partition and contains 'nodes', a numpy array of Xmin, Xmax, Ymin, Ymax of the partition, and 'npts', the number of points in the partition.
+        Returns:
+            List of dictionaries. Each dictionary corresponds to a partition and
+            contains 'nodes', a numpy array of Xmin, Xmax, Ymin, Ymax of the partition,
+            and 'npts', the number of points in the partition.
 
         '''
         # extract the bin boundaries
@@ -481,34 +522,41 @@ class Partitions:
 
 
 
-    def return_partition_clustering(self, data, clusterAlg = KMeans, num_clusters=5, weights = None, pad=0.1, boxOption="boundPoints", boxSize=2):
+    def return_partition_clustering(self, data, clusterAlg = KMeans, num_clusters=5, weights = None, boxOption="boundPoints", boxSize=2):
         '''
         Partitioning method based on clustering algorithms. First cluster the data, then using the cluster centers and labels determine the partitions.
 
-        :param data:
-            A manyx2 numpy array that contains all the original data
+        Parameters:
+            data (np.array):
+                A manyx2 numpy array that contains all the original data (not ordinals).
 
-        :param cluster_algorithm:
-            Clustering algorithm you want to use. Only options right now are KMeans and MiniBatchKMeans from scikit learn.
+            cluster_algorithm (function):
+                Clustering algorithm you want to use. Only options right now are
+                KMeans and MiniBatchKMeans from scikit learn.
 
-        :param num_clusters:
-            The number of clusters you want. This is the number of partitions you want to divide your space into.
+            num_clusters (int):
+                The number of clusters you want. This is the number of partitions
+                you want to divide your space into.
 
-        :param weights:
-            An array of the same length as data containing weights of points to use weighted clustering
+            weights (np.array):
+                An array of the same length as data containing weights of points to use weighted clustering
 
-        :param boxOption:
-            Specifies how to choose the boxes based on cluster centers. Options are "boundPoints" which takes the bounding box of all data points assigned to that cluster center,
-            or "equalSize" which puts boxes of size boxSize centered at the cluster center.
-            NOTE: option "equalSize" has not been debugged! Don't use it, it doesn't work correctly!
+            boxOption (str):
+                Specifies how to choose the boxes based on cluster centers. Options are
+                "boundPoints" which takes the bounding box of all data points assigned to that cluster center,
+                or "equalSize" which puts boxes of size boxSize centered at the cluster center.
+                NOTE: option "equalSize" has not been debugged! Don't use it, it doesn't work correctly!
 
-        :param boxSize:
-            If you are using option "equalSize" to pick the partition boxes, then boxSize specifies the width & height of the box centered at the cluster center.
-            Can enter an integer for a square box, or a list [width,height] for rectangular boxes.
-            NOTE: This option has not been debugged! Don't use it, it doesn't work correctly!
+            boxSize (int):
+                If you are using option "equalSize" to pick the partition boxes, then boxSize specifies
+                the width & height of the box centered at the cluster center.
+                Can enter an integer for a square box, or a list [width,height] for rectangular boxes.
+                NOTE: This option has not been debugged! Don't use it, it doesn't work correctly!
 
-        :returns:
-            List of dictionaries. Each dictionary corresponds to a partition and contains 'nodes', a numpy array of Xmin, Xmax, Ymin, Ymax of the partition, and 'center', the center of the cluster for that partition.
+        Returns:
+            List of dictionaries. Each dictionary corresponds to a partition and contains 'nodes',
+            a numpy array of Xmin, Xmax, Ymin, Ymax of the partition, and 'center', the center of the
+            cluster for that partition.
 
         '''
 
