@@ -177,6 +177,7 @@ class ParameterBucket(object):
 		# 			partitionParams['numClusters'] = numClustersDict
 
 		if self.split and isinstance(DgmsPD, pd.DataFrame):
+			# print('Splitting for partitioning')
 			for col in DgmsPD.columns:
 				AllPoints = np.concatenate(list(DgmsPD[col]))
 
@@ -201,7 +202,7 @@ class ParameterBucket(object):
 					for partition in self.partitions[col].partitionBucket:
 						self.partitions[col].convertOrdToFloat(partition)
 		else:
-
+			# print("Not splitting for partitioning")
 			try:
 				AllDgms = []
 				for label in DgmsPD.columns:
@@ -304,6 +305,7 @@ class InterpPolyParameters(ParameterBucket):
 				seed = None,
 				maxPower = 1,
 				split = False,
+				dgm_col = [],
 				**kwargs):
 		'''
 		Creates a new subclass of ParameterBucket specifically for the interpolating polynomials and sets all necessary parameters.
@@ -359,6 +361,8 @@ class InterpPolyParameters(ParameterBucket):
 		self.useAdaptivePart = useAdaptivePart #This should be boolean
 		self.meshingScheme = meshingScheme
 		self.split = split
+		self.dgm_col = dgm_col
+
 		self.clf_model = clf_model
 		self.seed = seed
 		self.test_size = test_size
@@ -416,30 +420,39 @@ class InterpPolyParameters(ParameterBucket):
 				deltay = ydiff / dy
 				# delta = max(deltax, deltay)
 
-				if deltax == 0:
-					deltax = np.inf
-				if deltay == 0:
-					deltay == np.inf
+
 				if (deltax == 0) and (deltay == 0):
 					print('Uh oh the partition consists of a single point...')
 					print('Something is wrong with the paritioning scheme...')
 					print('Exiting...')
 					return
 
+				if (deltax == 0) or (deltax < 0.1*deltay):
+					deltax = np.inf
+				if (deltay == 0) or (deltay < 0.1*deltax):
+					deltay = np.inf
+
 				delta = min(deltax, deltay)
 				if deltax > deltay:
 					delta = deltay
 
-					dx = round(xdiff / delta)
+					dx = np.ceil(xdiff / delta)
 				elif deltay > deltax:
 					delta = deltax
 
-					dy = round(ydiff / delta)
+					dy = np.ceil(ydiff / delta)
 				else:
 					delta = deltax
 
+				if dx == 0:
+					dx = 1
+				if dy == 0:
+					dy = 1
+
+
 				# Assign d as an element in the dictionary for each partition
 				d = [int(dx),int(dy)]
+				# print(d)
 				partition['d'] = d
 
 
@@ -559,10 +572,10 @@ class TentParameters(ParameterBucket):
 		'''
 
 		epsilon = self.epsilon
-		if epsilon != 0:
-			epsilon = 0
-			self.epsilon = 0
-			print("Sorry only option for epsilon is zero right now... This could be updated later...")
+		# if epsilon != 0:
+		# 	epsilon = 0
+		# 	self.epsilon = 0
+		# 	print("Sorry only option for epsilon is zero right now... This could be updated later...")
 		if pad != 0:
 			print("Sorry only option for pad is zero right now... This could be updated later...")
 			pad = 0
@@ -592,8 +605,9 @@ class TentParameters(ParameterBucket):
 					dx = d
 					dy = d
 				else:
-					print("There's a problem with the parameter d...")
-					print("Exiting...")
+					print("There's a problem with the datatype of parameter d...")
+					print("d is of type ", type(d))
+					print("d needs to be a dictionary, list or integer. Exiting...")
 					return
 
 
@@ -614,25 +628,28 @@ class TentParameters(ParameterBucket):
 				deltay = ydiff / dy
 				# delta = max(deltax, deltay)
 
-				if deltax == 0:
-					deltax = np.inf
-				if deltay == 0:
-					deltay == np.inf
+
 				if (deltax == 0) and (deltay == 0):
 					print('Uh oh the partition consists of a single point...')
 					print('Something is wrong with the paritioning scheme...')
 					print('Exiting...')
 					return
 
+				if (deltax == 0) or (deltax < 0.1*deltay):
+					deltax = np.inf
+				elif (deltay == 0) or (deltay < 0.1*deltax):
+					deltay = np.inf
+
+
 				delta = min(deltax, deltay)
 				if deltax > deltay:
 					delta = deltay
 
-					dx = round(xdiff / delta)
+					dx = np.ceil(xdiff / delta)
 				elif deltay > deltax:
 					delta = deltax
 
-					dy = round(ydiff / delta)
+					dy = np.ceil(ydiff / delta)
 				else:
 					delta = deltax
 
@@ -920,9 +937,13 @@ def getPercentScore(DgmsDF,
 		print(params)
 
 
-	#check to see if only one column label was passed. If so, turn it into a list.
+	# check to see if only one column label was passed. If so, turn it into a list.
 	if type(dgm_col) == str:
 		dgm_col = [dgm_col]
+
+	# if only one column was passed then there is nothing to split up
+	if len(dgm_col) == 1:
+		params.split = False
 
 	# time1 = time.time()
 	# Run actual train/test experiment using sklearn
@@ -998,6 +1019,7 @@ def getPercentScore(DgmsDF,
 
 	# Compute predictions and add to DgmsDF data frame
 	L_predict = pd.Series(clf.predict(G),index = L_test.index)
+
 	DgmsDF['Prediction'] = L_predict
 
 	# Compute score

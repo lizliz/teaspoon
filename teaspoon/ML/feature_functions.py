@@ -139,11 +139,12 @@ def tent(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
         out = out.reshape((dx + 1, dy + 1)).T.flatten()
         out = out / delta
 
-        if np.count_nonzero(out) == 0:
+        if np.count_nonzero(out) == 0 and np.count_nonzero(Asub[:,1]) != 0 and ( not any(np.array(partition['supportNodes']) == Asub) ):
             print('All zero but it shouldnt be...')
-            print('Dgm: ', A)
+            print('Dgm: ', Asub)
             print('Nodes: ', partition['nodes'])
             print('Support Nodes: ', partition['supportNodes'])
+            print('Delta: ', delta)
             print(' ')
 
         all_out = np.concatenate((all_out, out), axis=0)
@@ -318,6 +319,9 @@ def bary_diff_matrix(xnew, xbase, w=None):
 
     M = M / divisor
 
+
+
+
     #	M[np.isnan(M)] = 0
 
     M[xdiff == 0] = 1
@@ -339,6 +343,7 @@ def bary_diff_matrix(xnew, xbase, w=None):
     #		idx = sub2ind(DM.shape, row, col)
     #		DM[idx] = 0
     #		DM[idx] = -np.sum(DM[row, ], axis=1)
+
     return M
 
 
@@ -370,10 +375,9 @@ def interp_polynomial(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
     #     ny = params.d
     # else:
     #     nx, ny = params.d
-
     # check if the Dgm is empty. If it is, pass back zeros
-    if Dgm.size == 0:
-        return  np.zeros((nx + 1) * (ny + 1))
+    # if Dgm.size == 0:
+    #     return  np.zeros((nx + 1) * (ny + 1))
 
     # Move to birth,lifetime plane
     if dgm_type == 'BirthDeath':
@@ -384,7 +388,6 @@ def interp_polynomial(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
     else:
         print('Your choices for type are "BirthDeath" or "BirthLifetime".')
         print('Exiting...')
-
 
     all_weights = []
     # first, get the entries in Dgm that are within each partition
@@ -398,7 +401,6 @@ def interp_polynomial(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
         #     ny = params.d
         # else:
         #     nx, ny = params.d
-
 
         # use different d depending on the partititon
         if isinstance(partition['d'], list):
@@ -475,10 +477,8 @@ def interp_polynomial(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
         # get the weights for each interpolation function/base-point
         interp_weights = np.sum(np.abs(Psi), axis=0)
 
-        # print('I ran the feature function!')
-        # print(partition)
         # plt.figure(10)
-        # plt.plot(np.abs(interp_weights),'x')
+        # plt.plot(np.abs(all_weights),'x')
         # plt.show()
 
         all_weights = np.concatenate((all_weights, np.abs(interp_weights)), axis=0)

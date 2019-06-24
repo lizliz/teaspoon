@@ -22,7 +22,7 @@ from sklearn.cluster import KMeans, MiniBatchKMeans
 
 class Partitions:
     def __init__(self, data = None,
-                 convertToOrd = True,
+                 convertToOrd = False,
                  meshingScheme = None,
                  partitionParams = {},
                  **kwargs):
@@ -64,8 +64,8 @@ class Partitions:
         if data is not None:
 
             # # if using kmeans, we dont want to convert to ordinals
-            if meshingScheme == 'clustering':
-                convertToOrd = False
+            if meshingScheme == 'DV':
+                convertToOrd = True
 
             # check if we want to convert to ordinals
             # may not want to for certain partitioning schemes
@@ -73,7 +73,7 @@ class Partitions:
                 # check that the data is in ordinal coordinates
                 # data converted to ordinal and stored locally if not already
                 if not self.isOrdinal(data):
-                    # print("Converting the data to ordinal...")
+                    print("Converting the data to ordinal...")
 
                     # perform ordinal sampling (ranking) transformation
                     xRanked = rankdata(data[:,0], method='ordinal')
@@ -182,8 +182,8 @@ class Partitions:
             else:
                 self.numParts = 2
 
-            if self.convertToOrd == False:
-                self.convertToOrd = True
+            # if self.convertToOrd == False:
+            #     self.convertToOrd = True
 
         elif self.meshingScheme == 'clustering':
             if 'clusterAlg' in partitionParams:
@@ -216,8 +216,8 @@ class Partitions:
             else:
                 self.boxSize = 2
 
-            if self.convertToOrd == True:
-                self.convertToOrd = False
+            # if self.convertToOrd == True:
+            #     self.convertToOrd = False
 
         if 'split' in partitionParams:
             self.split = partitionParams['split']
@@ -582,8 +582,8 @@ class Partitions:
                 ymax = max(cluster[:,1])
 
                 # issues if bounding box touches x-axis so print a warning if it does
-                if ymin == 0:
-                    print("Uh oh can't have points with zero lifetime!")
+                # if ymin == 0:
+                #     print("Uh oh can't have points with zero lifetime!")
 
 
                 bins.insert(0,{'nodes': [xmin,xmax,ymin,ymax], 'center': centers[l]})
