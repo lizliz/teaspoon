@@ -139,7 +139,7 @@ def tent(Dgm, params, dgmColLabel, dgm_type='BirthDeath'):
         out = out.reshape((dx + 1, dy + 1)).T.flatten()
         out = out / delta
 
-        if np.count_nonzero(out) == 0 and np.count_nonzero(Asub[:,1]) != 0 and ( not any(np.array(partition['supportNodes']) == Asub) ):
+        if np.count_nonzero(out) == 0 and np.count_nonzero(Asub[:,1]) != 0:# and ( not any(np.array(partition['supportNodes']) == Asub) ):
             print('All zero but it shouldnt be...')
             print('Dgm: ', Asub)
             print('Nodes: ', partition['nodes'])
