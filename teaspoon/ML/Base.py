@@ -239,7 +239,7 @@ class ParameterBucket(object):
 					self.partitions[col].convertOrdToFloat(partition)
 
 
-	def check_params(self):
+	def check_params(self,verbose=False):
 		'''
 		Function to check the parameters and make sure they are set up correctly to be able to run the code.
 
@@ -287,8 +287,8 @@ class ParameterBucket(object):
 						print('numClusters does not match the diagram dimensions used.')
 						print('Fix these to match before continuing.')
 						return
-
-		print('Parameters checked.')
+		if verbose:
+			print('Parameters checked.')
 
 
 ## A new type of parameter ParameterBucket
@@ -432,17 +432,18 @@ class InterpPolyParameters(ParameterBucket):
 				if (deltay == 0) or (deltay < 0.1*deltax):
 					deltay = np.inf
 
-				delta = min(deltax, deltay)
-				if deltax > deltay:
-					delta = deltay
+				delta = max(deltax, deltay)#min(deltax, deltay)
+				if deltax >= deltay:
+					# delta = deltay
+					# dx = np.ceil(xdiff / delta)
 
-					dx = np.ceil(xdiff / delta)
-				elif deltay > deltax:
-					delta = deltax
+					dy = round(ydiff / delta)
 
-					dy = np.ceil(ydiff / delta)
-				else:
-					delta = deltax
+				elif deltax < deltay:
+					# delta = deltax
+					# dy = np.ceil(ydiff / delta)
+
+					dx = round(xdiff / delta)
 
 				if dx == 0:
 					dx = 1
@@ -635,23 +636,24 @@ class TentParameters(ParameterBucket):
 					print('Exiting...')
 					return
 
-				if (deltax == 0) or (deltax < 0.1*deltay):
-					deltax = np.inf
-				elif (deltay == 0) or (deltay < 0.1*deltax):
-					deltay = np.inf
+				# if (deltax == 0) or (deltax < 0.1*deltay):
+				# 	deltax = np.inf
+				# elif (deltay == 0) or (deltay < 0.1*deltax):
+				# 	deltay = np.inf
 
 
-				delta = min(deltax, deltay)
-				if deltax > deltay:
-					delta = deltay
+				delta = max(deltax, deltay)#min(deltax, deltay)
+				if deltax >= deltay:
+					# delta = deltay
+					# dx = np.ceil(xdiff / delta)
 
-					dx = np.ceil(xdiff / delta)
-				elif deltay > deltax:
-					delta = deltax
+					dy = round(ydiff / delta)
 
-					dy = np.ceil(ydiff / delta)
-				else:
-					delta = deltax
+				elif deltax < deltay:
+					# delta = deltax
+					# dy = np.ceil(ydiff / delta)
+
+					dx = round(xdiff / delta)
 
 				# check if support will cross the diagonal
 				# if it does, crop the bottom of the partition and recalculate d
@@ -660,10 +662,10 @@ class TentParameters(ParameterBucket):
 					# partition['nodes'][2] =
 					ymin = delta + epsilon
 
-					if ( ( ymin + (dy * delta) ) > ( ymax + (0.5*delta) ) ) and (dy > 1):
+					if ( ( ymin + (dy * delta) ) > ( ymax + (0.5*delta) ) ) and (dy >= 1):
 						dy = dy-1
 
-					if ( ( xmin + (dx * delta) ) > ( xmax + (0.55*delta) ) ) and (dx > 1):
+					if ( ( xmin + (dx * delta) ) > ( xmax + (0.5*delta) ) ) and (dx >= 1):
 						dx = dx-1
 
 				# assign this delta to the partition
