@@ -578,7 +578,7 @@ class TentParameters(ParameterBucket):
 		# 	self.epsilon = 0
 		# 	print("Sorry only option for epsilon is zero right now... This could be updated later...")
 		if pad != 0:
-			print("Sorry only option for pad is zero right now... This could be updated later...")
+			#print("Sorry only option for pad is zero right now... This could be updated later...")
 			pad = 0
 
 		# choose delta to be the max of the width or the height of the partition divided by d
@@ -647,13 +647,13 @@ class TentParameters(ParameterBucket):
 					# delta = deltay
 					# dx = np.ceil(xdiff / delta)
 
-					dy = round(ydiff / delta)
+					dy = np.ceil(ydiff / delta)
 
 				elif deltax < deltay:
 					# delta = deltax
 					# dy = np.ceil(ydiff / delta)
 
-					dx = round(xdiff / delta)
+					dx = np.ceil(xdiff / delta)
 
 				# check if support will cross the diagonal
 				# if it does, crop the bottom of the partition and recalculate d
