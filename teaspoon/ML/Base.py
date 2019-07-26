@@ -437,13 +437,13 @@ class InterpPolyParameters(ParameterBucket):
 					# delta = deltay
 					# dx = np.ceil(xdiff / delta)
 
-					dy = round(ydiff / delta)
+					dy = np.ceil(ydiff / delta)
 
 				elif deltax < deltay:
 					# delta = deltax
 					# dy = np.ceil(ydiff / delta)
 
-					dx = round(xdiff / delta)
+					dx = np.ceil(xdiff / delta)
 
 				if dx == 0:
 					dx = 1
@@ -660,7 +660,7 @@ class TentParameters(ParameterBucket):
 
 				if partition['nodes'][2] - delta < 0:
 					# partition['nodes'][2] =
-					ymin = delta + epsilon
+					ymin = delta #+ epsilon
 
 					if ( ( ymin + (dy * delta) ) > ( ymax + (0.5*delta) ) ) and (dy >= 1):
 						dy = dy-1
