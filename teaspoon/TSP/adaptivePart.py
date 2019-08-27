@@ -560,8 +560,15 @@ class Partitions:
 
         '''
 
+        if weights == 0:
+            sample_weights = data[:,0]
+        elif weights == 1:
+            sample_weights = data[:,1]
+        else:
+            sample_weights = None
+
         # Fit using whatever the chosen cluster algorithm is
-        kmeans = clusterAlg(n_clusters=num_clusters).fit(data,sample_weight = weights)
+        kmeans = clusterAlg(n_clusters=num_clusters).fit(data,sample_weight = sample_weights)
 
         # Get the centers of each cluster and the labels for the data points
         centers = kmeans.cluster_centers_
