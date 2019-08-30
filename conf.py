@@ -13,11 +13,9 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 # import os
-import sys
-import os
+# import sys
+# import os
 #sys.path.insert(0, "C:\\Users\\makel\\teaspoon")
-
-
 
 
 # -- Project information -----------------------------------------------------
@@ -46,7 +44,8 @@ extensions = [
     'sphinx.ext.doctest',
     'sphinx.ext.todo',
     'sphinx.ext.autosummary',
-    'sphinx.ext.mathjax'
+    'sphinx.ext.mathjax',
+    'sphinx.ext.napoleon',
 ]
 
 # need this for some reason, otherwise you get errors when it can't import these
@@ -85,7 +84,8 @@ pygments_style = 'sphinx'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinxdoc'
+#html_theme = "sphinxdoc"
+html_theme = 'sphinx_rtd_theme'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
