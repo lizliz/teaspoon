@@ -154,7 +154,7 @@ if __name__ == "__main__":
     import DynSysLib as DSL
     system = 'rossler' #define the system of interest
     dynamic_state = 'periodic' #set the dynamic state
-    t, ts = DSL.DynamicSystems(system, dynamic_state, UserGuide = True)
+    t, ts = DSL.DynamicSystems(system, dynamic_state)
 
     
     
@@ -182,5 +182,7 @@ if __name__ == "__main__":
         plt.xlabel(r'$x(t)$', size = TextSize)
         plt.ylabel(r'$y(t)$', size = TextSize)
         
+    plt.savefig('C:\\Users\\myersau3.EGR\\Desktop\\python_png\\example_'+dynamic_state+'_'+system+'.png', 
+                 bbox_inches='tight',dpi = 400)
     plt.show()
     
