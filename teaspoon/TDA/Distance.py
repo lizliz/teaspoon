@@ -27,10 +27,6 @@ def wassersteinDist(
     """
     Compute the Persistant p-Wasserstein distance between the diagrams pts0, pts1 using optimal transport.
 
-    WARNING: this has not been tested and debugged yet.
-
-    TODO: Make internal distance modifiable, with default L_\infty
-
     Parameters
     ----------
     pts0: array of shape (n_top_features, 2)
@@ -80,10 +76,6 @@ def wassersteinDist(
     else:
         raise ValueError("q must 1, 2, or np.inf")
 
-    # TODO: Start from here, still need to propogate the q through the rest of the function
-
-
-
     # Get distances between all pairs of off-diagonal points
     # When we fix this for more q options,
     if q == np.infty:
@@ -126,32 +118,6 @@ def wassersteinDist(
 
     return out
 #-----------------------------------------------------------------------
-
-
-
-## Computes the distance using the geom_bottleneck and geom_matching code
-# from [Hera](https://bitbucket.org/grey_narn/hera).
-# '''
-# .. todo::
-
-#     This documentation needs cleaning and updating.
-
-#     Need to build the C++ code, then add bottleneck_dist folder and wasserstein_dist to path
-
-#     On Liz's machine, this involves adding the following lines to the ~/.bashrc
-#         export PATH="/home/liz/Dropbox/Math/Code/hera/geom_matching/wasserstein/build:$PATH"
-#         export PATH="/home/liz/Dropbox/Math/Code/hera/geom_bottleneck/build/example:$PATH"
-#     Default values for wasserstein_dist from Hera:
-
-#         internal_p must be in :math:`[1.0, \infty]` (to explicitly set internal_p to :math:`\infty`, supply inf).By default wasserstein degree is 1.0, relative error is 0.01, internal norm is l_infinity.
-
-    # hera input format:
-
-    #     ::
-
-    #         bottleneck_dist file1 file2  [relative_error]
-    #         wasserstein_dist file1 file2  [wasserstein degree] [relative error] [internal norm]
-# '''
 
 def dgmDist_Hera(D1,D2, wassDeg = 'Bottleneck', relError = None, internal_p = None):
     """
