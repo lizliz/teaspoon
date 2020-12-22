@@ -6,6 +6,9 @@ This module provides algorithms to compute pairwise distances between persistenc
 import numpy as np
 import os
 import subprocess
+import ot
+from typing import Union, Sequence, AnyStr
+from sklearn.metrics import pairwise_distances
 # import TSAwithTDA.pyPerseus as pyPerseus
 # import TSAwithTDA.SlidingWindows as SW
 from .Persistence import  prepareFolders
@@ -14,6 +17,71 @@ from .Persistence import  prepareFolders
 .. module: Distance
 """
 
+
+def wasserstein_distance(
+    pts0: np.ndarray, pts1: np.ndarray, y_axis: AnyStr = "death", p: int = 1
+) -> float:
+    """
+    Compute the Persistant p-Wasserstein distance between the diagrams pts0, pts1 using optimal transport.
+
+    WARNING: this has not been tested and debugged yet
+
+    Parameters
+    ----------
+    pts0: array of shape (n_top_features, 2)
+        The first persistence diagram
+    pts1: array of shape (n_top_features, 2)
+        Thew second persistence diagram
+    y_axis: optional, default="death"
+        What the y-axis of the diagram represents. Should be one of
+            * ``"lifetime"``
+            * ``"death"``
+    p: int, optional (default=1)
+        The p in the p-Wasserstein distance to compute
+    Returns
+    -------
+    distance: float
+        The p-Wasserstein distance between diagrams ``pts0`` and ``pts1``
+    """
+    if y_axis == "lifetime":
+        extra_dist0 = pts0[:, 1]
+        extra_dist1 = pts1[:, 1]
+    elif y_axis == "death":
+        # Distance to diagonal in L_2 distance
+        extra_dist0 = (pts0[:, 1] - pts0[:, 0]) / np.sqrt(2)
+        extra_dist1 = (pts1[:, 1] - pts1[:, 0]) / np.sqrt(2)
+    else:
+        raise ValueError("y_axis must be 'death' or 'lifetime'")
+
+    # Get distances between all pairs of off-diagonal points
+    pairwise_dist = pairwise_distances(pts0, pts1)
+
+    #Add a row and column corresponding to the distance to the diagonal
+    all_pairs_ground_distance_a = np.hstack([pairwise_dist, extra_dist0[:, np.newaxis]])
+    extra_row = np.zeros(all_pairs_ground_distance_a.shape[1])
+    extra_row[: pairwise_dist.shape[1]] = extra_dist1
+    all_pairs_ground_distance_a = np.vstack([all_pairs_ground_distance_a, extra_row])
+
+    # Raise all distances to the pth power
+    all_pairs_ground_distance_a = all_pairs_ground_distance_a ** p
+
+    # WHAT IS THIS DOING?
+    n0 = pts0.shape[0]
+    n1 = pts1.shape[0]
+    a = np.ones(n0 + 1)
+    a[n0] = n1
+    a = a / a.sum()
+    b = np.ones(n1 + 1)
+    b[n1] = n0
+    b = b / b.sum()
+
+    # Get the distance according to optimal transport
+    otDist =  ot.emd2(a, b, all_pairs_ground_distance_a)
+
+    # Multiply by ??? and raise to the pth power
+    out = np.power((n0 + n1) * otDist, 1.0 / p)
+
+    return out
 #-----------------------------------------------------------------------
 
 
