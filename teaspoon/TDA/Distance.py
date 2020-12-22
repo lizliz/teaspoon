@@ -8,10 +8,8 @@ import os
 import subprocess
 import ot
 from typing import Union, Sequence, AnyStr
-# from scipy.spatial.distance import pdist
 from sklearn.metrics import pairwise_distances
-# import TSAwithTDA.pyPerseus as pyPerseus
-# import TSAwithTDA.SlidingWindows as SW
+
 from .Persistence import  prepareFolders
 
 """
