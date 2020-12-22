@@ -8,6 +8,7 @@ import os
 import subprocess
 import ot
 from typing import Union, Sequence, AnyStr
+# from scipy.spatial.distance import pdist
 from sklearn.metrics import pairwise_distances
 # import TSAwithTDA.pyPerseus as pyPerseus
 # import TSAwithTDA.SlidingWindows as SW
@@ -18,12 +19,12 @@ from .Persistence import  prepareFolders
 """
 
 
-def wasserstein_distance(
+def wassersteinDist(
     pts0: np.ndarray,
     pts1: np.ndarray,
+    p: int = 2,
+    q: int = 2,
     y_axis: AnyStr = "death",
-    p: int = 1,
-    q = np.inf
     ) -> float:
     """
     Compute the Persistant p-Wasserstein distance between the diagrams pts0, pts1 using optimal transport.
@@ -42,10 +43,12 @@ def wasserstein_distance(
         What the y-axis of the diagram represents. Should be one of
             * ``"lifetime"``
             * ``"death"``
-    p: int, optional (default=1)
+    p: int, optional (default=2)
         The p in the p-Wasserstein distance to compute
-    q: either int >= 1, or np.inf (default = np.inf)
-        The q for the internal distance between the points, L_q.  Uses L_infty distance if q = np.inf
+    q: 1, 2 or np.inf, optional (default = 2)
+        The q for the internal distance between the points, L_q.
+        Uses L_infty (Chebyshev) distance if q = np.inf.
+        Currently not implemented for other q.
     Returns
     -------
     distance: float
@@ -61,23 +64,38 @@ def wasserstein_distance(
     else:
         raise ValueError("y_axis must be 'death' or 'lifetime'")
 
-    # Check q
-    if (type(q) == int and q >= 1)
-        # Distance to diagonal in L_q distance
-        extra_dist0 = (pts0[:, 1] - pts0[:, 0]) * 2^(1/q - 1)
-        extra_dist1 = (pts1[:, 1] - pts1[:, 0]) * 2^(1/q - 1)
+    # Check q. Eventually want to remove the q <=2 part.
+    if type(q) == int and q >=3 :
+        raise ValueError("q (for the internal L_q) is currently only available for 1, 2, or np.inf")
+    elif q == 1:
+        # Distance to diagonal in L1 distance is just the lifetime
+        extra_dist0 = (pts0[:, 1] - pts0[:, 0])
+        extra_dist1 = (pts1[:, 1] - pts1[:, 0])
+    elif (q >= 2):
+        # Distance to diagonal in Lq distance
+        # Closest point to (a,b) is at (x,x) for x = a + (b-a)/2
+        extra_dist0 = (pts0[:, 1] - pts0[:, 0]) * 2**(1/q - 1)
+        extra_dist1 = (pts1[:, 1] - pts1[:, 0]) * 2**(1/q - 1)
     elif q == np.inf:
         extra_dist0 = (pts0[:, 1] - pts0[:, 0]) /2
         extra_dist1 = (pts1[:, 1] - pts1[:, 0]) /2
     else:
-        raise ValueError("q must be an integer geq 1, or np.inf")
+        raise ValueError("q must 1, 2, or np.inf")
 
-# TODO: Start from here, still need to propogate the q through the rest of the function 
+    # TODO: Start from here, still need to propogate the q through the rest of the function
 
 
 
     # Get distances between all pairs of off-diagonal points
-    pairwise_dist = pairwise_distances(pts0, pts1)
+    # When we fix this for more q options,
+    if q == np.infty:
+        metric = 'chebyshev'
+    elif q == 1:
+        metric = 'l1'
+    elif q == 2:
+        metric = 'l2'
+
+    pairwise_dist = pairwise_distances(pts0, pts1, metric = metric)
 
     #Add a row and column corresponding to the distance to the diagonal
     all_pairs_ground_distance_a = np.hstack([pairwise_dist, extra_dist0[:, np.newaxis]])
@@ -88,7 +106,11 @@ def wasserstein_distance(
     # Raise all distances to the pth power
     all_pairs_ground_distance_a = all_pairs_ground_distance_a ** p
 
-    # WHAT IS THIS DOING?
+    # Build vector representing the mass at each location
+    # For n0 points in the first diagram and n1 in the second,
+    # the total mass for each diagram is n0+n1.
+    # The mass for all off diagonal points are 1, and
+    # remaining weight is placed on the diagonal.
     n0 = pts0.shape[0]
     n1 = pts1.shape[0]
     a = np.ones(n0 + 1)
@@ -101,7 +123,7 @@ def wasserstein_distance(
     # Get the distance according to optimal transport
     otDist =  ot.emd2(a, b, all_pairs_ground_distance_a)
 
-    # Multiply by ??? and raise to the pth power
+    # Multiply by the total mass and raise to the pth power
     out = np.power((n0 + n1) * otDist, 1.0 / p)
 
     return out
