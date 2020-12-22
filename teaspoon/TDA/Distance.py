@@ -19,12 +19,18 @@ from .Persistence import  prepareFolders
 
 
 def wasserstein_distance(
-    pts0: np.ndarray, pts1: np.ndarray, y_axis: AnyStr = "death", p: int = 1
-) -> float:
+    pts0: np.ndarray,
+    pts1: np.ndarray,
+    y_axis: AnyStr = "death",
+    p: int = 1,
+    q = np.inf
+    ) -> float:
     """
     Compute the Persistant p-Wasserstein distance between the diagrams pts0, pts1 using optimal transport.
 
-    WARNING: this has not been tested and debugged yet
+    WARNING: this has not been tested and debugged yet.
+
+    TODO: Make internal distance modifiable, with default L_\infty
 
     Parameters
     ----------
@@ -38,20 +44,37 @@ def wasserstein_distance(
             * ``"death"``
     p: int, optional (default=1)
         The p in the p-Wasserstein distance to compute
+    q: either int >= 1, or np.inf (default = np.inf)
+        The q for the internal distance between the points, L_q.  Uses L_infty distance if q = np.inf
     Returns
     -------
     distance: float
         The p-Wasserstein distance between diagrams ``pts0`` and ``pts1``
     """
+
+    # Convert the diagram back to birth death coordinates if passed as birth, lifetime
     if y_axis == "lifetime":
-        extra_dist0 = pts0[:, 1]
-        extra_dist1 = pts1[:, 1]
-    elif y_axis == "death":
-        # Distance to diagonal in L_2 distance
-        extra_dist0 = (pts0[:, 1] - pts0[:, 0]) / np.sqrt(2)
-        extra_dist1 = (pts1[:, 1] - pts1[:, 0]) / np.sqrt(2)
+        pts0[:,1] = pts0[:,0] + pts0[:,1]
+        pts1[:,1] = pts1[:,0] + pts1[:,1]
+    elif y_axis == 'death':
+        pass
     else:
         raise ValueError("y_axis must be 'death' or 'lifetime'")
+
+    # Check q
+    if (type(q) == int and q >= 1)
+        # Distance to diagonal in L_q distance
+        extra_dist0 = (pts0[:, 1] - pts0[:, 0]) * 2^(1/q - 1)
+        extra_dist1 = (pts1[:, 1] - pts1[:, 0]) * 2^(1/q - 1)
+    elif q == np.inf:
+        extra_dist0 = (pts0[:, 1] - pts0[:, 0]) /2
+        extra_dist1 = (pts1[:, 1] - pts1[:, 0]) /2
+    else:
+        raise ValueError("q must be an integer geq 1, or np.inf")
+
+# TODO: Start from here, still need to propogate the q through the rest of the function 
+
+
 
     # Get distances between all pairs of off-diagonal points
     pairwise_dist = pairwise_distances(pts0, pts1)
