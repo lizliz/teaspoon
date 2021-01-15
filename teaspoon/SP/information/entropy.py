@@ -71,6 +71,71 @@ def PE(ts, n = 5, tau = 10, normalize = False):
     return PE
 
 
+def WPE(ts, n = 5, tau = 10, normalize = False):
+    """This function takes a time series and calculates Weighted Permutation Entropy (WPE) from "Weighted-permutation entropy: A complexity measure for time series incorporating amplitude information" by Bilal Fadlallah, Badong Chen, Andreas Keil, and José Príncipe.
+    
+    Args:
+       ts (array):  Time series (1d).
+       n (int): Permutation dimension. Default is 5.
+       tau (int): Permutation delay. Default is 10.
+       
+    Kwargs:
+       normalize (bool): Normalizes the permutation entropy on scale from 0 to 1. defaut is False.
+
+    Returns:
+       (float): h, the weighted permutation entropy.
+
+    """
+    
+    time_series = ts
+    
+    if n == None:
+        from teaaspoon.parameter_selection import MsPE
+        tau = int(MsPE.MsPE_tau(ts)) 
+        n = MsPE.MsPE_n(ts, tau)
+        
+    if tau == None:
+        from teaaspoon.parameter_selection import MsPE
+        tau = int(MsPE.MsPE_tau(ts))
+    
+    m, delay = n, tau
+    
+    import itertools
+    import numpy as np
+    def util_hash_term(perm): #finds permutation type
+        deg = len(perm)
+        return sum([perm[k]*deg**k for k in range(deg)])
+    L = len(time_series) #total length of time series
+    perm_order = [] #prepares permutation sequence array
+    weights = []
+    permutations = np.array(list(itertools.permutations(range(m)))) #prepares all possible permutations for comparison
+    hashlist = [util_hash_term(perm) for perm in permutations] #prepares hashlist
+    for i in range(L - delay * (m - 1)): 
+    #For all possible permutations in time series
+        v = time_series[i:i + delay * m:delay]
+        sorted_index_array = np.array(np.argsort(v, kind='quicksort'))
+        X_bar = np.mean(v)
+        weight = (1/n)*np.sum((v-X_bar)**2)
+        weights.append(weight)
+        #sort array for catagorization
+        hashvalue = util_hash_term(sorted_index_array);
+        #permutation type
+        perm_order = np.append(perm_order, np.argwhere(hashlist == hashvalue)[0][0])
+        #appends new permutation to end of array
+    perm_seq = perm_order.astype(int)+1 #sets permutation type as integer where $p_i \in \mathbb{z}_{>0}$
+    perms, counts = np.unique(perm_seq, return_counts = True)
+    weighted_probs = []
+    perm_seq, weights = np.array(perm_seq), np.array(weights)
+    d = np.sum(weights)
+    weighted_probs = [np.sum(weights[perm_seq == p] )/d for p in perms]
+    probs = np.array(weighted_probs)
+    H = -np.sum(probs*np.log2(probs))
+    WPE = H
+    if normalize == True:
+        WPE = H/np.log2(np.math.factorial(n))
+        
+    return WPE #returns sequence of permutations
+
 
 
 def PersistentEntropy(lifetimes, normalize = False):
@@ -107,10 +172,6 @@ def PersistentEntropy(lifetimes, normalize = False):
 # In[ ]:
     
 if __name__ == "__main__": #Only runs if running from this file (This will show basic example)
-    import os
-    import sys
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__),'..', '..'))
-    sys.path.insert(0, os.path.join(os.path.dirname(__file__),'..'))
 
     #-----------------------------------PE-----------------------------------------
     
