@@ -17,7 +17,7 @@ sys.modules['ripser'] = mock.Mock()
 project = 'teaspoon'
 copyright = '2020, Munch'
 author = 'Elizabeth Munch'
-release = '0.1.0'
+release = '1.1.1'
 
 
 # -- General configuration ---------------------------------------------------
