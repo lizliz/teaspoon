@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>2.2.1. Featurization &mdash; teaspoon 0.1.0 documentation</title>
+  <title>2.2.1. Featurization &mdash; teaspoon 1.2.0 documentation</title>
   
 
   
@@ -268,13 +268,13 @@ The algorithm computes the persistence landscapes is written based on Ref. <a cl
 </dd></dl>
 
 <p><strong>Example:</strong> In this example, we do not specify which landscape function we want specifically. Therefore, algorihtms returns a warning to user if desired landscape points is wanted.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">teaspoon.ML.feature_functions</span> <span class="k">as</span> <span class="nn">Ff</span>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">teaspoon.ML.feature_functions</span> <span class="kn">import</span> <span class="n">PLandscape</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">teaspoon.MakeData.PointCloud</span> <span class="kn">import</span> <span class="n">testSetManifolds</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># generate persistence diagrams</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">df</span> <span class="o">=</span> <span class="n">testSetManifolds</span><span class="p">(</span><span class="n">numDgms</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">numPts</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">Diagrams_H1</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;Dgm1&#39;</span><span class="p">]</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Compute the persistence landscapes</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">PLC</span> <span class="o">=</span> <span class="n">Ff</span><span class="o">.</span><span class="n">PLandscape</span><span class="p">(</span><span class="n">Diagrams_H1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">PLC</span> <span class="o">=</span> <span class="n">PLandscape</span><span class="p">(</span><span class="n">Diagrams_H1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">PLC</span><span class="o">.</span><span class="n">PL_number</span><span class="p">)</span>
 <span class="go">18</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">PLC</span><span class="o">.</span><span class="n">AllPL</span><span class="p">)</span>
@@ -331,7 +331,7 @@ The algorithm computes the persistence landscapes is written based on Ref. <a cl
 <span class="go">       [1.43779945, 0.2846272 ],</span>
 <span class="go">       [1.46482104, 0.31164879],</span>
 <span class="go">       [1.77646983, 0.        ]])]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">PLC</span><span class="o">.</span><span class="n">PLandscape_plot</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="s1">&#39;Points&#39;</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">PLC</span><span class="o">.</span><span class="n">PLandscape_plot</span><span class="p">(</span><span class="n">PLC</span><span class="o">.</span><span class="n">AllPL</span><span class="p">[</span><span class="s1">&#39;Points&#39;</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>Output of the plotting functions is:</p>
@@ -560,6 +560,7 @@ Function takes two inputs and these are persistence landcsape set in an object a
 <p><strong>Example</strong>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">teaspoon.ML.feature_functions</span> <span class="k">as</span> <span class="nn">Ff</span>
+<span class="kn">from</span> <span class="nn">teaspoon.ML.feature_functions</span> <span class="kn">import</span> <span class="n">PLandscape</span>
 <span class="kn">from</span> <span class="nn">teaspoon.MakeData.PointCloud</span> <span class="kn">import</span> <span class="n">testSetManifolds</span>
 <span class="c1"># generate persistence diagrams</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">testSetManifolds</span><span class="p">(</span><span class="n">numDgms</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">numPts</span> <span class="o">=</span> <span class="mi">100</span><span class="p">)</span>
@@ -567,7 +568,7 @@ Function takes two inputs and these are persistence landcsape set in an object a
 <span class="c1">#compute persistence landscapes</span>
 <span class="n">PerLand</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
-    <span class="n">Land</span><span class="o">=</span><span class="n">Ff</span><span class="o">.</span><span class="n">PLandscape</span><span class="p">(</span><span class="n">Diagrams_H1</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">Land</span><span class="o">=</span><span class="n">PLandscape</span><span class="p">(</span><span class="n">Diagrams_H1</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
     <span class="n">PerLand</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">=</span><span class="n">Land</span><span class="o">.</span><span class="n">AllP</span>
 <span class="c1">#choose landscape number for which feature matrix will be computed</span>
 <span class="n">L_number</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>

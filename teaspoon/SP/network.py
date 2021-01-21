@@ -28,9 +28,6 @@ def Adjacency_CGSS(state_seq, N, delay = 1): #Coarse Grained State Space adjacen
     return A #this A is directional and weighted
 
 
-
-
-
 def knn_graph(ts, n = None, tau = None, k = 4):
     
     """This function creates an k-NN network represented as an adjacency matrix A using a 1-D time series
@@ -71,7 +68,7 @@ def knn_graph(ts, n = None, tau = None, k = 4):
     return A
 
 
-def ordinal_partition_graph(ts, n = None, tau = None):
+def ordinal_partition_graph(ts, n = None, tau = None, delay_distance = None):
     
     """This function creates an ordinal partition network represented as an adjacency matrix A using a 1-D time series
     
@@ -105,13 +102,19 @@ def ordinal_partition_graph(ts, n = None, tau = None):
         tau = int(MsPE.MsPE_tau(ts)) 
     
     PS = permutation_sequence(ts, n, tau)
+    
+    if delay_distance == None:
+        delay_distance = 1
         
-    A = Adjaceny_OP(PS, n) #gets adjacency matrix from permutation sequence transtitions
+    A = Adjaceny_OP(PS, n, delay = delay_distance) #gets adjacency matrix from permutation sequence transtitions
     
     return A
     
 
-def cgss_graph(ts, n = None, tau = None, B = 10, embedding_method = 'standard', binning_method = 'equal_frequency'):
+def cgss_graph(ts, n = None, tau = None, B = 10, 
+               embedding_method = 'standard', 
+               binning_method = 'equal_frequency',
+               delay_distance = None):
     """This function creates a coarse grained state space (cgss) network represented as an adjacency matrix A using a 1-D time series
     
     Args:
@@ -121,6 +124,8 @@ def cgss_graph(ts, n = None, tau = None, B = 10, embedding_method = 'standard', 
         n (Optional[int]): embedding dimension for state space reconstruction. Default is uses false nearest negihbor algorithm from parameter_selection module.
         tau (Optional[int]): embedding delay from state space reconstruction. Default uses mutual information algorithm from parameter_selection module.
         B (Optional[int]): number of bins per dimension for graph formation. Default is 10.
+        embedding_method (Optional[string]): embedding method as "standard" state space reconstruction or embedding of differences as "difference".
+        binning_method (Optional[string]): "equal_frequency" or "equal_size" binning options for state space.
         
     Returns:
         [2-D square array]: A (2-D weighted and directed square adjacency matrix)
@@ -143,6 +148,8 @@ def cgss_graph(ts, n = None, tau = None, B = 10, embedding_method = 'standard', 
     if n == None:
         from parameter_selection import FNN_n
         perc_FNN, n = FNN_n.FNN_n(ts, tau)
+    if delay_distance == None:
+        delay_distance = 1
     
     #get state space reconstruction from signal (SSR)
     SSR = tsa_tools.takens(ts, n, tau) 
@@ -180,7 +187,7 @@ def cgss_graph(ts, n = None, tau = None, B = 10, embedding_method = 'standard', 
     
     
     #get adjacency matrix from sequence
-    A = Adjacency_CGSS(symbol_seq, N)
+    A = Adjacency_CGSS(symbol_seq, N, delay = delay_distance)
    
     return A
     

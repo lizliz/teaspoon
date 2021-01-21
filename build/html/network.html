@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>2.4.2. Network Representation of Time Series &mdash; teaspoon 0.1.0 documentation</title>
+  <title>2.4.2. Network Representation of Time Series &mdash; teaspoon 1.2.0 documentation</title>
   
 
   
@@ -211,6 +211,30 @@
 <a class="with-shadow float-left reference internal image-reference" href="_images/ordinal_partition_network_video_complex.gif"><img alt="Left floating image" class="with-shadow float-left" src="_images/ordinal_partition_network_video_complex.gif" style="width: 471.15000000000003px; height: 214.38000000000002px;" /></a>
 <p>Figure: Example formation of an ordinal partition network for 6 dimensional permutations. As the ordinal ranking of the 6 spaced points changes, so does the node in the network. This shows how the network captures the periodic structure of the time series through a resulting double loop topology.</p>
 <span class="target" id="module-teaspoon.SP.network"></span><dl class="py clear-both function">
+<dt id="teaspoon.SP.network.cgss_graph">
+<code class="sig-prename descclassname">teaspoon.SP.network.</code><code class="sig-name descname">cgss_graph</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ts</span></em>, <em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tau</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">B</span><span class="o">=</span><span class="default_value">10</span></em>, <em class="sig-param"><span class="n">embedding_method</span><span class="o">=</span><span class="default_value">'standard'</span></em>, <em class="sig-param"><span class="n">binning_method</span><span class="o">=</span><span class="default_value">'equal_frequency'</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/teaspoon/SP/network.html#cgss_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#teaspoon.SP.network.cgss_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function creates a coarse grained state space (cgss) network represented as an adjacency matrix A using a 1-D time series</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ts</strong> (<em>1-D array</em>) – 1-D time series signal</p>
+</dd>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>n</strong> (<em>Optional[int]</em>) – embedding dimension for state space reconstruction. Default is uses false nearest negihbor algorithm from parameter_selection module.</p></li>
+<li><p><strong>tau</strong> (<em>Optional[int]</em>) – embedding delay from state space reconstruction. Default uses mutual information algorithm from parameter_selection module.</p></li>
+<li><p><strong>B</strong> (<em>Optional[int]</em>) – number of bins per dimension for graph formation. Default is 10.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A (2-D weighted and directed square adjacency matrix)</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>[2-D square array]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="teaspoon.SP.network.knn_graph">
 <code class="sig-prename descclassname">teaspoon.SP.network.</code><code class="sig-name descname">knn_graph</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">ts</span></em>, <em class="sig-param"><span class="n">n</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">tau</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">k</span><span class="o">=</span><span class="default_value">4</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/teaspoon/SP/network.html#knn_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#teaspoon.SP.network.knn_graph" title="Permalink to this definition">¶</a></dt>
 <dd><p>This function creates an k-NN network represented as an adjacency matrix A using a 1-D time series</p>
@@ -244,8 +268,8 @@
 </dd>
 <dt class="field-even">Other Parameters</dt>
 <dd class="field-even"><ul class="simple">
-<li><p><strong>n</strong> (<em>Optional[int]</em>) – embedding dimension for state space reconstruction. Default is uses MsPE algorithm from parameter_selection module.</p></li>
-<li><p><strong>tau</strong> (<em>Optional[int]</em>) – embedding delay fro state space reconstruction. Default uses MsPE algorithm from parameter_selection module.</p></li>
+<li><p><strong>n</strong> (<em>Optional[int]</em>) – embedding dimension for state space reconstruction. Default is uses false nearest negihbor algorithm from parameter_selection module.</p></li>
+<li><p><strong>tau</strong> (<em>Optional[int]</em>) – embedding delay from state space reconstruction. Default uses mutual information algorithm from parameter_selection module.</p></li>
 <li><p><strong>k</strong> (<em>Optional[int]</em>) – number of nearest neighbors for graph formation.</p></li>
 </ul>
 </dd>
@@ -283,13 +307,16 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">teaspoon.SP.network</span> <span class="kn">import</span> <span class="n">knn_graph</span>
 <span class="kn">from</span> <span class="nn">teaspoon.SP.network</span> <span class="kn">import</span> <span class="n">ordinal_partition_graph</span>
+<span class="kn">from</span> <span class="nn">teaspoon.SP.network</span> <span class="kn">import</span> <span class="n">cgss_graph</span>
 
-<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span> <span class="c1">#define time array</span>
 <span class="n">ts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">t</span><span class="p">)</span> <span class="c1">#generate a simple time series</span>
 
 <span class="n">A_knn</span> <span class="o">=</span> <span class="n">knn_graph</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span> <span class="c1">#ordinal partition network from time series</span>
 
 <span class="n">A_op</span> <span class="o">=</span> <span class="n">ordinal_partition_graph</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span> <span class="c1">#knn network from time series</span>
+
+<span class="n">A_cgss</span> <span class="o">=</span> <span class="n">cgss_graph</span><span class="p">(</span><span class="n">ts</span><span class="p">)</span> <span class="c1">#coarse grained state space netwrok from time series</span>
 </pre></div>
 </div>
 <p>Additionally, there is methods to change the data structure to anything available in networkx through changing the adjacency matrix to the networkx data structure (dictionary of dictionaries) with an example as follows:</p>

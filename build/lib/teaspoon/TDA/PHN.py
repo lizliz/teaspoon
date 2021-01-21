@@ -137,7 +137,7 @@ if __name__ == "__main__": #Only runs if running from this file (This will show 
     G, pos = make_network(A, position_iterations = 1000, remove_deg_zero_nodes = True)
     
     #create distance matrix and calculate persistence diagram
-    D, diagram = PH_network(A, method = 'unweighted', distance = 'shortest_path') 
+    D, diagram = PH_network(A, method = 'inverse', distance = 'shortest_path') 
     
     
     import matplotlib.pyplot as plt

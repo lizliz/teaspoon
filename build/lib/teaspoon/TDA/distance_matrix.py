@@ -99,6 +99,50 @@ def resistence_distance(Dmat, weighted = True):
     np.fill_diagonal(Dmat_res, 0)
     return Dmat_res
     
+
+def inverse_distance(A):
+    import numpy as np
+    np.seterr(divide='ignore') #ignores divide by zero warning
+    np.fill_diagonal(A, 0) #set diagonal to zero
+    AD = 1/A #take element-wise inverse
+    return AD
+
+def unweighted_distance(A):
+    import numpy as np
+    A[A>0] = 1 #sets all edge weights = 1
+    AD = A 
+    np.fill_diagonal(AD, 0) #get rid of diagonal as we don't care about self transitions
+    return AD
+
+def difference_distance(A):
+    import numpy as np
+    np.fill_diagonal(A, 0) #get rid of diagonal for proper weighting (diagonal can have very high values from self transitions)
+    Amax = np.nanmax(A) #finds max of A for transformation into distance matrix
+    AD = (Amax - A) # flips distance matrix so that high edge weights = short distance
+    AD[AD==np.nanmax(AD)] = np.inf  #replaces max distance with infinity because this would represent no connection
+    np.fill_diagonal(AD, np.inf) #gets rid of diagonal by setting distance to infinity
+    return AD
+
+def simple_distance(A):
+    import numpy as np
+    AD = A #set adjacenct distance matrix to A
+    AD[AD==0] = np.inf
+    np.fill_diagonal(AD, np.inf) #gets rid of diagonal byu setting distance to infinity
+    return AD
+
+
+def error_checks(method, distance):
+    methods = ['unweighted', 'simple', 'difference', 'inverse']
+    if method not in methods:
+        print('Error: adjacenct node distance method not available.')
+        print('Defaulting to unweighted')
+        method = 'unweighted'
+    distances = ['shortest_path', 'longest_path', 'resistance']
+    if distance not in distances:
+        print('Error: non-adjacent distance method not available.')
+        print('Defaulting to shortest path')
+        method = 'shortest_path'
+    return method, distance
     
 def DistanceMatrix(A, method = 'inverse', distance = 'shortest_path'):
     #inputs: A = weighted, directional adjacency matrix, weighted = weighting on A for calculating distance matrix 
@@ -106,37 +150,15 @@ def DistanceMatrix(A, method = 'inverse', distance = 'shortest_path'):
     A = A + A.T #make undirected adjacency matrix
     np.fill_diagonal(A, 0)
     
-    methods = ['unweighted', 'simple', 'difference', 'inverse']
-    
-    if method not in methods:
-        print('Error: method listed for distance matrix not available.')
-        print('Defaulting to unweighted')
-        method = 'unweighted'
-            
-    if method == 'simple':
-        Dmat = A
-        Dmat[Dmat==0] = np.inf
-        np.fill_diagonal(Dmat, np.inf) #gets rid of diagonal byu setting distance to infinity
-            
-    if method == 'difference':
-        np.fill_diagonal(A, 0) #get rid of diagonal for proper weighting (diagonal can have very high values from self transitions)
-        Amax = np.nanmax(A) #finds max of A for transformation into distance matrix
-        Dmat = (Amax - A + 1) # flips distance matrix so that high edge weights = short distance
-        Dmat[Dmat==np.nanmax(Dmat)] = np.inf  #replaces max distance with infinity because this would represent no connection
-        np.fill_diagonal(Dmat, np.inf) #gets rid of diagonal byu setting distance to infinity
-            
-    if method == 'inverse':
-        np.seterr(divide='ignore') #ignores divide by zero warning
-        np.fill_diagonal(A, 0) #set diagonal to zero
-        Dmat = 1/A #take element-wise inverse
-            
-    if method == 'unweighted':
-        A[A>0] = 1 #sets all edge weights = 1
-        Dmat = A 
-        np.fill_diagonal(Dmat, 0) #get rid of diagonal as we don't care about self transitions
+    # set distance based on adjacent nodes
+    if method == 'simple': simple_distance(A)
+    if method == 'difference': Adj_Dmat = difference_distance(A)
+    if method == 'inverse': Adj_Dmat = inverse_distance(A)
+    if method == 'unweighted': Adj_Dmat = unweighted_distance(A)
         
-    if distance == 'shortest_path': Dmat = shortest_path_distance(A, Dmat)   
-    if distance == 'longest_path': Dmat = longest_path_distance(Dmat)  
-    if distance == 'resistance': Dmat = resistence_distance(Dmat)   
+    # set distances for non-adjacent nodes
+    if distance == 'shortest_path': Dmat = shortest_path_distance(A, Adj_Dmat)   
+    if distance == 'longest_path': Dmat = longest_path_distance(Adj_Dmat)  
+    if distance == 'resistance': Dmat = resistence_distance(Adj_Dmat)   
     
     return Dmat
