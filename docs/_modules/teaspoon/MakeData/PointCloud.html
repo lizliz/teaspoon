@@ -117,6 +117,7 @@
 <li class="toctree-l3"><a class="reference internal" href="../../../persistence.html">2.3.4. Persistence</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../sublevel_set_persistence.html">2.3.5. Zero Dimensional Sublevel Set Persistence (SLSP) Module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../../buzz.html">2.3.6. Bifurcations using ZigZag (BuZZ)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../TopologicalConsistency.html">2.3.7. Topological Consistency via Kernel Estimation</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="../../../SP.html">2.4. Signal Processing (SP) Module</a><ul>
@@ -212,7 +213,7 @@
 
 
 <span class="c1">#-------------Circles and Annuli---------------------------------------#</span>
-<div class="viewcode-block" id="Circle"><a class="viewcode-back" href="../../../PointCloud.html#teaspoon.MakeData.PointCloud.Circle">[docs]</a><span class="k">def</span> <span class="nf">Circle</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Circle"><a class="viewcode-back" href="../../../TopologicalConsistency.html#teaspoon.MakeData.PointCloud.Circle">[docs]</a><span class="k">def</span> <span class="nf">Circle</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate :math:`N` points in :math:`\mathbb{R}^2` from the circle centered</span>
 <span class="sd">    at the origin with radius :math:`r`.</span>
@@ -253,7 +254,7 @@
     <span class="k">return</span> <span class="n">P</span></div>
 
 
-<div class="viewcode-block" id="Sphere"><a class="viewcode-back" href="../../../PointCloud.html#teaspoon.MakeData.PointCloud.Sphere">[docs]</a><span class="k">def</span> <span class="nf">Sphere</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Sphere"><a class="viewcode-back" href="../../../TopologicalConsistency.html#teaspoon.MakeData.PointCloud.Sphere">[docs]</a><span class="k">def</span> <span class="nf">Sphere</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate :math:`N` points in :math:`\mathbb{R}^3` from the sphere centered</span>
 <span class="sd">    at the origin with radius :math:`r`.</span>
@@ -288,7 +289,7 @@
     <span class="k">return</span> <span class="n">P</span></div>
 
 
-<div class="viewcode-block" id="Annulus"><a class="viewcode-back" href="../../../PointCloud.html#teaspoon.MakeData.PointCloud.Annulus">[docs]</a><span class="k">def</span> <span class="nf">Annulus</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Annulus"><a class="viewcode-back" href="../../../TopologicalConsistency.html#teaspoon.MakeData.PointCloud.Annulus">[docs]</a><span class="k">def</span> <span class="nf">Annulus</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Returns point cloud sampled from uniform distribution on</span>
 <span class="sd">    annulus in :math:`\mathbb{R}^2` of inner radius `r` and outer radius `R`</span>
@@ -327,7 +328,7 @@
 
 <span class="c1">#-------------Torus a la Diaconis paper--------------------------------#</span>
 
-<div class="viewcode-block" id="Torus"><a class="viewcode-back" href="../../../PointCloud.html#teaspoon.MakeData.PointCloud.Torus">[docs]</a><span class="k">def</span> <span class="nf">Torus</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>  <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Torus"><a class="viewcode-back" href="../../../TopologicalConsistency.html#teaspoon.MakeData.PointCloud.Torus">[docs]</a><span class="k">def</span> <span class="nf">Torus</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">R</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>  <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Sampling method taken from Sampling from a Manifold by Diaconis,</span>
 <span class="sd">    Holmes and Shahshahani, arXiv:1206.6913.</span>
@@ -400,7 +401,7 @@
 
 <span class="c1">#----------------------------------------------------------------------#</span>
 
-<div class="viewcode-block" id="Cube"><a class="viewcode-back" href="../../../PointCloud.html#teaspoon.MakeData.PointCloud.Cube">[docs]</a><span class="k">def</span> <span class="nf">Cube</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">diam</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Cube"><a class="viewcode-back" href="../../../TopologicalConsistency.html#teaspoon.MakeData.PointCloud.Cube">[docs]</a><span class="k">def</span> <span class="nf">Cube</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">diam</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generate `N` points in :math:`\mathbb{R}^{dim}` from the box</span>
 <span class="sd">    :math:`[0,diam]\\times[0,diam]\\times ...\\times [0,diam]`</span>
@@ -427,7 +428,7 @@
 
 <span class="c1">#----------------------------------------------------------------------#</span>
 
-<div class="viewcode-block" id="Clusters"><a class="viewcode-back" href="../../../PointCloud.html#teaspoon.MakeData.PointCloud.Clusters">[docs]</a><span class="k">def</span> <span class="nf">Clusters</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+<div class="viewcode-block" id="Clusters"><a class="viewcode-back" href="../../../TopologicalConsistency.html#teaspoon.MakeData.PointCloud.Clusters">[docs]</a><span class="k">def</span> <span class="nf">Clusters</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
              <span class="n">centers</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))),</span>
              <span class="n">sd</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
              <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -498,7 +499,7 @@
 <span class="c1">#----------------------------------------------------------------------#</span>
 <span class="c1">#------------Normally distributed points in (birth,death) plane--------#</span>
 <span class="c1">#----------------------------------------------------------------------#</span>
-<div class="viewcode-block" id="normalDiagram"><a class="viewcode-back" href="../../../PointCloud.html#teaspoon.MakeData.PointCloud.normalDiagram">[docs]</a><span class="k">def</span> <span class="nf">normalDiagram</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">sd</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="normalDiagram"><a class="viewcode-back" href="../../../TopologicalConsistency.html#teaspoon.MakeData.PointCloud.normalDiagram">[docs]</a><span class="k">def</span> <span class="nf">normalDiagram</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">sd</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Generates a diagram with points drawn from a normal distribution in the persistence diagram plane.</span>
 <span class="sd">    Pulls `N` points from a normal distribution with mean `\mu` and standard deviation `sd`, then discards any points that are below the diagonal.  Note, however, that this does not get rid of negative birth times.</span>
@@ -536,7 +537,7 @@
     <span class="k">return</span> <span class="n">dgm</span></div>
 
 
-<div class="viewcode-block" id="testSetClassification"><a class="viewcode-back" href="../../../PointCloud.html#teaspoon.MakeData.PointCloud.testSetClassification">[docs]</a><span class="k">def</span> <span class="nf">testSetClassification</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+<div class="viewcode-block" id="testSetClassification"><a class="viewcode-back" href="../../../TopologicalConsistency.html#teaspoon.MakeData.PointCloud.testSetClassification">[docs]</a><span class="k">def</span> <span class="nf">testSetClassification</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
                           <span class="n">numDgms</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
                           <span class="n">muRed</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
                           <span class="n">muBlue</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
@@ -601,7 +602,7 @@
 <span class="c1"># ---------------LINEAR---------------------------------------</span>
 <span class="c1"># -----------------------------------------------</span>
 
-<div class="viewcode-block" id="testSetRegressionLine"><a class="viewcode-back" href="../../../PointCloud.html#teaspoon.MakeData.PointCloud.testSetRegressionLine">[docs]</a><span class="k">def</span> <span class="nf">testSetRegressionLine</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+<div class="viewcode-block" id="testSetRegressionLine"><a class="viewcode-back" href="../../../TopologicalConsistency.html#teaspoon.MakeData.PointCloud.testSetRegressionLine">[docs]</a><span class="k">def</span> <span class="nf">testSetRegressionLine</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
                           <span class="n">numDgms</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
                           <span class="n">muStart</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
                           <span class="n">muEnd</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
@@ -657,7 +658,7 @@
 <span class="c1"># ---------------2D-ball around center-----------------------</span>
 <span class="c1"># -----------------------------------------------</span>
 
-<div class="viewcode-block" id="testSetRegressionBall"><a class="viewcode-back" href="../../../PointCloud.html#teaspoon.MakeData.PointCloud.testSetRegressionBall">[docs]</a><span class="k">def</span> <span class="nf">testSetRegressionBall</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+<div class="viewcode-block" id="testSetRegressionBall"><a class="viewcode-back" href="../../../TopologicalConsistency.html#teaspoon.MakeData.PointCloud.testSetRegressionBall">[docs]</a><span class="k">def</span> <span class="nf">testSetRegressionBall</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
                           <span class="n">numDgms</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span>
                           <span class="n">muCenter</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
                           <span class="n">sd</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
@@ -709,7 +710,7 @@
 
 <span class="c1">#------------------------------------------------------------#</span>
 
-<div class="viewcode-block" id="testSetManifolds"><a class="viewcode-back" href="../../../PointCloud.html#teaspoon.MakeData.PointCloud.testSetManifolds">[docs]</a><span class="k">def</span> <span class="nf">testSetManifolds</span><span class="p">(</span><span class="n">numDgms</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+<div class="viewcode-block" id="testSetManifolds"><a class="viewcode-back" href="../../../TopologicalConsistency.html#teaspoon.MakeData.PointCloud.testSetManifolds">[docs]</a><span class="k">def</span> <span class="nf">testSetManifolds</span><span class="p">(</span><span class="n">numDgms</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
                      <span class="n">numPts</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span>
                      <span class="n">permute</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
                      <span class="n">seed</span><span class="o">=</span><span class="kc">None</span>

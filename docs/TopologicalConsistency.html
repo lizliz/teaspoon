@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <title>2.5. MakeData Module Documentation &mdash; teaspoon 0.1.0 documentation</title>
+  <title>2.3.7. Topological Consistency via Kernel Estimation Module Documentation &mdash; teaspoon 0.1.0 documentation</title>
   
 
   
@@ -35,14 +35,15 @@
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
         <script src="_static/doctools.js"></script>
+        <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
 
     
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="2.5.1. Point Cloud Data Generation Module Documentation" href="PointCloud.html" />
-    <link rel="prev" title="2.4.4. Miscellaneous Functions" href="misc.html" /> 
+    <link rel="next" title="2.4. Signal Processing (SP) Module Documentation" href="SP.html" />
+    <link rel="prev" title="2.3.6. Bifurcations using ZigZag (BuZZ)" href="buzz.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -112,14 +113,14 @@
 <li class="toctree-l3"><a class="reference internal" href="ML.html#references">2.2.3. References</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="TDA.html">2.3. Topological Data Analaysis (TDA) Module</a><ul>
+<li class="toctree-l2 current"><a class="reference internal" href="TDA.html">2.3. Topological Data Analaysis (TDA) Module</a><ul class="current">
 <li class="toctree-l3"><a class="reference internal" href="PHN.html">2.3.1. Persistent Homology of Networks (PHN) Module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="distances.html">2.3.2. Distances</a></li>
 <li class="toctree-l3"><a class="reference internal" href="drawing.html">2.3.3. Drawing</a></li>
 <li class="toctree-l3"><a class="reference internal" href="persistence.html">2.3.4. Persistence</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sublevel_set_persistence.html">2.3.5. Zero Dimensional Sublevel Set Persistence (SLSP) Module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="buzz.html">2.3.6. Bifurcations using ZigZag (BuZZ)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="TopologicalConsistency.html">2.3.7. Topological Consistency via Kernel Estimation</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">2.3.7. Topological Consistency via Kernel Estimation</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="SP.html">2.4. Signal Processing (SP) Module</a><ul>
@@ -129,7 +130,7 @@
 <li class="toctree-l3"><a class="reference internal" href="misc.html">2.4.4. Miscellaneous</a></li>
 </ul>
 </li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">2.5. Make Data (MakeData) Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="MakeData.html">2.5. Make Data (MakeData) Module</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="PointCloud.html">2.5.1. Point Cloud Data Generation (PointCloud) Module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="DynSysLib.html">2.5.2. Dynamic Systems Library (DynSysLib) Module</a></li>
 </ul>
@@ -192,13 +193,15 @@
         
           <li><a href="modules.html"><span class="section-number">2. </span>Table of Contents</a> &raquo;</li>
         
-      <li><span class="section-number">2.5. </span>MakeData Module Documentation</li>
+          <li><a href="TDA.html"><span class="section-number">2.3. </span>Topological Data Analysis (TDA) Module Documentation</a> &raquo;</li>
+        
+      <li><span class="section-number">2.3.7. </span>Topological Consistency via Kernel Estimation Module Documentation</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
           
-            <a href="_sources/MakeData.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/TopologicalConsistency.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -211,14 +214,32 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="makedata-module-documentation">
-<span id="makedata"></span><h1><span class="section-number">2.5. </span>MakeData Module Documentation<a class="headerlink" href="#makedata-module-documentation" title="Permalink to this headline">¶</a></h1>
-<p>This module provides two methods for generating data for analysis. The first is through point cloud data generation for various shapes (e.g. sphere, annulus, etc.). The second module is the dynamic systems library. This library has approximately 60 dynamical systems available for simulation where the output is the time series of each variable of the dynamical system. These systems include flows, maps, and collected data.</p>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="PointCloud.html">2.5.1. Point Cloud Data Generation (PointCloud) Module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="DynSysLib.html">2.5.2. Dynamic Systems Library (DynSysLib) Module</a></li>
-</ul>
+  <div class="section" id="topological-consistency-via-kernel-estimation-module-documentation">
+<h1><span class="section-number">2.3.7. </span>Topological Consistency via Kernel Estimation Module Documentation<a class="headerlink" href="#topological-consistency-via-kernel-estimation-module-documentation" title="Permalink to this headline">¶</a></h1>
+<p>This module includes code for running the ideas from</p>
+<p><a class="reference external" href="https://projecteuclid.org/journals/bernoulli/volume-23/issue-1/Topological-consistency-via-kernel-estimation/10.3150/15-BEJ744.full">Omer Bobrowski, Sayan Mukherjee, and Jonathan E. Taylor, Topological consistency via kernel estimation. Bernoulli, Vol. 23, No. 1. Bernoulli Society for Mathematical Statistics and Probability. p. 288-328, 2017.</a></p>
+<span class="target" id="module-teaspoon.TDA.TopologicalConsistency"></span><div class="section" id="topological-consistency-via-kernel-estimation">
+<h2><span class="section-number">2.3.7.1. </span>Topological Consistency via Kernel Estimation<a class="headerlink" href="#topological-consistency-via-kernel-estimation" title="Permalink to this headline">¶</a></h2>
+<p>This module includes code for running the ideas from</p>
+<p><a class="reference external" href="https://projecteuclid.org/journals/bernoulli/volume-23/issue-1/Topological-consistency-via-kernel-estimation/10.3150/15-BEJ744.full">Omer Bobrowski, Sayan Mukherjee, and Jonathan E. Taylor, Topological consistency via kernel estimation. Bernoulli, Vol. 23, No. 1. Bernoulli Society for Mathematical Statistics and Probability. p. 288-328, 2017.</a></p>
+<dl class="py function">
+<dt class="sig sig-object py" id="teaspoon.TDA.TopologicalConsistency.OmerApprox">
+<span class="sig-prename descclassname"><span class="pre">teaspoon.TDA.TopologicalConsistency.</span></span><span class="sig-name descname"><span class="pre">OmerApprox</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[-</span> <span class="pre">2,</span> <span class="pre">2,</span> <span class="pre">-</span> <span class="pre">2,</span> <span class="pre">2]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">N</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">300</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/teaspoon/TDA/TopologicalConsistency.html#OmerApprox"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#teaspoon.TDA.TopologicalConsistency.OmerApprox" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function takes an <span class="math notranslate nohighlight">\(\mathbb{R}\)</span> function defined on the provided domain <span class="math notranslate nohighlight">\(\subseteq \mathbb{R}^2\)</span>, and a level <span class="math notranslate nohighlight">\(L\)</span> of interest. TODO FINISH DOCUMENTING</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>todo</strong> – </p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>todo</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="section" id="examples">
+<h2><span class="section-number">2.3.7.2. </span>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>TODO</p>
 </div>
 </div>
 
@@ -228,8 +249,8 @@
           </div>
           <footer>
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
-        <a href="PointCloud.html" class="btn btn-neutral float-right" title="2.5.1. Point Cloud Data Generation Module Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-        <a href="misc.html" class="btn btn-neutral float-left" title="2.4.4. Miscellaneous Functions" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="SP.html" class="btn btn-neutral float-right" title="2.4. Signal Processing (SP) Module Documentation" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="buzz.html" class="btn btn-neutral float-left" title="2.3.6. Bifurcations using ZigZag (BuZZ)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
     </div>
 
   <hr/>
