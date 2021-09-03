@@ -1,29 +1,29 @@
-# Minimal makefile for Sphinx documentation
-#
-
 # You can set these variables from the command line, and also
 # from the environment for the first two.
+
 SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = source
-BUILDDIR      = docs
+BUILDDIR      = build
 
-# Put it first so that "make" without argument is like "make help".
-# help:
-	# @$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-
-# .PHONY: help Makefile
-
-# Catch-all target: route all unknown targets to Sphinx using the new
-# "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
-%: Makefile
-	# @$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-	# Note: old way of passing in -M html results in docs going into the wrong folder.
-	# For github pages to work, the docs have ot be in /docs/
-	@$(SPHINXBUILD)  "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
-
+autopep:
 	# Running autopep8
 	@autopep8 -r --in-place teaspoon/
 
+unittests:
 	# Running unittests
 	@python -m unittest
+
+%: Makefile
+	# Running sphinx-build to build html files.
+	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	
+	@mkdir $(shell pwd)/docs/temp
+	# Removing all files from docs folder to be replaced with new docs.
+	@rm -rf $(shell pwd)/docs/
+	@mkdir $(shell pwd)/docs/
+	# Copying over contents of build/html to docs
+	@mkdir $(shell pwd)/docs/.doctrees
+	@cp -a $(shell pwd)/build/doctrees/. $(shell pwd)/docs/.doctrees/
+	@cp -a $(shell pwd)/build/html/. $(shell pwd)/docs/
+

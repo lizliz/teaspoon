@@ -1,3 +1,18 @@
+import sys
+import os
+from teaspoon.TDA import Persistence as pP
+from teaspoon.SP.adaptivePart import Partitions
+import time
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import LogisticRegression, Ridge, RidgeCV, RidgeClassifierCV, LassoCV
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn import metrics
+from sklearn.preprocessing import scale, PolynomialFeatures
+from termcolor import colored
+from scipy.special import comb
+import itertools
+from sklearn.svm import LinearSVC, NuSVC, SVC
 """
 This is the main code for running ML code in teaspoon.
 
@@ -53,24 +68,6 @@ out = Base.getPercentScore(DgmsDF,dgm_col = 'Dgm', labels_col = 'trainingLabel',
 #     __file__), '..', '..', 'teaspoon', 'TSP'))
 
 
-
-
-from sklearn.svm import LinearSVC, NuSVC, SVC
-import itertools
-from scipy.special import comb
-from termcolor import colored
-from sklearn.preprocessing import scale, PolynomialFeatures
-from sklearn import metrics
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.linear_model import LogisticRegression, Ridge, RidgeCV, RidgeClassifierCV, LassoCV
-import pandas as pd
-import numpy as np
-import time
-from teaspoon.SP.adaptivePart import Partitions
-from teaspoon.TDA import Persistence as pP
-import teaspoon.ML.feature_functions as fF
-import os
-import sys
 class ParameterBucket(object):
     def __init__(self, description='',
                  clf_model=RidgeClassifierCV,

@@ -138,7 +138,7 @@ def get_persistence_pair(q):
 
 def Persistence0D(ts):
     """This function calculates the zero-dimensional sublevel set persistence over a closed time domain 
-       using a recursively updated priority Q as a SortedList data structure. The algorithm is approximately O(log(n)).
+       using a recursively updated priority Q as a SortedList data structure. The algorithm is approximately O(nlog(n)).
 
     Args:
         ts (1-D array): time series.

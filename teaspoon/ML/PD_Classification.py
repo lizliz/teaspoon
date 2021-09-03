@@ -472,7 +472,7 @@ def CL_KM(PD, params):
 
         # Training
         m = svm_train(Label_train, [list(row)
-                      for row in KernelTrain], '-c 4 -t 4')
+                                    for row in KernelTrain], '-c 4 -t 4')
 
         N2 = len(PD_test)
         # test set kernel matrix

@@ -8,20 +8,19 @@ def point_summaries(diagram, A):
     Returns:
         [array 1-D]: statistics (R, En M) as (maximum persistence ratio, persistent entropy normalized, homology class ratio). Returns NaNs if empty diagram.
     """
-    
+
     import numpy as np
-    
-    #assertion errors to check data types
-    
+
+    # assertion errors to check data types
+
     assert (len(A[0]) == len(A.T[0])), "A is not square adjacency matrix."
     assert (len(diagram) > 1), "Diagram should include atleast 0D and 1D persistene diagrams as a list of numpy.ndarrays."
     assert (type(diagram) is list), "Diagram should include atleast 0D and 1D persistene diagrams as a list of numpy.ndarrays."
-    assert (type(diagram[0]) is np.ndarray), "Diagram should include atleast 0D and 1D persistene diagrams as a list of numpy.ndarrays."
-
-    
+    assert (type(
+        diagram[0]) is np.ndarray), "Diagram should include atleast 0D and 1D persistene diagrams as a list of numpy.ndarrays."
 
     def persistentEntropy(lt):
-        
+
         if len(lt) > 1:
             L = sum(lt)
             p = lt/L
@@ -35,8 +34,8 @@ def point_summaries(diagram, A):
         return E
 
     if len(diagram[1]) > 0:
-        
-        #------------Entropy---------------
+
+        # ------------Entropy---------------
         lt = np.array(diagram[1].T[1]-diagram[1].T[0])
         D1 = np.array([diagram[1].T[0], diagram[1].T[1]])
         D1 = D1
@@ -44,20 +43,19 @@ def point_summaries(diagram, A):
         num_lifetimes1 = len(lt)
         num_unique = len(A[0])
         En = persistentEntropy(lt)
-        
-        #------------maximum persistence ratio---------------
+
+        # ------------maximum persistence ratio---------------
         H1 = diagram[1].T
         delta = 0.1
         R = (1-np.nanmax(H1)/np.floor((num_unique/3)-delta))
-        
-        #------------homology class ratio---------------
+
+        # ------------homology class ratio---------------
         M = num_lifetimes1/num_unique
         statistics = [R, En, M]
     else:
         statistics = [np.nan, np.nan, np.nan]
-        
-    return statistics
 
+    return statistics
 
 
 def PH_network(A, method='unweighted', distance='shortest_path'):
@@ -132,7 +130,7 @@ if __name__ == "__main__":
 
     # create distance matrix and calculate persistence diagram
     D, diagram = PH_network(A, method='unweighted', distance='shortest_path')
-    
+
     print('1-D Persistent Homology (loops): ', diagram[1])
 
     stats = point_summaries(diagram, A)

@@ -11,7 +11,6 @@ teaspoon/ML/__init__.py
 teaspoon/ML/classification_examples.py
 teaspoon/ML/feature_functions.py
 teaspoon/ML/featurization_examples.py
-teaspoon/ML/test_classification.py
 teaspoon/MakeData/PointCloud.py
 teaspoon/MakeData/__init__.py
 teaspoon/MakeData/DynSysLib/DynSysLib.py
@@ -32,12 +31,14 @@ teaspoon/SP/network_tools.py
 teaspoon/SP/tsa_tools.py
 teaspoon/SP/information/__init__.py
 teaspoon/SP/information/entropy.py
+teaspoon/TDA/BuZZ.py
 teaspoon/TDA/Distance.py
 teaspoon/TDA/Draw.py
 teaspoon/TDA/PHN.py
 teaspoon/TDA/Persistence.py
 teaspoon/TDA/SLSP.py
 teaspoon/TDA/SLSP_tools.py
+teaspoon/TDA/SW1PerS.py
 teaspoon/TDA/__init__.py
 teaspoon/TDA/c_profile_test.py
 teaspoon/TDA/distance_matrix.py
@@ -48,3 +49,11 @@ teaspoon/parameter_selection/PAMI_delay.py
 teaspoon/parameter_selection/__init__.py
 teaspoon/parameter_selection/autocorrelation.py
 teaspoon/parameter_selection/delay_LMS.py
+tests/__init__.py
+tests/test_MakeData.py
+tests/test_OrdinalPartition.py
+tests/test_SLSP.py
+tests/test_basics.py
+tests/test_classification.py
+tests/test_parameterSelection.py
+tests/test_signalProcessing.py
